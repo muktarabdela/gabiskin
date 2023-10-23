@@ -1,16 +1,15 @@
-const { json } = require('body-parser');
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
 
+// database
 const connectDB = require('./config/db');
 connectDB();
-// database
 
 // middlewares
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static("public"));
+
 
 // routes
 // users

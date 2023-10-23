@@ -69,7 +69,79 @@ const getLaptopFullSkin = async (req, res) => {
     }
 }
 
+// getPhoneFullSkin
+
+const getphoneFullSkin = async (req, res) => {
+    try {
+        const phoneFullSkins = await stickers.find({ type: 'laptop' });
+
+        // Send the laptop full skin images as a response
+        res.json(phoneFullSkins);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch phone full skin images' });
+    }
+}
+
+// get programing stickers
+const getProgramingStickers = async (req, res) => {
+    try {
+        const programingStickers = await stickers.find({ category: 'programing' });
+
+        // Send the laptop full skin images as a response
+        res.json(programingStickers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch programing stickers' });
+    }
+}
+
+// get hot stickers
+const getHotStickers = async (req, res) => {
+    try {
+        const hotStickers = await stickers.find({ category: 'hot' });
+
+        // Send the laptop full skin images as a response
+        res.json(hotStickers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch hot stickers' });
+    }
+}
+
+// get music stickers
+const getMusicStickers = async (req, res) => {
+    try {
+        const musicStickers = await stickers.find({ category: 'music' });
+
+        // Send the laptop full skin images as a response
+        res.json(musicStickers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch music stickers' });
+    }
+}
+
+// get amharic stickers
+const getAmharicStickers = async (req, res) => {
+    try {
+        const amharicStickers = await stickers.find({ category: 'amharic' });
+
+        // Send the laptop full skin images as a response
+        res.json(amharicStickers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to amharic programing stickers' });
+    }
+}
+
+// Export your route controllers
 module.exports = {
     createStickers,
     getLaptopFullSkin,
+    getphoneFullSkin,
+    getProgramingStickers,
+    getHotStickers,
+    getMusicStickers,
+    getAmharicStickers
 };

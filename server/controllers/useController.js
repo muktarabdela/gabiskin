@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 const registerUser = async (req, res) => {
     try {
         const { firstname, lastname, address, email, password } = req.body;
-
         // Hash the password before storing it in the database
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
 
@@ -18,6 +17,12 @@ const registerUser = async (req, res) => {
             email,
             password: hashedPassword, // Store the hashed password
         });
+
+        // check if the user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ error: 'User already exists' });
+        }
 
         await user.save();
         res.json(user);
@@ -32,6 +37,8 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        console.log(email, password);
+
         // Find the user by email
         const user = await User.findOne({ email });
 
@@ -43,15 +50,14 @@ const loginUser = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ error: 'password not much ' });
         }
 
         // Generate a JWT token for authentication
         const token = jwt.sign({ userId: user._id, email: user.email }, 'your-secret-key', {
             expiresIn: '1h', // Token expiration time
         });
-
-        res.json({ token });
+        res.json({ message: 'login success', token })
     } catch (error) {
         res.status(500).json({ error: 'Login failed' });
     }
