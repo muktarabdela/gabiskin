@@ -1,27 +1,41 @@
-const express = require('express');
+import express from 'express';
+import cors from 'cors';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+import connectDB from './config/db.js';
+
 const app = express();
-
-// database
-const connectDB = require('./config/db');
-connectDB();
-
-// middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }))
-app.use(express.static("public"));
+app.use(cors());
 
+app.get('/', (req, res) => {
+    res.send({ message: 'hello world' });
+})
 
-// routes
 // users
-const userRouter = require('./routes/userRoute');
+
+import authenticateToken from './middleware/authenticateToken.js';
+import userRouter from './routes/userRoute.js';
 app.use('/api/users', userRouter);
+
 // stickers
-const stickersRouter = require('./routes/stickersRouter');
+import stickersRouter from './routes/stickersRouter.js';
 app.use('/api/stickers', stickersRouter);
+
+import paymentRouter from "./routes/paymentRouter.js"
+app.use('/api/payment', paymentRouter)
 
 // server
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-})
+const startServer = async () => {
+    try {
+        connectDB(process.env.DBURL);
+        app.listen(port, () => console.log(`http://localhost:${port}`));
+    } catch (error) {
+        console.log(error);
+    }
+}
+startServer();

@@ -1,147 +1,148 @@
-const stickers = require('../models/stickerModel'); // Import your FullSkin model
-const { validationResult } = require('express-validator'); // You can add validation if needed
+import Stickers from "../models/stickerModel.js";
+import Cloudinary from '../config/clouddinary.config.js';
+import { uploadToCloudinary } from '../config/clouddinary.config.js';
+import mongoose from 'mongoose';
 
-// Route controller for uploading full skin images
-const createStickers = async (req, res) => {
-    // Log the request body and uploaded files
-    console.log('req.body:', req.body);
-    console.log('req.files:', req.files);
+// Get all stickers
 
-    // Use express-validator or custom validation logic to validate the request data here
+const getCategoryStickers = async (req, res) => {
+    const { category } = req.query;
+    let query = {};
 
-    // Check if any validation errors occurred
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+    if (category) {
+        query.category = category;
     }
-
     try {
-        // Check if no file was uploaded
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ error: 'Please upload one or more files' });
+        const stickers = await Stickers.find(query).exec();
+        return res.status(200).json({ stickers });
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+}
+
+const fetchImages = async (req, res) => {
+    let allImages = [];
+    let nextCursor = null;
+    try {
+        do {
+            const options = {
+                type: 'upload',
+                prefix: 'Works/',
+                max_results: 500,
+                next_cursor: nextCursor,
+            };
+            const result = await Cloudinary.api.resources(options);
+            allImages = allImages.concat(result.resources);
+            nextCursor = result.next_cursor;
+        } while (nextCursor);
+
+        const insertedImages = [];
+        for (const image of allImages) {
+            const newSticker = new Stickers({
+                name: "Full_Skin",
+                category: "works",
+                imageUrl: image.secure_url,
+            });
+            const savedImage = await newSticker.save();
+            insertedImages.push(savedImage);
         }
 
-        // Extract the 'type' field from the request body
-        const { type } = req.body;
+        // Send a single response to the client with the inserted images.
+        res.json({ images: insertedImages });
+    } catch (error) {
+        console.error("Error during database save:", error);
+        res.status(500).json({ error: "An error occurred during database save." });
+    }
+};
 
-        // Validate the 'type' field
-        if (!type || (type !== 'laptop' && type !== 'phone')) {
-            return res.status(400).json({ error: 'Invalid or missing "type" field' });
-        }
+const uploadMultiple = async (req, res) => {
+    const stickerData = req.body.stickers;
+    try {
+        const insertedStickers = [];
+        for (const sticker of stickerData) {
+            // Upload the image to Cloudinary and get the secure URL
+            const imageUrl = await uploadToCloudinary(sticker.imagPath, "programming/");
 
-        // Create an array to store new FullSkin documents
-        const newFullSkins = [];
-
-        // Iterate through the uploaded files
-        for (const file of req.files) {
-            const newFullSkin = new FullSkin({
-                type: file.type,
-                image_name: file.image_name,
-                image: file.image,
-                category: file.category,
-                price: file.price,
+            const newSticker = new Stickers({
+                name: "minSticker",
+                category: "programming",
+                size: sticker.size,
+                price: sticker.price,
+                imageUrl: imageUrl, // Assign the secure URL
             });
 
-            newFullSkins.push(newFullSkin);
+            // Save the sticker to the database
+            const savedSticker = await newSticker.save();
+            insertedStickers.push(savedSticker);
+        }
+        res.status(200).json({ stickers: insertedStickers });
+    } catch (error) {
+        console.error("Error during database save:", error);
+        res.status(500).json({ error: "An error occurred during database save." });
+    }
+};
+
+// update sticker
+const updateSticker = async (req, res) => {
+    const { sticker_Id } = req.params;
+    const { size, price } = req.body;
+    try {
+        if (!mongoose.Types.ObjectId.isValid(sticker_Id)) {
+            return res.status(400).json({ message: 'Invalid sticker id' });
         }
 
-        // Save the documents to the database
-        await stickers.insertMany(newFullSkins);
-        // Respond with a success message and the saved documents
-        res.status(201).json(newFullSkins);
+        // Update sticker size and price
+        await Stickers.updateOne(
+            { _id: new mongoose.Types.ObjectId(sticker_Id) },
+            { $set: { size, price } }
+        );
+
+        // Check inserted size and price
+        if (!size || !price) {
+            return res.status(400).json({ message: 'Please enter size and price' });
+        }
+
+        // Fetch the updated sticker data
+        const updatedStickerData = await Stickers.findById(sticker_Id);
+
+        if (!updatedStickerData) {
+            return res.status(400).json({ message: 'Sticker not found' });
+        }
+        return res.status(200).json({
+            message: 'Sticker updated successfully',
+            sticker: updatedStickerData,
+        });
     } catch (error) {
-        // Handle errors and respond with a server error message
-        console.error(error);
-        res.status(500).json({ error: 'Failed to upload image' });
+        console.log(error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
 
-// Route controller for getting laptop full skin images (you can implement a similar one for phone full skin)
-const getLaptopFullSkin = async (req, res) => {
+const postCustomData = async (req, res) => {
     try {
-        const laptopFullSkins = await FullSkin.find({ type: 'laptop' });
+        const { imageUrl, price, size } = req.body;
 
-        // Send the laptop full skin images as a response
-        res.json(laptopFullSkins);
+        const newSticker = new Stickers({
+            imageUrl: imageUrl,
+            price,
+            size
+        });
+
+        // Save the new sticker to the database
+        await newSticker.save();
+
+        res.status(201).json({ message: 'Custom sticker created successfully!', newSticker });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch laptop full skin images' });
+        console.error('Error creating custom sticker:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-}
-
-// getPhoneFullSkin
-
-const getphoneFullSkin = async (req, res) => {
-    try {
-        const phoneFullSkins = await stickers.find({ type: 'laptop' });
-
-        // Send the laptop full skin images as a response
-        res.json(phoneFullSkins);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch phone full skin images' });
-    }
-}
-
-// get programing stickers
-const getProgramingStickers = async (req, res) => {
-    try {
-        const programingStickers = await stickers.find({ category: 'programing' });
-
-        // Send the laptop full skin images as a response
-        res.json(programingStickers);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch programing stickers' });
-    }
-}
-
-// get hot stickers
-const getHotStickers = async (req, res) => {
-    try {
-        const hotStickers = await stickers.find({ category: 'hot' });
-
-        // Send the laptop full skin images as a response
-        res.json(hotStickers);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch hot stickers' });
-    }
-}
-
-// get music stickers
-const getMusicStickers = async (req, res) => {
-    try {
-        const musicStickers = await stickers.find({ category: 'music' });
-
-        // Send the laptop full skin images as a response
-        res.json(musicStickers);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to fetch music stickers' });
-    }
-}
-
-// get amharic stickers
-const getAmharicStickers = async (req, res) => {
-    try {
-        const amharicStickers = await stickers.find({ category: 'amharic' });
-
-        // Send the laptop full skin images as a response
-        res.json(amharicStickers);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to amharic programing stickers' });
-    }
-}
-
-// Export your route controllers
-module.exports = {
-    createStickers,
-    getLaptopFullSkin,
-    getphoneFullSkin,
-    getProgramingStickers,
-    getHotStickers,
-    getMusicStickers,
-    getAmharicStickers
 };
+
+
+export {
+    getCategoryStickers,
+    uploadMultiple,
+    updateSticker,
+    fetchImages,
+    postCustomData,
+}

@@ -1,16 +1,21 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-// Schema for phone-full-skin images
-const stickersSchema = new mongoose.Schema({
-    type: String,
-    image_name: String,
-    image: String,
-    category: String,
+// Define a schema for your stickers
+const stickerSchema = new mongoose.Schema({
+    name: String,
+    category: {
+        type: String,
+        default: 'custom', 
+    },
+    size: {
+        type: String,
+        enum: ['small', 'medium', 'large'],
+    },
     price: Number,
+    imageUrl: String,
 });
 
+// Create a model for the stickers
+const Stickers = mongoose.model('Stickers', stickerSchema);
 
-// Create models
-const stickers = mongoose.model('stickers', stickersSchema);
-
-module.exports = stickers;
+export default Stickers;
