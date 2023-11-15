@@ -18,7 +18,7 @@ const Account = () => {
                 console.error('Error fetching user data:', error);
                 setLoading(false);
             });
-    }, []);
+    }, [userId]);
 
     if (loading) {
         return <p>Loading...</p>;
@@ -31,6 +31,8 @@ const Account = () => {
     return (
         <div className="container mx-auto p-8 mt-[60px]">
             <h1 className="text-3xl font-bold mb-4">User Account</h1>
+
+            {/* User Information */}
             <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-2">User Information</h2>
                 <p><span className="font-bold">Name:</span> {userInfo.name}</p>
@@ -38,6 +40,7 @@ const Account = () => {
                 <p><span className="font-bold">Phone:</span> {userInfo.phone}</p>
             </div>
 
+            {/* Delivery Information */}
             <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-2">Delivery Information</h2>
                 <p><span className="font-bold">First Name:</span> {userInfo.deliveryInfo.firstName}</p>
@@ -47,6 +50,16 @@ const Account = () => {
                 <p><span className="font-bold">Delivery Location:</span> {userInfo.deliveryInfo.deliveryLocation}</p>
             </div>
 
+            {/* Payment Information */}
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-2">Payment Information</h2>
+                <p><span className="font-bold">Payment Status:</span> {userInfo.paymentStatus}</p>
+                <p><span className="font-bold">paymentMethod:</span> {userInfo.paymentMethod}</p>
+
+                <img src={userInfo.receiptScreenshot} alt="" />
+            </div>
+
+            {/* Orders */}
             <div>
                 <h2 className="text-2xl font-bold mb-2">Orders</h2>
                 {userInfo.orders.length === 0 ? (

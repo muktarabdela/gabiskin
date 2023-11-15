@@ -8,7 +8,7 @@ import {
     setDeliveryLocation,
 } from '../store/deliverySlice';
 // register slice 
-import { setName, setEmail, setPassword } from "../store/registrationSlice"
+import { setName, setEmail, setPassword, setConfirmPassword } from "../store/registrationSlice"
 export const MultiStepContext = createContext()
 
 const CheckoutContextProvider = ({ children }) => {
@@ -37,12 +37,15 @@ const CheckoutContextProvider = ({ children }) => {
         Name: "",
         Email: "",
         password: "",
+        confirmPassword: "", // Add this line
+
     })
 
     function submitRegisterData() {
         dispatch(setName(DeliveryData.firstName));
         dispatch(setEmail(registerData.Email));
         dispatch(setPassword(registerData.password));
+        dispatch(setConfirmPassword(registerData.confirmPassword));
     }
     return (
         <div>

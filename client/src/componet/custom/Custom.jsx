@@ -134,7 +134,19 @@ const Custom = () => {
                         </p>
                     </div>
                     <div className="mt-[1em] md:mt-[9em] lg:mt-[8em] pl-[9.5em]">
-                        <input type='file' onChange={handleImageChange} multiple className="mb-4 pl-3" />
+                        <label
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            for="multiple_files"
+                        >
+                            Upload images
+                        </label>
+                        <input
+                            onChange={handleImageChange}
+                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            id="multiple_files"
+                            type="file"
+                            multiple
+                        />
                         <button onClick={handleUpload} className="bg-blue-500 text-white px-4 py-2 rounded">
                             Upload Images
                         </button>

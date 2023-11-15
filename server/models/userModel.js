@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        maxlength: 50, // Adjust the max length based on your requirements
+        maxlength: 50,
     },
     email: {
         type: String,
@@ -21,11 +21,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    confirmPassword: {
+        type: String,
+        required: true,
+    },
     deliveryInfo: {
         firstName: {
             type: String,
             required: true,
-            maxlength: 50, 
+            maxlength: 50,
         },
         lastName: {
             type: String,
@@ -63,8 +67,22 @@ const userSchema = new mongoose.Schema({
             ],
         }
     ],
+    paymentStatus: {
+        type: String,
+        enum: ['Pending', 'Paid', 'Failed'],
+        default: 'Pending',
+    },
+
+    paymentMethod: {
+        type: String,
+        enum: ['Telebirr', 'CBE', 'BOA'], // Add other payment methods as needed
+    },
+
+    receiptScreenshot: {
+        type: String, // Assuming you store the image URL/path
+    },
 });
 
 const User = mongoose.model('User', userSchema);
 
-export default User
+export default User;

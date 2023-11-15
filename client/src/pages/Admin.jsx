@@ -3,43 +3,37 @@ import React, { useEffect, useState } from 'react';
 import UserInfo from '../componet/admin/UserInfo';
 import DeliveryInfo from '../componet/admin/DeliveryInfo';
 import Orders from '../componet/admin/Orders';
+import PaymentInfo from '../componet/admin/PaymentInfo';
 import axios from '../Axios';
 
 const Admin = ({ userId }) => {
     const [selectedSection, setSelectedSection] = useState('userInfo');
-    const [userInfoData, setUserInfoData] = useState(null);
-    const [deliveryInfoData, setDeliveryInfoData] = useState(null);
-    const [ordersData, setOrdersData] = useState(null);
+    const [usersData, setUsersData] = useState([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                // Replace 'userId' with the actual user ID you want to fetch
-                const response = await axios.get(`/users/get-user-info/${userId}?userInfo=true&deliveryInfo=true&orders=true`);
-                // console.log(response)
-                setUserInfoData(response.data.userInfo)
-                setDeliveryInfoData(response.data.deliveryInfo)
-                setOrdersData(response.data.orders)
-
-                console.log("userinfo", userInfoData)
-                console.log("delivery info", deliveryInfoData)
-                console.log("orders", ordersData)
+                const response = await axios.get('/users/admin');
+                console.log(response.data);
+                setUsersData(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
-
         fetchUserData();
-    }, []);
+    }, [userId]);
 
     const renderSection = () => {
         switch (selectedSection) {
             case 'userInfo':
-                return <UserInfo userInfo={userInfoData} />;
+                return <UserInfo userInfo={usersData} />;
             case 'deliveryInfo':
-                return <DeliveryInfo deliveryInfo={deliveryInfoData} />;
+                return <DeliveryInfo users={usersData
+                } />;
             case 'orders':
-                return <Orders orders={ordersData} />;
+                return <Orders users={usersData} />;
+            case 'PaymentInfo':
+                return <PaymentInfo users={usersData} />;
             default:
                 return null;
         }
@@ -66,6 +60,12 @@ const Admin = ({ userId }) => {
                     onClick={() => setSelectedSection('orders')}
                 >
                     Orders
+                </button>
+                <button
+                    className={`w-full py-2 ${selectedSection === 'PaymentInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
+                    onClick={() => setSelectedSection('PaymentInfo')}
+                >
+                    PaymentInfo
                 </button>
             </div>
 

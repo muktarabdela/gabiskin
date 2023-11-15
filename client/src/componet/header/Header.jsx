@@ -34,7 +34,7 @@ const Header = ({ updateCartCount }) => {
             <Toolbar>
 
                 <Box
-                    className=' absolute left-[120px] md:left-[30px] lg:left-[50px] md:flex lg:flex'
+                    className=' absolute  left-[120px] md:left-[30px] lg:left-[50px] md:flex lg:flex'
                     variant="h6" style={{ flexGrow: 1, color: "black" }}>
                     <Link
                         className='cursor-pointer'

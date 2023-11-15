@@ -22,8 +22,9 @@ const CheckOut = () => {
     }
 
 
+
     return (
-        <div className='w-[60vh] h-[95vh] rounded-lg mx-auto bg-white'>
+        <div className='w-[24em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
             <h1 className="text-lg font-bold text-gray-700 leading-tight text-center mt-[90px] mb-">
                 Form Wizard - Multi Step Form
             </h1>
