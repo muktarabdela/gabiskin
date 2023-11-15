@@ -1,26 +1,26 @@
 import { Button, TextField } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
-import { selectRegistration, setName, setPassword } from '../../store/registrationSlice';
+import { selectRegistration, } from '../../store/registrationSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import axios from "../../Axios";
-import { setUserId } from '../../store/userSlice';
+import { setUserId, setEmailErrorData, setPhoneErrorData } from '../../store/userSlice';
 const RegisterForm = () => {
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
 
     const deliveryData = useSelector(selectDelivery);
     const registrationData = useSelector(selectRegistration);
     const cartItems = useSelector(selectCartItems);
+    // Use Redux state for error data
+    const emailError = useSelector(state => state.user.emailError);
+    console.log(emailError)
     const dispatch = useDispatch();
-
     const [nameError, setNameError] = useState(null);
-    const [emailError, setEmailError] = useState(null);
+    const [emailErrorInput, setEmailErrorInput] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [passwordConfirmError, setPasswordConfirmError] = useState(null);
-    const [phoneError, setPhoneError] = useState(null)
-    const [errorData, setErrorData] = useState(null)
 
     const handleRegistration = async () => {
         try {
@@ -54,60 +54,24 @@ const RegisterForm = () => {
             }
             // make API 
             const response = await axios.post('/users/register', userData);
-            console.log(response)
             const newUserId = response.data.newUser._id;
+            // console.log(newUserId)
             dispatch(setUserId(newUserId));
-            setEmailError(null);
-            setPhoneError(null);
+
+            console.log('Response from server:', response.data)
 
         } catch (error) {
-            if (error.response) {
-                // The request was made, but the server responded with an error
-                console.error('Error during registration:', error.response.data.error);
-
-                // Handle email and phone number errors separately
-                if (error.response.data.error.includes('email')) {
-                    setEmailError('User with this email already exists');
-                } else if (error.response.data.error.includes('phone')) {
-                    setPhoneError('User with this phone number already exists');
-                }
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error('No response received from the server');
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error setting up the request:', error.message);
-            }
-
+            console.log(error.response.data.error)
+            dispatch(setEmailErrorData(error.response.data.error));
+            dispatch(setPhoneErrorData(error.response.data.error));
         }
+
     }
-
-    // Function to check if the email already exists
-    const checkEmailExists = async (email) => {
-        try {
-            const response = await axios.post('/users/check-email', { email });
-            return response.data.exists; // Assuming the server responds with an object containing a boolean property 'exists'
-        } catch (error) {
-            console.error('Error checking email existence:', error);
-            return true; // Treat any error as email exists to prevent moving forward
-        }
-    };
-
-    // Function to check if the phone number already exists
-    const checkPhoneExists = async (phoneNumber) => {
-        try {
-            const response = await axios.post('/users/check-phone', { phoneNumber });
-            return response.data.exists; // Assuming the server responds with an object containing a boolean property 'exists'
-        } catch (error) {
-            console.error('Error checking phone number existence:', error);
-            return true; // Treat any error as phone number exists to prevent moving forward
-        }
-    };
 
     const validateInput = () => {
         let isValid = true;
 
-        // Validate name
+        // Validate  name
         if (!DeliveryData["firstName"]) {
             setNameError("First name is required");
             isValid = false;
@@ -117,36 +81,25 @@ const RegisterForm = () => {
 
         // Validate email
         if (!registerData["Email"]) {
-            setEmailError("Email is required");
+            setEmailErrorInput("email required");
             isValid = false;
-        } else {
-            const emailExists =  checkEmailExists(registerData["Email"]);
-            if (emailExists) {
-                setEmailError("User with this email already exists");
-                isValid = false;
-            } else {
-                setEmailError(null);
-            }
-        }
+        } else if (emailError === "User with this email already exists") {
+            setEmailErrorInput("this email already exists")
+            isValid = false;
 
-        // Validate phone number
-        // Validate phone number
-        if (!deliveryData.phoneNumber) {
-            setPhoneError("Phone number is required");
+        }
+        else if (emailError === "User with this email already exists") {
+            setEmailErrorInput("this email already exists")
             isValid = false;
-        } else {
-            const phoneExists =  checkPhoneExists(deliveryData.phoneNumber);
-            if (phoneExists) {
-                setPhoneError("User with this phone number already exists");
-                isValid = false;
-            } else {
-                setPhoneError(null);
-            }
+
+        }
+        else {
+            setEmailErrorInput(null);
         }
 
         // Validate password
         if (!registerData["password"]) {
-            setPasswordError("Password is required");
+            setPasswordError("Phone number is required");
             isValid = false;
         } else {
             setPasswordError(null);
@@ -162,11 +115,8 @@ const RegisterForm = () => {
         } else {
             setPasswordConfirmError(null);
         }
-
         return isValid;
     };
-
-
     useEffect(() => {
         if (currentStep === 2) {
             submitRegisterData();
@@ -183,8 +133,9 @@ const RegisterForm = () => {
                     {" "}
                     you need account to mange your order
                 </p>
-                <p className="text-red-600">{phoneError}</p>
-                <div className={`mb-2 ${emailError ? 'error' : ''}`}>
+                <p className="text-red-500">{emailErrorInput}</p>
+
+                <div className={`mb-2 ${nameError ? 'error' : ''}`}>
                     <TextField
                         label="Name"
                         margin="normal"
@@ -198,16 +149,14 @@ const RegisterForm = () => {
                     />
 
                 </div>
-
-                <div className="mb-2">
-                    <p className="text-red-600"> {emailError}</p>
+                <div className={`mb-2 ${emailErrorInput ? 'error' : ''}`}>
                     <TextField
                         label="Email"
                         margin="normal"
                         variant="outlined"
-                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${emailError ? 'border-red-500 bg-red-100' : ''
+                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${emailErrorInput ? 'border-red-500 bg-red-100' : ''
                             }`}
-                        onInput={() => setEmailError(null)}
+                        onInput={() => setEmailErrorInput(null)}
                         value={registerData["Email"]}
                         onChange={(e) => setRegisterData({ ...registerData, "Email": e.target.value })}
                     />
