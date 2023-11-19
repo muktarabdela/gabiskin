@@ -9,7 +9,7 @@ const stickerSchema = new mongoose.Schema({
     },
     size: {
         type: String,
-        enum: ['small', 'medium', 'large'],
+        enum: ['small', 'medium', 'large', 'half_package', 'regular_full_package', 'premium'],
     },
     price: Number,
     imageUrl: String,

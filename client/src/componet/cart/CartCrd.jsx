@@ -5,8 +5,6 @@ import Header from "../header/Header";
 import { Link } from "react-router-dom";
 
 function Cart() {
-    const [isAuthenticationPopupVisible, setIsAuthenticationPopupVisible] = useState(false);
-
     const cartStickers = useSelector((state) => state.cart.stickers);
     const dispatch = useDispatch();
 
@@ -14,7 +12,7 @@ function Cart() {
 
     };
 
-    const handleRemoveFromCart = (itemId, itemPrice) => {
+    const handleRemoveFromCart = (itemId) => {
         dispatch(removeFromCart(itemId));
         const newTotalQuantity = cartStickers.reduce((total, sticker) => total + sticker.quantity, 0);
         updateCartCount(newTotalQuantity);
@@ -28,11 +26,11 @@ function Cart() {
         dispatch(decrementQuantity(itemId));
         dispatch(decreaseTotalPrice(itemPrice));
     };
-    const toggleAuthenticationPopup = () => {
-        setIsAuthenticationPopupVisible(!isAuthenticationPopupVisible);
-    };
 
+    const totalAmountWithoutDiscount = cartStickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);
 
+    const totalAmountWithDiscount = totalAmountWithoutDiscount * 0.8;
+    console.log(totalAmountWithoutDiscount)
 
     return (
         <>
@@ -78,7 +76,7 @@ function Cart() {
                                                 <input
                                                     className="h-8 w-8 border  text-black text-center text-[1.1em] outline-none"
                                                     type="number"
-                                                    value={sticker.quantity}
+                                                    defaultValue={sticker.quantity}
                                                     min={1}
                                                 />
                                                 <span
@@ -99,7 +97,7 @@ function Cart() {
                                             >
                                                 <svg
                                                     className="w-[2.5em] ml-5"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
 
@@ -114,19 +112,20 @@ function Cart() {
                                 <p className="text-gray-700">Subtotal</p>
 
                                 <p className="text-gray-700">
-                                    {cartStickers.reduce((subtotal, sticker) => subtotal + (sticker.price * sticker.quantity), 0)} ETB
+                                    {totalAmountWithoutDiscount.toFixed(2)} ETB
                                 </p>
                             </div>
                             <div className="flex justify-between">
-                                <p className="text-gray-700">Shipping</p>
-                                <p className="text-gray-700">100 ETB</p>
+                                <p className="text-gray-700">Delivery</p>
+                                <p className="text-gray-700">Free</p>
                             </div>
                             <hr className="my-4" />
                             <div className="flex justify-between">
-                                <p className="text-lg font-bold text-black">Total</p>
-                                <div className>
-                                    <p className="mb-1 text-lg font-bold text-black">
-                                        {(cartStickers.reduce((subtotal, sticker) => subtotal + (sticker.price * sticker.quantity), 0) + 100).toFixed(2)} ETB
+                                <p className="text-lg font-bold text-black">20% initial payment</p>
+                                <div>
+                                    <p className="text-gray-700 text-lg">
+                                        {totalAmountWithDiscount.toFixed(2)} ETB
+
                                     </p>
                                 </div>
                             </div>

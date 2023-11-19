@@ -1,96 +1,67 @@
-// UserAccountPage.js
 import React, { useState, useEffect } from 'react';
-import axios from '../../Axios'; // Import your Axios instance
-import { useParams } from 'react-router-dom';
+import axios from '../../Axios';
+import { useParams, useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
+import { jwtDecode } from 'jwt-decode';
+import AuthForm from '../auth/AuthForm';
+import UserAccountDetails from './UserAccountDetails';
 
 const Account = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const { userId } = useParams();
+    const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
     useEffect(() => {
-        axios.get(`/users/get-user-info/${userId}`)
-            .then(response => {
-                setUserInfo(response.data);
+        const token = localStorage.getItem('acc2essToken');
+
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                console.log('Decoded Token:', decodedToken);
+
+                const userIdFromToken = decodedToken.userId;
+
+                if (userIdFromToken) {
+                    // User is registered, fetch and display user information
+                    axios
+                        .get(`/users/get-user-info/${userIdFromToken}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            },
+                        })
+                        .then(response => {
+                            setUserInfo(response.data);
+                            setLoading(false);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching user data:', error);
+                            setLoading(false);
+                        });
+                } else {
+                    // userId is not available, indicating a new user
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
                 setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-                setLoading(false);
-            });
-    }, [userId]);
+            }
+        } else {
+            // No token available, indicating a new user
+            setLoading(false);
+        }
+    }, [userId, navigate]); 
 
     if (loading) {
         return <p>Loading...</p>;
     }
 
     if (!userInfo) {
-        return <p>User not found</p>;
+        return <AuthForm />;
     }
 
+    // Render user account details if userId is available
     return (
-        <div className="container mx-auto p-8 mt-[60px]">
-            <h1 className="text-3xl font-bold mb-4">User Account</h1>
-
-            {/* User Information */}
-            <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-2">User Information</h2>
-                <p><span className="font-bold">Name:</span> {userInfo.name}</p>
-                <p><span className="font-bold">Email:</span> {userInfo.email}</p>
-                <p><span className="font-bold">Phone:</span> {userInfo.phone}</p>
-            </div>
-
-            {/* Delivery Information */}
-            <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-2">Delivery Information</h2>
-                <p><span className="font-bold">First Name:</span> {userInfo.deliveryInfo.firstName}</p>
-                <p><span className="font-bold">Last Name:</span> {userInfo.deliveryInfo.lastName}</p>
-                <p><span className="font-bold">Phone:</span> {userInfo.deliveryInfo.phone}</p>
-                <p><span className="font-bold">Sub City:</span> {userInfo.deliveryInfo.subCity}</p>
-                <p><span className="font-bold">Delivery Location:</span> {userInfo.deliveryInfo.deliveryLocation}</p>
-            </div>
-
-            {/* Payment Information */}
-            <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-2">Payment Information</h2>
-                <p><span className="font-bold">Payment Status:</span> {userInfo.paymentStatus}</p>
-                <p><span className="font-bold">paymentMethod:</span> {userInfo.paymentMethod}</p>
-
-                <img src={userInfo.receiptScreenshot} alt="" />
-            </div>
-
-            {/* Orders */}
-            <div>
-                <h2 className="text-2xl font-bold mb-2">Orders</h2>
-                {userInfo.orders.length === 0 ? (
-                    <p>No orders found</p>
-                ) : (
-                    <ul>
-                        {userInfo.orders.map(order => (
-                            <li key={order._id} className="mb-4">
-                                <h3 className="text-xl font-bold">Order ID: {order._id}</h3>
-                                <ul>
-                                    {order.stickers.map(sticker => (
-                                        <li key={sticker.id} className="mb-2">
-                                            <p><span className="font-bold">Sticker ID:</span> {sticker.id}</p>
-                                            <p><span className="font-bold">Price:</span> ${sticker.price}</p>
-                                            <p><span className="font-bold">Size:</span> {sticker.size}</p>
-                                            <p><span className="font-bold">Quantity:</span> {sticker.quantity}</p>
-                                            <p><span className="font-bold">Total Price:</span> ${sticker.totalPrice}</p>
-                                            <img
-                                                src={sticker.imageUrl}
-                                                alt={`Sticker ${sticker.id}`}
-                                                className="w-16 h-16 object-cover rounded"
-                                            />
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </div>
+        <UserAccountDetails userInfo={userInfo} />
     );
 };
 

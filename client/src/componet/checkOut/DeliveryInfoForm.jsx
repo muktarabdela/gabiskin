@@ -2,8 +2,16 @@ import { Button, TextField } from "@material-ui/core";
 import { useContext, useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
 import { Link } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 
 const DeliveryForm = () => {
+
+    const token = localStorage.getItem('acc2essToken');
+    const isValidToken = typeof token === 'string' && token.length > 0;
+    const decodedToken = isValidToken ? jwtDecode(token) : null;
+    const userIdFromToken = decodedToken ? decodedToken.userId : null;
+    console.log(userIdFromToken)
+
     const { setStep, DeliveryData, setDeliveryData, submitDeliveryData } = useContext(MultiStepContext)
 
     // State variables for input validation
@@ -114,7 +122,7 @@ const DeliveryForm = () => {
                         setSubCityError(null); // Set subCityError to null when the user selects a subcity
                     }}
                 >
-                    <option value="" disabled selected>Select a Sub City</option>
+                    <option value="" disabled>Select a Sub City</option>
                     <option value="Addis Ketema">Addis Ketema</option>
                     <option value="Akaky Kaliti">Akaky Kaliti</option>
                     <option value="Arada">Arada</option>
@@ -127,6 +135,7 @@ const DeliveryForm = () => {
                     <option value="Yeka">Yeka</option>
                     <option value="Lemi Kura">Lemi Kura</option>
                 </select>
+
             </div>
 
 
@@ -159,6 +168,11 @@ const DeliveryForm = () => {
                         onClick={() => {
                             if (validateInput()) {
                                 submitDeliveryData();
+                            } if (userIdFromToken) {
+                                // User is already registered, move to the payment form
+                                setStep(3);
+                            } else {
+                                // User is not registered, move to the next step in the registration process
                                 setStep(2);
                             }
                         }}

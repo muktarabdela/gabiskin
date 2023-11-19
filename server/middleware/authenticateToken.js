@@ -10,14 +10,21 @@ async function authenticateToken(req, res, next) {
         return res.status(401).json({ error: "You are not authorized" })
     }
     const token = authHeader.split(" ")[1];
-    // console.log(token);
-    // console.log(authHeader);
+    console.log('Received Token:', token);
+
     try {
-        const { email, password } = jwt.verify(token, process.env.JWT_KEY);
-        req.user = { email, password }
+        const decodedToken = jwt.verify(token, process.env.JWT_KEY);
+        console.log('Decoded Token:', decodedToken);
+
+        const { email, userId } = decodedToken;
+        req.user = { email, userId }
+
         next()
     } catch (error) {
-        return res.status(403).json({ error: "You are not authorized" })
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token has expired' });
+        }
+        return res.status(403).json({ error: 'You are not authorized' });
     }
 
 }

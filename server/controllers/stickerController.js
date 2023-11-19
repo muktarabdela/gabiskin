@@ -2,6 +2,7 @@ import Stickers from "../models/stickerModel.js";
 import Cloudinary from '../config/clouddinary.config.js';
 import { uploadToCloudinary } from '../config/clouddinary.config.js';
 import mongoose from 'mongoose';
+import User from "../models/userModel.js";
 
 // Get all stickers
 
@@ -27,7 +28,7 @@ const fetchImages = async (req, res) => {
         do {
             const options = {
                 type: 'upload',
-                prefix: 'Works/',
+                prefix: 'half/',
                 max_results: 500,
                 next_cursor: nextCursor,
             };
@@ -39,8 +40,8 @@ const fetchImages = async (req, res) => {
         const insertedImages = [];
         for (const image of allImages) {
             const newSticker = new Stickers({
-                name: "Full_Skin",
-                category: "works",
+                name: "half",
+                category: "half",
                 imageUrl: image.secure_url,
             });
             const savedImage = await newSticker.save();
@@ -61,11 +62,11 @@ const uploadMultiple = async (req, res) => {
         const insertedStickers = [];
         for (const sticker of stickerData) {
             // Upload the image to Cloudinary and get the secure URL
-            const imageUrl = await uploadToCloudinary(sticker.imagPath, "programming/");
+            const imageUrl = await uploadToCloudinary(sticker.imagPath, "half/");
 
             const newSticker = new Stickers({
-                name: "minSticker",
-                category: "programming",
+                name: "half",
+                category: "half",
                 size: sticker.size,
                 price: sticker.price,
                 imageUrl: imageUrl, // Assign the secure URL
@@ -138,6 +139,29 @@ const postCustomData = async (req, res) => {
     }
 };
 
+const updatePaymentStatus = async  (req, res) => {
+    const { userId } = req.params;
+    const { newPaymentStatus } = req.body;
+
+    try {
+        // Find the user by userId and update the paymentStatus
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { paymentStatus: newPaymentStatus },
+            { new: true } // Return the updated user
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ message: 'Payment status updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error('Error updating payment status:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 export {
     getCategoryStickers,
@@ -145,4 +169,5 @@ export {
     updateSticker,
     fetchImages,
     postCustomData,
+    updatePaymentStatus
 }

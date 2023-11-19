@@ -5,6 +5,7 @@ import Contact from "../componet/Contact/Contact"
 import Partner from "../componet/Partener/Partner"
 import Advantage from "../componet/Advantage/Adventage"
 import Custom from "../componet/custom/Custom"
+import HalfStickers from "../componet/stickers/HalfStickers"
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <Custom />
       <Hot />
       <Category />
+      <HalfStickers />
       <Partner />
       <Contact />
       <Advantage />

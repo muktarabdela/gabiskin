@@ -16,7 +16,6 @@ app.get('/', (req, res) => {
 
 // users
 
-import authenticateToken from './middleware/authenticateToken.js';
 import userRouter from './routes/userRoute.js';
 app.use('/api/users', userRouter);
 
@@ -24,8 +23,6 @@ app.use('/api/users', userRouter);
 import stickersRouter from './routes/stickersRouter.js';
 app.use('/api/stickers', stickersRouter);
 
-import paymentRouter from "./routes/paymentRouter.js"
-app.use('/api/payment', paymentRouter)
 
 // server
 const port = process.env.PORT || 3000;

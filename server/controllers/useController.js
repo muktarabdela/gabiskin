@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import * as dotenv from 'dotenv';
+import mongoose from 'mongoose';
 dotenv.config();
 
 // Handle user registration
@@ -21,18 +22,12 @@ const registerUser = async (req, res) => {
         if (!confirmPassword) {
             return res.status(400).json({ error: 'Confirm password required' });
         }
-        if (!phone) {
-            return res.status(400).json({ error: 'Phone number required' });
-        }
-        if (!name) {
-            return res.status(400).json({ error: 'Name required' });
-        }
-        if (!deliveryInfo) {
-            return res.status(400).json({ error: 'Delivery info required' });
-        }
-        if (!orders) {
-            return res.status(400).json({ error: 'Orders is required' });
-        }
+        // if (!phone) {
+        //     return res.status(400).json({ error: 'Phone number required' });
+        // }
+        // if (!name) {
+        //     return res.status(400).json({ error: 'Name required' });
+        // }
 
         // Validate email
         const emailPattern = /^\S+@\S+\.\S+$/;
@@ -71,14 +66,19 @@ const registerUser = async (req, res) => {
             confirmPassword,
             deliveryInfo,
             orders,
+            isNewUser: true,
         });
 
+        console.log('New user ID:', newUser._id);
+
         await newUser.save();
+        const expirationTime = '1d';
 
-        // You can add additional logic here based on your needs
 
-        const token = jwt.sign({ email, phone }, process.env.JWT_KEY);
-        return res.status(201).json({ message: 'User registered successfully', token, newUser });
+        const token = jwt.sign({ email, userId: newUser._id }, process.env.JWT_KEY, { expiresIn: expirationTime });
+
+        return res.status(200).json({ message: 'User registered successfully', token, newUser });
+
     } catch (error) {
         console.error('Error during user registration:', error);
         return res.status(500).json({ message: 'Failed to create a new user' });
@@ -92,30 +92,37 @@ const loginUser = async (req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
+
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const passwordMatch = bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: '1h' });
 
-        res.status(201).json({
+        let isNewUser = false;
+
+        const expirationTime = '1d';
+
+        const token = jwt.sign({ email, userId: user._id }, process.env.JWT_KEY, { expiresIn: expirationTime });
+
+        res.status(200).json({
             message: 'login success',
             token,
             user: {
                 email: user.email,
-                password: user.password,
                 userId: user._id
             }
-        })
+        });
     } catch (error) {
+        console.error('Error during user login:', error);
         res.status(500).json({ error: 'Login failed' });
     }
 };
+
 
 // post payment info
 const paymentInfo = async (req, res) => {
@@ -124,6 +131,11 @@ const paymentInfo = async (req, res) => {
         const { userId, paymentStatus, paymentMethod, receiptScreenshot } = req.body;
         // Find the user in the database by userId
         const user = await User.findById(userId);
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found.' });
+        }
 
         // Update the user's payment information
         user.paymentStatus = paymentStatus;
@@ -141,18 +153,21 @@ const paymentInfo = async (req, res) => {
     }
 }
 
+
 // server/controllers/userController.js
 
 const getUserInfo = async (req, res) => {
     try {
         const userId = req.params.userId;
-        // Assume you have a User model with the necessary fields and relations
-        const userInfo = await User.findById(userId).populate('orders.stickers');
+        console.log('userId:', userId);
 
+        const userInfo = await User.findById(userId).populate('orders.stickers');
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
         if (!userInfo) {
             return res.status(404).json({ message: 'User not found' });
         }
-
         res.status(200).json(userInfo);
     } catch (error) {
         console.error('Error fetching user information:', error);
@@ -160,8 +175,30 @@ const getUserInfo = async (req, res) => {
     }
 };
 
+// updateUserData
+
+// controllers/userController.js
 
 
-export { registerUser, loginUser, paymentInfo, getUserInfo }
+const updateUserData = async (req, res) => {
+    const userId = req.params.userId;
+    const userData = req.body;
+
+    try {
+        // Find the user by ID and update the data
+        const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ message: 'User data updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData }
 
 

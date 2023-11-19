@@ -4,6 +4,14 @@ import axios from "../../Axios"
 import { addToCart } from '../../store/CartSlice';
 
 import {
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    Typography,
+} from "@material-tailwind/react";
+
+import {
     Popover,
     PopoverHandler,
     PopoverContent,
@@ -17,7 +25,6 @@ const Custom = () => {
     const [selectedSize, setSelectedSize] = useState('small');
     const [price, setPrice] = useState(35);
     const dispatch = useDispatch();
-
 
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
@@ -61,13 +68,11 @@ const Custom = () => {
                 );
 
                 console.log(`Image ${i + 1} uploaded:`, response.data.secure_url);
-
                 const customDataBase = await axios.put('/stickers/get-custom', {
                     imageUrl: response.data.secure_url,
                     ...customStickerData,
                 });
                 console.log(customDataBase.data.newSticker)
-
                 dispatch(addToCart({
                     _id: customDataBase.data.newSticker._id,
                     price: customDataBase.data.newSticker.price,
@@ -88,18 +93,36 @@ const Custom = () => {
 
 
     return (
-        <div className="flex flex-col items-center w-full my-10 p-0">
+        <div className="flex flex-col items-center my-10 p-0">
             <Popover>
-                <div className='bg-blue-100 p-7 rounded'>
-                    <p className="text-blue-800 font-semibold text-[26px]">🎨 Customize Your Stickers!</p>
-                    <p className="text-blue-700  text-[18px]">Send us any image, and we'll transform it into high-quality stickers.</p>
-                    <p className="text-blue-700 my-2">Express yourself with unique, personalized designs!</p>
-                    <PopoverHandler >
-                        <Button className='bg-red-600 ml-[14em] my-2'>Send Custom Image</Button>
-                    </PopoverHandler>
-                </div>
-                <PopoverContent className=" grid w-full h-[40em] md:h-[30em] md:w-[50em] sm:w-[28rem] lg:h-[30em] lg:w-[50em] grid-cols-1 sm:grid-cols-2 overflow-hidden p-0">
+                <Card className="mt-6 w-96">
+                    <CardHeader color="blue-gray" className="relative h-56">
+                        <img
+                            src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+                            alt="card-image"
+                        />
+                    </CardHeader>
+                    <CardBody>
+                        <Typography variant="h5" color="blue-gray" className="mb-2">
+                            UI/UX Review Check
+                        </Typography>
+                        <Typography>
+                            The place is close to Barceloneta Beach and bus stop just 2 min by
+                            walk and near to &quot;Naviglio&quot; where you can enjoy the main
+                            night life in Barcelona.
+                        </Typography>
+                    </CardBody>
+                    <CardFooter className="pt-0">
+                        <PopoverHandler >
+                            <Button className='bg-red-600 ml-[14em] my-2'>Send Image</Button>
+                        </PopoverHandler>
+                    </CardFooter>
+                </Card>
+
+
+                <PopoverContent className="mt-6 w-96">
                     <p className='text-black text-[1.5em] mx-auto mt-[2em] font-semibold'> choose your convince size and price</p>
+
                     <div className='mx-auto'>
                         <div className='text-black text-[1.4em]'>
                             <Radio
@@ -133,6 +156,7 @@ const Custom = () => {
                             Price: {price} ETB
                         </p>
                     </div>
+
                     <div className="mt-[1em] md:mt-[9em] lg:mt-[8em] pl-[9.5em]">
                         <label
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -152,13 +176,6 @@ const Custom = () => {
                         </button>
                     </div>
 
-                    <div className="min-h-full !w-full p-3 h-[15em]">
-                        <img
-                            src="https://images.unsplash.com/photo-1544928147-79a2dbc1f389?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dGVhbSUyMGJ1aWxkaW5nfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60"
-                            alt="image"
-                            className="h-full w-full rounded-lg object-cover"
-                        />
-                    </div>
                 </PopoverContent>
             </Popover>
         </div>

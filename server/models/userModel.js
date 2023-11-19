@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
         maxlength: 50,
     },
     email: {
@@ -14,7 +13,6 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: true,
         maxlength: 15,
     },
     password: {
@@ -28,29 +26,31 @@ const userSchema = new mongoose.Schema({
     deliveryInfo: {
         firstName: {
             type: String,
-            required: true,
-            maxlength: 50,
+            required: false,
         },
         lastName: {
             type: String,
-            required: true,
-            maxlength: 50,
+            required: false,
         },
         phone: {
             type: String,
-            required: true,
-            maxlength: 15,
+            required: false,
         },
         subCity: {
             type: String,
             enum: ['Addis Ketema', 'Akaky Kaliti', 'Arada', 'Bole', 'Gullele', 'Kiros', 'Kolfie Keranio', 'Lideta', 'Nifas Silk-Lafto', 'Yeka', 'Lemi Kura'],
-            required: true,
+            required: false,
         },
         deliveryLocation: {
             type: String,
-            required: true,
-            maxlength: 255,
+            required: false,
         },
+        deliveryStatus: {
+            type: String,
+            enum: ['Pending', 'Paid', 'Failed'],
+            default: 'Pending',
+        },
+    
     },
     orders: [
         {
@@ -80,6 +80,10 @@ const userSchema = new mongoose.Schema({
 
     receiptScreenshot: {
         type: String, // Assuming you store the image URL/path
+    },
+    isNewUser: {
+        type: Boolean,
+        default: true,
     },
 });
 

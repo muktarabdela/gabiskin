@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Badge, MenuItem, Menu } from '@material-ui/core';
-import { AccountCircle, ShoppingCart, Home as HomeIcon, ContactPhone, AttachMoney } from '@material-ui/icons';
+import { AppBar, Toolbar, IconButton, Badge, MenuItem, Menu } from '@material-ui/core';
+import { AccountCircle, ShoppingCart, Home as HomeIcon, } from '@material-ui/icons';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, selectCartCount } from '../../store/CartSlice';
-import logo from "../../../public/images/logo.png"
+import { selectCartCount } from '../../store/CartSlice';
 import { Box } from '@mui/material';
-const Header = ({ updateCartCount }) => {
-    const dispatch = useDispatch();
-    const cartCount = useSelector(selectCartCount);
+import { selectUserId } from '../../store/userSlice'
+import AccountLink from '../Account/AccountLink';
+import { useSelector } from 'react-redux';
 
+const Header = () => {
+    const cartCount = useSelector(selectCartCount);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -41,7 +40,7 @@ const Header = ({ updateCartCount }) => {
                         to="/">
                         <img
                             className=' w-[90px] h-[60px]'
-                            src={logo} alt="logo" />
+                            src="" alt="logo" />
 
                     </Link>
 
@@ -72,27 +71,24 @@ const Header = ({ updateCartCount }) => {
 
                 </div>
                 <div className='absolute top-2 right-6 text-black'>
-                    <Link to="/account">
-                        <IconButton
-                            color="inherit">
-                            <AccountCircle />
-                        </IconButton>
-                    </Link>
+                    <AccountLink />
                     <Link to="/cart">
                         <IconButton color="inherit">
-                            <Badge badgeContent={cartCount} color="secondary">
+                            <Badge badgeContent={cartCount} color="secondary" overlap="rectangular">
                                 <ShoppingCart />
                             </Badge>
+
                         </IconButton>
                     </Link>
                 </div>
 
                 {isMobile && (
                     <div className='md:hidden lg:hidden'>
-                        <IconButton edge="end" color="black"
-                            onClick={handleMenu}>
+                        <IconButton edge="end" color="primary" onClick={handleMenu}>
                             <MenuIcon />
                         </IconButton>
+
+
                         <Menu
 
                             id="menu-appbar"

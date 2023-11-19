@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import AddToCartPopup from '../popup/AddToCartPopup';
 
-function StickerCard({ sticker, currentPage, stickersPerPage, onPageChange  }) {
+function StickerCard({ sticker, currentPage, stickersPerPage, onPageChange }) {
     const [selectedStickerId, setSelectedStickerId] = useState(sticker._id);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 

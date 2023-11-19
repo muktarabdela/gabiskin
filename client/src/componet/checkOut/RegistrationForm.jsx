@@ -7,7 +7,15 @@ import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import axios from "../../Axios";
 import { setUserId, setEmailErrorData, setPhoneErrorData } from '../../store/userSlice';
+    import { jwtDecode } from 'jwt-decode';
+
 const RegisterForm = () => {
+
+    const token = localStorage.getItem('acc2essToken');
+    const isValidToken = typeof token === 'string' && token.length > 0;
+    const decodedToken = isValidToken ? jwtDecode(token) : null;
+    const userIdFromToken = decodedToken ? decodedToken.userId : null;
+    console.log(userIdFromToken)
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
 
     const deliveryData = useSelector(selectDelivery);
@@ -54,8 +62,11 @@ const RegisterForm = () => {
             }
             // make API 
             const response = await axios.post('/users/register', userData);
+            const token = response.data.token;
+            console.log("console fro token", token)
+
+            localStorage.setItem('acc2essToken', token);
             const newUserId = response.data.newUser._id;
-            // console.log(newUserId)
             dispatch(setUserId(newUserId));
 
             console.log('Response from server:', response.data)

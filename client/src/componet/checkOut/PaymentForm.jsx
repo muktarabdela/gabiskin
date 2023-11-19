@@ -1,4 +1,4 @@
-import { Button, Tooltip } from "@material-ui/core";
+import { Button, CircularProgress, Tooltip } from "@material-ui/core";
 import { useContext, useEffect, useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
 import axios from "../../Axios";
@@ -8,25 +8,81 @@ import boa from "../../../public/images/boa.png"
 import { useSelector } from 'react-redux';
 import { selectUserId } from '../../store/userSlice.js';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { selectDelivery } from '../../store/deliverySlice';
+import { selectCartItems } from "../../store/CartSlice";
 
 const PaymentForm = () => {
     const navigate = useNavigate();
 
+    const token = localStorage.getItem('acc2essToken');
+    const isValidToken = typeof token === 'string' && token.length > 0;
+    const decodedToken = isValidToken ? jwtDecode(token) : null;
+    const userIdFromToken = decodedToken ? decodedToken.userId : null;
+
+    const deliveryData = useSelector(selectDelivery);
+    const cartItems = useSelector(selectCartItems);
+    console.log(deliveryData)
+    useEffect(() => {
+        const checkUserRegistration = async () => {
+            if (userIdFromToken) {
+                try {
+                    const updatedUserData = {
+                        deliveryInfo: {
+                            firstName: deliveryData.firstName,
+                            lastName: deliveryData.lastName,
+                            phone: deliveryData.phoneNumber,
+                            subCity: deliveryData.subCity,
+                            deliveryLocation: deliveryData.deliveryLocation,
+                        },
+                        orders: [
+                            {
+                                stickers: cartItems.map(item => ({
+                                    id: item.id,
+                                    price: item.price,
+                                    size: item.size,
+                                    quantity: item.quantity,
+                                    totalPrice: item.totalPrice,
+                                    category: item.category,
+                                    imageUrl: item.imageUrl,
+                                })),
+                            },
+                        ],
+                    };
+
+
+
+                    const updatedUserDataResponse = await axios.put(`/users/${userIdFromToken}`, updatedUserData, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    console.log('User data updated:', updatedUserDataResponse.data);
+                } catch (error) {
+                    // Handle errors
+                    console.error('Error updating user data:', error);
+                }
+            }
+        };
+
+        checkUserRegistration();
+    }, [userIdFromToken, token, deliveryData, cartItems]);
+
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const { setStep, } = useContext(MultiStepContext)
     const [images, setImages] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState(null)
     const userId = useSelector(selectUserId);
+    const userIdToUse = userIdFromToken || userId;
 
     const handlePaymentMethodChange = (e) => {
         const selectedPaymentMethod = e.target.value;
         setPaymentMethod(selectedPaymentMethod);
     };
     console.log(userId)
-    useEffect(() => {
-        console.log('Payment Method in useEffect:', paymentMethod);
-
-    }, [paymentMethod])
 
     const handleImageChange = (e) => {
         const files = e.target.files;
@@ -37,7 +93,7 @@ const PaymentForm = () => {
             console.error('No images selected for upload.');
             return;
         }
-
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('file', images[0]);
         formData.append('upload_preset', 'Receipt_screenshot');
@@ -54,11 +110,17 @@ const PaymentForm = () => {
                 }
             );
             console.log('Image uploaded:', response.data.secure_url);
+            const token = localStorage.getItem('acc2essToken');
 
             const paymentInfo = await axios.post('/users/paymentInfo', {
-                userId: userId,
+                userId: userIdToUse,
                 receiptScreenshot: response.data.secure_url,
                 paymentMethod: paymentMethod,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
             });
             navigate(`/account/${userId}`, { replace: true });
             window.location.reload();
@@ -67,8 +129,6 @@ const PaymentForm = () => {
             console.error('Error uploading image:', error);
         }
     };
-
-
 
     const handlePaymentSelect = (payment) => {
         setSelectedPayment(payment);
@@ -148,7 +208,7 @@ const PaymentForm = () => {
                         name="SubCity"
                         className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
                         onChange={handlePaymentMethodChange}
-                        value={paymentMethod || ''} // Set the selected value
+                        value={paymentMethod || ''}
                     >
                         <option value="" disabled>Select payment method</option>
                         <option value="Telebirr">Tele birr</option>
@@ -161,7 +221,7 @@ const PaymentForm = () => {
                     <div>
                         <label
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            for="multiple_files"
+                            htmlFor="multiple_files"
                         >
                             Receipt screenshot
                         </label>
@@ -187,17 +247,27 @@ const PaymentForm = () => {
                             Back
                         </Button>
                     </div>
+
                     <div className="mx-auto">
                         <Button
                             className=""
                             variant="contained"
                             color="primary"
                             onClick={() => {
+                                setIsLoading(true); // Set loading state to true when the Pay button is clicked
                                 handleUpload();
                                 setStep(3);
                             }}
+                            disabled={isLoading} // Disable the button when loading
                         >
-                            Pay
+                            {isLoading ? (
+                                <>
+                                    <CircularProgress size={20} color="inherit" />
+                                    <span className="ml-3">Processing...</span>
+                                </>
+                            ) : (
+                                'Pay'
+                            )}
                         </Button>
                     </div>
                 </div>
