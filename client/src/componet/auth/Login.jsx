@@ -9,7 +9,6 @@ const Login = ({ onToggleForm }) => {
         email: '',
         password: '',
         name: '',
-        phone: '', // 
     });
 
     const handleChange = (e) => {

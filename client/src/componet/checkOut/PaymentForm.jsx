@@ -6,14 +6,16 @@ import telebir from "../../../public/images/telebirr.png"
 import cbe from "../../../public/images/cbe.jpeg"
 import boa from "../../../public/images/boa.png"
 import { useSelector } from 'react-redux';
-import { selectUserId } from '../../store/userSlice.js';
+import { selectUserId, setErrorData } from '../../store/userSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
+import { useDispatch } from 'react-redux';
 
 const PaymentForm = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const token = localStorage.getItem('acc2essToken');
     const isValidToken = typeof token === 'string' && token.length > 0;
@@ -22,8 +24,19 @@ const PaymentForm = () => {
 
     const deliveryData = useSelector(selectDelivery);
     const cartItems = useSelector(selectCartItems);
-    console.log(deliveryData)
-    
+    const error = useSelector(state => state.user.Error);
+
+    const [paymentMethodError, setPaymentMethodError] = useState(null);
+    const [imageError, setImageError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(true);
+
+    const [selectedPayment, setSelectedPayment] = useState(null);
+    const { setStep, } = useContext(MultiStepContext)
+    const [images, setImages] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState(null)
+    const userId = useSelector(selectUserId);
+
     useEffect(() => {
         const checkUserRegistration = async () => {
             if (userIdFromToken) {
@@ -51,9 +64,8 @@ const PaymentForm = () => {
                         ],
                     };
 
-
-
-                    const updatedUserDataResponse = await axios.patch(`/users/${userIdFromToken}`, updatedUserData, {
+                    const updatedUserDataResponse = await axios.patch(`/users/${userIdFromToken}`,
+                        updatedUserData, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -71,30 +83,36 @@ const PaymentForm = () => {
         checkUserRegistration();
     }, [userIdFromToken, token, deliveryData, cartItems]);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedPayment, setSelectedPayment] = useState(null);
-    const { setStep, } = useContext(MultiStepContext)
-    const [images, setImages] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState(null)
-    const userId = useSelector(selectUserId);
     const userIdToUse = userIdFromToken || userId;
 
     const handlePaymentMethodChange = (e) => {
         const selectedPaymentMethod = e.target.value;
         setPaymentMethod(selectedPaymentMethod);
+        setPaymentMethodError(null);
     };
-    console.log(userId)
 
     const handleImageChange = (e) => {
         const files = e.target.files;
         setImages(files);
+        setImageError(null);
     };
     const handleUpload = async () => {
-        if (!images || images.length === 0) {
-            console.error('No images selected for upload.');
+        if (!paymentMethod) {
+            setPaymentMethodError('Payment method is required');
             return;
+        } else {
+            setPaymentMethodError(null);
         }
+
+        if (!images || images.length === 0) {
+            setImageError('Image file is required');
+            return;
+        } else {
+            setImageError(null);
+        }
+
         setIsLoading(true);
+
         const formData = new FormData();
         formData.append('file', images[0]);
         formData.append('upload_preset', 'Receipt_screenshot');
@@ -128,6 +146,8 @@ const PaymentForm = () => {
             console.log(paymentInfo);
         } catch (error) {
             console.error('Error uploading image:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -136,9 +156,17 @@ const PaymentForm = () => {
     };
     return (
         <div className=" flex flex-col items-center justify-center bg-gray-100">
+            {isSubmitting && (
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, padding: 10, background: '#fff', textAlign: 'center' }}>
+                    <CircularProgress size={20} color="inherit" />
+                    <span className="ml-3">It takes a minute. Please wait until the end...</span>
+                </div>
+            )}
+
             <p className="text-lg text-gray-700 leading-tight text-center mt-8 mb-5">
                 Easy payment method
             </p>
+            <p className="text-red-500 my-2">{error}</p>
 
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-lg font-semibold mb-4 text-blue-500">Payment Options</h2>
@@ -243,7 +271,8 @@ const PaymentForm = () => {
                 <div className="mb-2">
                     <select
                         name="SubCity"
-                        className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
+                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 ${paymentMethodError ? 'border-red-500' : 'border-gray-400'}`}
+
                         onChange={handlePaymentMethodChange}
                         value={paymentMethod || ''}
                     >
@@ -252,24 +281,27 @@ const PaymentForm = () => {
                         <option value="CBE">CBE</option>
                         <option value="BOA">BOA</option>
                     </select>
+                    {paymentMethodError && <p className="text-red-500 text-sm mt-1">{paymentMethodError}</p>}
 
                 </div>
                 <div>
                     <div>
                         <label
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            htmlFor="multiple_files"
+                            className={`block mb-2 text-sm font-medium text-gray-900 dark:text-white ${imageError ? 'text-red-500' : ''}`}
+
                         >
                             Receipt screenshot
                         </label>
                         <input
                             onChange={handleImageChange}
-                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            className={`block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 ${imageError ? 'border-red-500' : ''}`}
+
                             id="multiple_files"
                             type="file"
                             multiple
                         />
                     </div>
+                    {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
 
 
                 </div>
@@ -277,12 +309,16 @@ const PaymentForm = () => {
                 <div className="flex mt-[2em]">
                     <div className="mx-auto">
                         <Button
-                            onClick={() => setStep(2)}
+                            onClick={() => {
+                                dispatch(setErrorData(null));
+                                setStep(2);
+                            }}
                             variant="contained"
                             color="default"
                         >
                             Back
                         </Button>
+
                     </div>
 
                     <div className="mx-auto">
@@ -291,11 +327,15 @@ const PaymentForm = () => {
                             variant="contained"
                             color="primary"
                             onClick={() => {
-                                setIsLoading(true); // Set loading state to true when the Pay button is clicked
-                                handleUpload();
-                                setStep(3);
+                                if (paymentMethodError || imageError) {
+                                    console.error('Please provide valid payment method and image');
+                                } else {
+                                    setIsLoading(true);
+                                    handleUpload();
+                                    setStep(3);
+                                }
                             }}
-                            disabled={isLoading} // Disable the button when loading
+                            disabled={isLoading || paymentMethodError || imageError}
                         >
                             {isLoading ? (
                                 <>
@@ -306,6 +346,7 @@ const PaymentForm = () => {
                                 'Pay'
                             )}
                         </Button>
+
                     </div>
                 </div>
             </div>

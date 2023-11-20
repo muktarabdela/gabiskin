@@ -12,16 +12,13 @@ export const userSlice = createSlice({
         setUserId: (state, action) => {
             state.userId = action.payload;
         },
-        setEmailErrorData: (state, action) => {
-            state.emailError = action.payload;
-        },
-        setPhoneErrorData: (state, action) => {
-            state.phoneError = action.payload;
+        setErrorData: (state, action) => {
+            state.Error = action.payload;
         },
     },
 });
 
-export const { setUserId, setEmailErrorData, setPhoneErrorData } = userSlice.actions;
+export const { setUserId, setErrorData } = userSlice.actions;
 
 export const selectUserId = (state) => state.user.userId;
 

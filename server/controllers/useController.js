@@ -182,15 +182,26 @@ const getUserInfo = async (req, res) => {
 
 const updateUserData = async (req, res) => {
     const userId = req.params.userId;
-    const userData = req.body;
+    const { deliveryInfo, orders } = req.body;
 
     try {
         // Find the user by ID and update specific fields without replacing the entire document
-        const updatedUser = await User.findByIdAndUpdate(userId, { $set: userData }, { new: true });
+        const user = await User.findById(userId);
 
-        if (!updatedUser) {
+
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        // Update deliveryInfo if provided
+        if (deliveryInfo) {
+            user.deliveryInfo = { ...user.deliveryInfo, ...deliveryInfo };
+        }
+        // Update orders if provided
+        if (orders) {
+            user.orders = user.orders.concat(orders);
+        }
+
+        const updatedUser = await user.save();
 
         return res.status(200).json({ message: 'User data updated successfully', user: updatedUser });
     } catch (error) {

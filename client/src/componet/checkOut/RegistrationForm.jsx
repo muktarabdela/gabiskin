@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import axios from "../../Axios";
-import { setUserId, setEmailErrorData, setPhoneErrorData } from '../../store/userSlice';
-    import { jwtDecode } from 'jwt-decode';
+import { setUserId, setErrorData } from '../../store/userSlice';
+import { jwtDecode } from 'jwt-decode';
 
 const RegisterForm = () => {
 
@@ -15,15 +15,12 @@ const RegisterForm = () => {
     const isValidToken = typeof token === 'string' && token.length > 0;
     const decodedToken = isValidToken ? jwtDecode(token) : null;
     const userIdFromToken = decodedToken ? decodedToken.userId : null;
-    console.log(userIdFromToken)
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
 
     const deliveryData = useSelector(selectDelivery);
     const registrationData = useSelector(selectRegistration);
     const cartItems = useSelector(selectCartItems);
     // Use Redux state for error data
-    const emailError = useSelector(state => state.user.emailError);
-    console.log(emailError)
     const dispatch = useDispatch();
     const [nameError, setNameError] = useState(null);
     const [emailErrorInput, setEmailErrorInput] = useState(null);
@@ -73,8 +70,7 @@ const RegisterForm = () => {
 
         } catch (error) {
             console.log(error.response.data.error)
-            dispatch(setEmailErrorData(error.response.data.error));
-            dispatch(setPhoneErrorData(error.response.data.error));
+            dispatch(setErrorData(error.response.data.error));
         }
 
     }
@@ -94,16 +90,7 @@ const RegisterForm = () => {
         if (!registerData["Email"]) {
             setEmailErrorInput("email required");
             isValid = false;
-        } else if (emailError === "User with this email already exists") {
-            setEmailErrorInput("this email already exists")
-            isValid = false;
-
-        }
-        else if (emailError === "User with this email already exists") {
-            setEmailErrorInput("this email already exists")
-            isValid = false;
-
-        }
+        } 
         else {
             setEmailErrorInput(null);
         }
@@ -152,7 +139,7 @@ const RegisterForm = () => {
                         margin="normal"
                         variant="outlined"
                         color="secondary"
-                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${nameError ? 'border-red-500 bg-red-100' : '' // Apply red border and background on error
+                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${nameError ? 'border-red-500 bg-red-100' : '' 
                             }`}
                         onInput={() => setNameError(null)}
                         value={DeliveryData["firstName"]}
@@ -224,9 +211,6 @@ const RegisterForm = () => {
                         >
                             Register
                         </Button>
-
-
-
                     </div>
                 </div>
             </>

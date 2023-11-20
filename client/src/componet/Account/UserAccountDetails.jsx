@@ -2,15 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const UserAccountDetails = ({ userInfo }) => {
-  if (!userInfo.name) {
-
+  if (!userInfo.paymentStatus) {
     return (
       <div className="container mx-auto p-8 mt-[60px] text-center">
         <p className="mt-10 text-gray-300 text-4xl animate__animated animate__fadeInDown">
           Welcome to Gabi Skin
         </p>
         <p className="text-gray-400 text-xl animate__animated animate__fadeInUp">
-          Home of Sticker 
+          Home of Sticker
         </p>
         <div className="mt-4 animate__animated animate__fadeIn">
           <p className="text-gray-400">
@@ -21,13 +20,18 @@ const UserAccountDetails = ({ userInfo }) => {
       </div>
     );
   }
+
+  const totalAmountWithoutDiscount = userInfo.orders.reduce((total, order) => {
+    return total + order.stickers.reduce((orderTotal, sticker) => orderTotal + sticker.totalPrice, 0);
+  }, 0);
+  const totalAmountWithDiscount = totalAmountWithoutDiscount / 5
   return (
     <div className="container mx-auto p-8 mt-[60px]">
       {/* User Information */}
       <div className="mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div>
-            <p className="font-bold text-lg text-right">Hello: {userInfo.name}</p>
+            <p className="font-bold text-lg text-right">Hello: {userInfo.name || userInfo.deliveryInfo.firstName}</p>
           </div>
         </div>
       </div>
@@ -92,59 +96,48 @@ const UserAccountDetails = ({ userInfo }) => {
 
 
       {/* Orders */}
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Orders</h2>
-        {userInfo.orders.length === 0 ? (
-          <p className="text-gray-500">No orders found</p>
-        ) : (
-          <div className="overflow-x-auto bg-white rounded-md p-4">
-            <table className="w-full my-0 align-middle text-black border-neutral-200">
-              <thead className="align-bottom">
-                <tr className="font-semibold text-md text-secondary-black">
-                  <th className="pb-3 text-start min-w-[175px]">Image</th>
-                  <th className="pb-3 text-center min-w-[100px]">Category</th>
-                  <th className="pb-3 text-center min-w-[100px]">Price</th>
-                  <th className="pb-3 text-center min-w-[175px]">Size</th>
-                  <th className="pb-3 text-center min-w-[100px]">Quantity</th>
-                  <th className="pb-3 text-center">Actions</th>
-                </tr>
-              </thead>
 
-              <tbody>
-                {userInfo.orders.map((order) =>
-                  order.stickers.map((sticker, index) => (
-                    <tr key={sticker.id} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white border-b border-dashed last:border-b-0'}>
-                      <td className="p-3 pl-0">
-                        <img src={sticker.imageUrl} className="w-[100px] h-auto rounded-md" alt="" />
-                      </td>
-                      <td className="p-3 text-center">
-                        <span className="font-semibold text-light-inverse">{sticker.category}</span>
-                      </td>
-                      <td className="p-3 text-center">
-                        <span className="text-success bg-success-light rounded-lg p-2">
-                          {sticker.price} ETB
-                        </span>
-                      </td>
-                      <td className="p-3 text-center">
-                        <span className="text-primary bg-primary-light rounded-lg p-2">
-                          {sticker.size}
-                        </span>
-                      </td>
-                      <td className="p-3 text-center">
-                        <span className="font-semibold text-light-inverse">{sticker.quantity}</span>
-                      </td>
-                      <td className="p-3 text-center">
-                        <button className="text-secondary-black bg-light-dark hover:text-primary hover:bg-gray-200 px-3 py-1 rounded-md">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+
+      <div className="mx-2 cart-items-container my-6 rounded-md bg-gray-100 p-6">
+        <h2 className="text-black text-2xl font-bold mb-4">Your Orders</h2>
+        <hr className="border-black" />
+        <ul className="mt-4">
+          {userInfo.orders.map((order) =>
+            order.stickers.map((sticker, index) => (
+              <li key={sticker.id} className="mb-6 border-b pb-4">
+                <div className="flex items-center justify-evenly">
+                  <img className="w-20 h-20 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={sticker.imageUrl} alt="" />
+
+                  <div>
+                    <p className="text-black mb-2 md:text-lg font-mono">
+                      <span className="mr-2 text-gray-600">Category:</span>
+                      {sticker.category}
+                    </p>
+                    <p className="text-black mb-2 md:text-lg font-mono">
+                      <span className="mr-2 text-gray-600">Sticker Price:</span>
+                      {sticker.totalPrice}
+                    </p>
+                    <p className="text-black md:text-lg font-mono">
+                      <span className="mr-2 text-gray-600">Quantity:</span>
+                      {sticker.quantity}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))
+          )}
+        </ul>
+        <div className="mt-6">
+          <p className="text-black font-bold">
+            Total Price: {totalAmountWithoutDiscount} ETB
+          </p>
+        </div>
+        <div className="mt-6">
+          <p className="text-black font-bold">
+            Initial Price: {totalAmountWithDiscount} ETB
+          </p>
+        </div>
+        <h2 className='text-gray-600 text-center mt-6 text-lg font-semibold'>visit our social media</h2>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Register({ onToggleForm }) {
     const navigate = useNavigate();
-
+    const [Error, setError] = useState(null)
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -35,9 +35,12 @@ function Register({ onToggleForm }) {
                 navigate(`/account/${response.data.newUser._id}`);
             })
             .catch((error) => {
-                console.error(error);
+                error.response.data
+                console.error(error.response.data.error);
+                setError(error.response.data.error)
             });
     };
+    console.log(Error)
     return (
         <section className="mt-[5em]">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -46,6 +49,8 @@ function Register({ onToggleForm }) {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Create and account
                         </h1>
+                        {Error && <p className="text-red-500 text-sm">{Error}</p>}
+
                         <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                             <div>
                                 <label

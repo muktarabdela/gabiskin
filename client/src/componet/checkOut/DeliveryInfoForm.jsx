@@ -168,17 +168,17 @@ const DeliveryForm = () => {
                         onClick={() => {
                             if (validateInput()) {
                                 submitDeliveryData();
-                            } if (userIdFromToken) {
-                                // User is already registered, move to the payment form
-                                setStep(3);
-                            } else {
-                                // User is not registered, move to the next step in the registration process
-                                setStep(2);
+                                if (userIdFromToken) {
+                                    setStep(3);
+                                } else {
+                                    setStep(2);
+                                }
                             }
                         }}
                     >
                         Next
                     </Button>
+
                 </div>
             </div>
         </div>
