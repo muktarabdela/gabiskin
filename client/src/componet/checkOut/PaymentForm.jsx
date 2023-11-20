@@ -23,6 +23,7 @@ const PaymentForm = () => {
     const deliveryData = useSelector(selectDelivery);
     const cartItems = useSelector(selectCartItems);
     console.log(deliveryData)
+    
     useEffect(() => {
         const checkUserRegistration = async () => {
             if (userIdFromToken) {
@@ -52,7 +53,7 @@ const PaymentForm = () => {
 
 
 
-                    const updatedUserDataResponse = await axios.put(`/users/${userIdFromToken}`, updatedUserData, {
+                    const updatedUserDataResponse = await axios.patch(`/users/${userIdFromToken}`, updatedUserData, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -135,8 +136,8 @@ const PaymentForm = () => {
     };
     return (
         <div className=" flex flex-col items-center justify-center bg-gray-100">
-            <p className="text-md text-gray-700 leading-tight text-center mt-8 mb-5">
-                We will never sell your information.
+            <p className="text-lg text-gray-700 leading-tight text-center mt-8 mb-5">
+                Easy payment method
             </p>
 
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
@@ -166,40 +167,76 @@ const PaymentForm = () => {
                 {/* Payment Details */}
                 {selectedPayment && (
                     <div className="mb-4">
-                        <p className="text-md font-semibold mb-2 text-black">
-                            After making the payment, please do the following:
-                        </p>
-                        <ul className="list-disc list-inside text-black">
-                            <li>
-                                Take a screenshot of your payment receipt.
-                            </li>
-                            <li>
-                                Send the screenshot to our Telegram account.
-                            </li>
-                        </ul>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={() => window.open('https://t.me/kalidkalaw1', '_blank')}
-                        >
-                            Open Telegram
-                        </Button>
+
+
                         {selectedPayment === "telebirr" && (
-                            <div className="mx-6 my-2">
-                                <p className="text-xl text-black">Mobile Number: <span className="text-blue-500"> 0932874527</span></p>
-                            </div>
+                            <>
+                                <div className="mx-6 my-2">
+                                    <p className="text-xl text-center font-semibold mb-2 text-black">
+                                        Kalid Shamil
+                                    </p>
+                                    <p className="text-xl text-black">Mobile Number: <span className="text-blue-500"> 0982761602</span></p>
+                                </div>
+
+                                <p className="text-md font-semibold mb-2 text-black">
+                                    ክፍያውን ከፈጸሙ በኋላ የሚከተሉትን ያድርጉ
+                                </p>
+                                <ul className="list-disc list-inside text-black">
+                                    <li>
+                                        የክፍያ ደረሰኝዎን screenshot ያንሱ።
+                                    </li>
+                                    <li className="my-3">
+                                        ስክሪንሾቱን ከታች ባለው ፎርም  ይላኩ
+                                    </li>
+                                </ul>
+                            </>
+
                         )}
                         {selectedPayment === "cbe" && (
-                            <div className="mx- my-2">
-                                <p className="text-xl text-black">Account Number : <span className="text-gray-600 text-xl"> 1000341105408 </span></p>
-                                <p className="text-lg text-black">Account Name: <span className="text-xl">kalid hashim</span></p>
-                            </div>
+                            <>
+                                <div className="mx-6 my-2">
+                                    <p className="text-xl text-center font-semibold mb-2 text-blue-500">
+                                        <span className="text-gray-700"> Name : </span>  Kalid Shamil
+                                    </p>
+                                    <p className="text-lg text-black">Account Number <span className="text-blue-500"> 1000254618571</span></p>
+                                </div>
+
+                                <p className="text-md font-semibold mb-2 text-black">
+                                    ክፍያውን ከፈጸሙ በኋላ የሚከተሉትን ያድርጉ
+                                </p>
+                                <ul className="list-disc list-inside text-black">
+                                    <li>
+                                        የክፍያ ደረሰኝዎን screenshot ያንሱ።
+                                    </li>
+                                    <li className="my-3">
+                                        ስክሪንሾቱን ከታች ባለው ፎርም  ይላኩ
+                                    </li>
+                                </ul>
+                            </>
+
                         )}
                         {selectedPayment === "boa" && (
-                            <div className=" my-2">
-                                <p className="text-xl text-black">Account Number : <span className="text-gray-600 text-xl"> 1000341105408 </span></p>
-                                <p className="text-lg text-black">Account Name: <span className="text-xl">kalid hashim</span></p>
-                            </div>
+                            <>
+                                <div className="mx-6 my-2">
+                                    <p className="text-xl text-center font-semibold mb-2 text-blue-500">
+                                        <span className="text-gray-700"> Name : </span>  Kalid Shamil
+                                    </p>
+                                    <p className="text-lg text-black">Account Number <span className="text-blue-500"> 115144782</span></p>
+                                </div>
+
+                                <p className="text-md font-semibold mb-2 text-black">
+                                    ክፍያውን ከፈጸሙ በኋላ የሚከተሉትን ያድርጉ
+                                </p>
+                                <ul className="list-disc list-inside text-black">
+                                    <li>
+                                        የክፍያ ደረሰኝዎን screenshot ያንሱ።
+                                    </li>
+                                    <li className="my-3">
+                                        ስክሪንሾቱን ከታች ባለው ፎርም  ይላኩ
+                                    </li>
+                                </ul>
+                            </>
+
                         )}
                     </div>
                 )}

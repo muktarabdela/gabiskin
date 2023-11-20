@@ -9,6 +9,7 @@ import axios from '../Axios';
 const Admin = ({ userId }) => {
     const [selectedSection, setSelectedSection] = useState('userInfo');
     const [usersData, setUsersData] = useState([]);
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -17,7 +18,7 @@ const Admin = ({ userId }) => {
                 console.log(response.data);
                 setUsersData(response.data);
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                console.error('Error fetching user data:', error.message);
             }
         };
         fetchUserData();
@@ -28,8 +29,7 @@ const Admin = ({ userId }) => {
             case 'userInfo':
                 return <UserInfo userInfo={usersData} />;
             case 'deliveryInfo':
-                return <DeliveryInfo users={usersData
-                } />;
+                return <DeliveryInfo users={usersData} />;
             case 'orders':
                 return <Orders users={usersData} />;
             case 'PaymentInfo':
@@ -40,9 +40,19 @@ const Admin = ({ userId }) => {
     };
 
     return (
-        <div className="flex h-screen mt-[4em]">
+        <div className=" flex flex-col h-screen mt-[4em]">
+            {/* Mobile Hamburger Menu */}
+            <div className="bg--200 p-4 md:">
+                <button
+                    className="w-8 h-8 text-blue-500"
+                    onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                    ☰
+                </button>
+            </div>
+
             {/* Sidebar */}
-            <div className="bg-gray-200 w-1/5 p-4">
+            <div className={`bg-gray-200 w-1/5 p-4 md:w-1/6 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
                 <button
                     className={`w-full py-2 mb-2 ${selectedSection === 'userInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
                     onClick={() => setSelectedSection('userInfo')}
@@ -65,7 +75,7 @@ const Admin = ({ userId }) => {
                     className={`w-full py-2 ${selectedSection === 'PaymentInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
                     onClick={() => setSelectedSection('PaymentInfo')}
                 >
-                    PaymentInfo
+                    Payment Info
                 </button>
             </div>
 

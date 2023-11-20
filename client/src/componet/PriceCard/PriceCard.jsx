@@ -11,6 +11,34 @@ function PriceCard() {
       <div className="gabiskin__price-main">
         <div className="pricing-table-wrapper">
           <ul className="pricing-table">
+            <li className="pricing-table__item pricing-table__item-three">
+              <img
+                src={custom}
+                alt="custom"
+                className="pricing-table__img custom"
+              />
+              <a href="">
+                <h3 className="pricing-table__title">Custom Stickers</h3>
+              </a>
+              <p className="pricing-table__description">
+                <span className="pricing-table__tagline">
+                  Here is Price package for our Custom Stickers
+                </span>
+              </p>
+              <ul className="pricing-table__products">
+                <li className="pricing-table__product">
+                  🎆 Custom Mini-Stickers - 100 ETB
+                </li>
+                <li className="pricing-table__product margin">💯 Quality</li>
+                <li className="pricing-table__product margin-1">
+                  💬 By Clints Choice
+                </li>
+                <li className="pricing-table__product">💬 By Clints Choice</li>
+              </ul>
+              <a href="">
+                <button className="pricing-table__button">continue</button>
+              </a>
+            </li>
             <li className="pricing-table__item pricing-table__item-one">
               <img src={mini} alt="mini" className="pricing-table__img mini" />
               <a href="">
@@ -67,34 +95,7 @@ function PriceCard() {
                 <button className="pricing-table__button">continue</button>
               </a>
             </li>
-            <li className="pricing-table__item pricing-table__item-three">
-              <img
-                src={custom}
-                alt="custom"
-                className="pricing-table__img custom"
-              />
-              <a href="">
-                <h3 className="pricing-table__title">Custom Stickers</h3>
-              </a>
-              <p className="pricing-table__description">
-                <span className="pricing-table__tagline">
-                  Here is Price package for our Custom Stickers
-                </span>
-              </p>
-              <ul className="pricing-table__products">
-                <li className="pricing-table__product">
-                  🎆 Custom Mini-Stickers - 100 ETB
-                </li>
-                <li className="pricing-table__product margin">💯 Quality</li>
-                <li className="pricing-table__product margin-1">
-                  💬 By Clints Choice
-                </li>
-                <li className="pricing-table__product">💬 By Clints Choice</li>
-              </ul>
-              <a href="">
-                <button className="pricing-table__button">continue</button>
-              </a>
-            </li>
+
           </ul>
         </div>
       </div>

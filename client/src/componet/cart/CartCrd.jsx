@@ -29,7 +29,7 @@ function Cart() {
 
     const totalAmountWithoutDiscount = cartStickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);
 
-    const totalAmountWithDiscount = totalAmountWithoutDiscount * 0.8;
+    const totalAmountWithDiscount = totalAmountWithoutDiscount / 5;
     console.log(totalAmountWithoutDiscount)
 
     return (

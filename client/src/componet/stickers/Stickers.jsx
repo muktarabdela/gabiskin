@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import StickersCard from "./StickersCard";
 import axios from "../../Axios";
-import Pagination from './Pagination'; // Import your pagination component
+import Pagination from './Pagination'; 
 
 const Sticker = ({ category }) => {
     const [stickersData, setStickersData] = useState([]);

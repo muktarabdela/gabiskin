@@ -10,6 +10,8 @@ import { Box } from '@mui/material';
 import { selectUserId } from '../../store/userSlice'
 import AccountLink from '../Account/AccountLink';
 import { useSelector } from 'react-redux';
+import Logo from "../../../public/images/logo.png"
+
 
 const Header = () => {
     const cartCount = useSelector(selectCartCount);
@@ -29,8 +31,9 @@ const Header = () => {
     return (
 
         <AppBar
-            position="fixed" style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#6f6e80' }}>
-            <Toolbar>
+        className='pl-10 h-[60px] '
+            position="fixed" style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
+            <Toolbar className=''>
 
                 <Box
                     className=' absolute  left-[120px] md:left-[30px] lg:left-[50px] md:flex lg:flex'
@@ -39,38 +42,40 @@ const Header = () => {
                         className='cursor-pointer'
                         to="/">
                         <img
-                            className=' w-[90px] h-[60px]'
-                            src="" alt="logo" />
+                            className=' w-[4em] h-[3em]'
+                            src={Logo} alt="logo" />
 
                     </Link>
 
                 </Box>
 
                 <div className='hidden md:flex lg:flex absolute left-[230px] justify-between list-none text-black'>
-                    <li className='mx-5 text-[23px] font-medium'>
+                    <li className='mx-5 text-[1.2em] font-medium'>
                         <Link to="/">
                             Home
                         </Link>
                     </li>
-                    <li className='mx-5 text-[23px] font-medium'>
+                    <li className='mx-5 text-[1.2em] font-medium'>
                         <Link to="/pricing">
                             Pricing
                         </Link>
                     </li>
 
-                    <li className='mx- text-[23px] font-medium'>
+                    <li className='mx- text-[1.2em] font-medium'>
                         <Link to="/Works">
                             About
                         </Link>
                     </li>
-                    <li className='mx-5 text-[23px] font-medium'>
+                    <li className='mx-5 text-[1.2em] font-medium'>
                         <Link to="/Works">
                             Our Work
                         </Link>
                     </li>
 
                 </div>
-                <div className='absolute top-2 right-6 text-black'>
+                <div className='absolute top-2 right-[1em] md:right-[8em]
+                lg:right-[10em]
+                text-black'>
                     <AccountLink />
                     <Link to="/cart">
                         <IconButton color="inherit">
@@ -105,7 +110,8 @@ const Header = () => {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>
+                            <MenuItem
+                                onClick={handleClose}>
                                 <Link to="/">
                                     Home
                                 </Link>

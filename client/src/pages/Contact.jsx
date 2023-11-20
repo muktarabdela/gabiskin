@@ -1,8 +1,9 @@
 import React from 'react'
+import ContactCard from '../componet/Contact/ContactCard'
 
 const Contact = () => {
     return (
-        <div>Contact</div>
+        <div><ContactCard /></div>
     )
 }
 

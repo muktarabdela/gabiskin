@@ -20,7 +20,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         }
         else if (newSize === 'regular_full_package') {
             setPrice(500);
-        } else if (newSize === 'regular_full_package') {
+        } else if (newSize === 'premium') {
             setPrice(800);
         }
     }
@@ -33,12 +33,9 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                 <>
                     <p className='text-lg font-bold mb-2'>
                         Half Package Laptop Skin - Sticker only for the back of your screen
-                    </p>
-                    <p className='my-4'>
-                        Elevate your laptop style with this unique sticker designed for the back of your screen. Transform your laptop into a canvas of self-expression!
-                    </p>
+                    </p>                    
                     your laptop after installation 😍
-                    <img className='mt-2 w-[13em] mx-auto rounded' src={half_package} alt="Half Package Laptop Skin" />
+                    <img className='w-[13em] mx-auto rounded' src={half_package} alt="Half Package Laptop Skin" />
                 </>
             );
         } else if (selectedSize === 'regular_full_package') {
@@ -47,12 +44,10 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     <p className='text-lg font-bold mb-2'>
                         Regular Full Package Laptop Skin - Front and back (For the back of your screen + on the keyboard area)
                     </p>
-                    <p className='my-4'>
-                        Enhance your laptop's overall appearance with comprehensive coverage. Personalize every inch with your favorite design elements.
-                    </p>
+                    
                     your laptop after installation 😍
 
-                    <img className='mt-2 w-[13em] mx-auto rounded' src={regular_full_package} alt="Half Package Laptop Skin" />
+                    <img className='w-[13em] mx-auto rounded' src={regular_full_package} alt="Half Package Laptop Skin" />
                 </>
             );
         } else if (selectedSize === 'premium') {
@@ -61,7 +56,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     <p className='text-lg font-bold mb-2'>
                         Premium Full Package Laptop Skin - Front, back, and bottom
                     </p>
-                    <p className='my-4'>
+                    <p className='my-2'>
                         Experience top-tier customization with this exclusive package. Elevate your laptop aesthetics with precision and attention to detail.
                     </p>
                     your laptop after installation 😍
@@ -127,7 +122,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     {renderSizeDetails()}
 
                 </div>
-                <p className="text-gray-700 mb-2 text-[18px] mt-[3em]">
+                <p className="text-gray-700 mb-2 text-[18px] mt-[1em]">
                     Price: {price} ETB
                 </p>
                 <p className='text-[23px] text-blue-600' >With Free delivery</p>

@@ -30,7 +30,12 @@ const HalfStickers = ({ category }) => {
     };
     return (
         <div>
-            <h1 className=" items-center flex text-center text-3xl mt-[3em] font-thin">half skin package </h1>
+            <h1 className="flex justify-center items-center text-center text-3xl  font-thin my-7">
+                <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+                    Half Skin Package
+                </span>
+            </h1>
+
 
             <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {currentStickers.map((sticker) => (

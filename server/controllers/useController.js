@@ -185,8 +185,8 @@ const updateUserData = async (req, res) => {
     const userData = req.body;
 
     try {
-        // Find the user by ID and update the data
-        const updatedUser = await User.findByIdAndUpdate(userId, userData, { new: true });
+        // Find the user by ID and update specific fields without replacing the entire document
+        const updatedUser = await User.findByIdAndUpdate(userId, { $set: userData }, { new: true });
 
         if (!updatedUser) {
             return res.status(404).json({ error: 'User not found' });
@@ -198,6 +198,7 @@ const updateUserData = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 
 export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData }
 

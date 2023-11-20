@@ -9,6 +9,8 @@ import Footer from './componet/footer/Footer'
 import Account from './componet/Account/account'
 import CheckoutPage from "./componet/checkOut/CheckOut"
 import Admin from './pages/Admin'
+import Page404 from './pages/Page404'
+import Contact from './pages/Contact'
 
 const App = () => {
   return (
@@ -25,11 +27,15 @@ const App = () => {
         <Route path="/admin" element={<Admin />} />
 
         <Route path='/checkout' element={<CheckoutPage />} />
-      </Routes>
 
-      {/* <Footer /> */}
+        <Route path='/contact' element={<Contact />} />
+
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+      <Footer />
 
     </>
   )
 }
+
 export default App

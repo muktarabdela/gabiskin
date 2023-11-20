@@ -14,7 +14,7 @@ router.post('/login', loginUser);
 router.post('/paymentInfo', authenticateToken, paymentInfo)
 
 // Update user data
-router.put('/:userId', updateUserData);
+router.patch('/:userId', updateUserData);
 
 // protected route
 router.get('/protected', authenticateToken, (req, res) => {

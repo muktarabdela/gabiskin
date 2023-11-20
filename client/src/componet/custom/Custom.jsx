@@ -1,51 +1,66 @@
 import React, { useState } from 'react';
 import axios1 from 'axios';
-import axios from "../../Axios"
+import axios from "../../Axios";
 import { addToCart } from '../../store/CartSlice';
-
+import miniStikcer from "../../../public/images/price3.png";
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    Typography,
+    Card, CardHeader, CardBody, CardFooter, Typography,
 } from "@material-tailwind/react";
-
 import {
-    Popover,
-    PopoverHandler,
-    PopoverContent,
-    Button,
+    Popover, PopoverHandler, PopoverContent, Button, Progress,
 } from "@material-tailwind/react";
-import { Radio } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 const Custom = () => {
     const [images, setImages] = useState(null);
-    const [selectedSize, setSelectedSize] = useState('small');
-    const [price, setPrice] = useState(35);
+    const [selectedSize, setSelectedSize] = useState(null);
+    const [price, setPrice] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     const dispatch = useDispatch();
 
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
         setSelectedSize(newSize);
-        if (newSize === 'large') {
-            setPrice(55);
+        if (newSize === 'small') {
+            setPrice(35);
         } else if (newSize === 'medium') {
             setPrice(45);
-        } else {
-            setPrice(35);
+        } else if (newSize === 'large') {
+            setPrice(55);
         }
-    }
+    };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = async (e) => {
         const files = e.target.files;
-        setImages(files);
+        const compressedImages = await Promise.all(
+            Array.from(files).map(async (file) => {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 800,
+                    useWebWorker: true,
+                };
+                try {
+                    return await imageCompression(file, options);
+                } catch (error) {
+                    console.error('Error compressing image:', error);
+                    return file; // Fallback to original image
+                }
+            })
+        );
+        setImages(compressedImages);
     };
 
     const handleUpload = async () => {
-        const formData = new FormData();
+        if (!images || images.length === 0) {
+            // Add your logic to handle the case when no images are selected
+            alert('Please select at least one image to upload.');
+            return;
+        }
 
+        setIsUploading(true);
+
+        const formData = new FormData();
         const customStickerData = {
             price,
             size: selectedSize,
@@ -72,7 +87,8 @@ const Custom = () => {
                     imageUrl: response.data.secure_url,
                     ...customStickerData,
                 });
-                console.log(customDataBase.data.newSticker)
+
+                console.log(customDataBase.data.newSticker);
                 dispatch(addToCart({
                     _id: customDataBase.data.newSticker._id,
                     price: customDataBase.data.newSticker.price,
@@ -81,86 +97,81 @@ const Custom = () => {
                     category: customDataBase.data.newSticker.category,
                     imageUrl: customDataBase.data.newSticker.imageUrl,
                 }));
-
             } catch (error) {
                 console.error(`Error uploading image ${i + 1}:`, error);
             }
+
             formData.delete('file');
             formData.delete('upload_preset');
             formData.delete('folder');
         }
+
+        setIsUploading(false);
+        setImages(null);
+        setSelectedSize(null);
+        setPrice(null);
+        setIsPopoverOpen(false);
     };
 
-
+    function CircularProgress() {
+        return (
+            <div className="flex items-center justify-center">
+                <div className="border-t-4 border-white border-solid h-12 w-12 rounded-full animate-spin"></div>
+            </div>
+        )
+    }
     return (
         <div className="flex flex-col items-center my-10 p-0">
-            <Popover>
-                <Card className="mt-6 w-96">
+            <Popover isOpen={isPopoverOpen}>
+                <Card className="mt-6 w-[45vh]">
                     <CardHeader color="blue-gray" className="relative h-56">
                         <img
-                            src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-                            alt="card-image"
+                            src={miniStikcer}
                         />
                     </CardHeader>
                     <CardBody>
                         <Typography variant="h5" color="blue-gray" className="mb-2">
-                            UI/UX Review Check
+                            Print on Demand
                         </Typography>
                         <Typography>
-                            The place is close to Barceloneta Beach and bus stop just 2 min by
-                            walk and near to &quot;Naviglio&quot; where you can enjoy the main
-                            night life in Barcelona.
+                            💫 Print on demand, በፈልጉት Size, በፈለጉት ፎቶ -  with only puls 5 birr
+                            💫  There is no additional cost for Custom design
+                            💫 We have a Discount for those who want Quantity.
                         </Typography>
                     </CardBody>
                     <CardFooter className="pt-0">
-                        <PopoverHandler >
-                            <Button className='bg-red-600 ml-[14em] my-2'>Send Image</Button>
+                        <PopoverHandler>
+                            <Button className='bg-red-600 ml-[8em] my-2' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
+                                Send Image
+                            </Button>
                         </PopoverHandler>
                     </CardFooter>
                 </Card>
 
+                <PopoverContent className="w-96">
+                    <p className='text-black text-[1.5em] mx-auto mb-[1em] font-semibold'>
+                        Choose your preferred size and price
+                    </p>
 
-                <PopoverContent className="mt-6 w-96">
-                    <p className='text-black text-[1.5em] mx-auto mt-[2em] font-semibold'> choose your convince size and price</p>
-
-                    <div className='mx-auto'>
-                        <div className='text-black text-[1.4em]'>
-                            <Radio
-                                className='text-black'
-                                id="sizeSmall"
-                                value="small"
-                                checked={selectedSize === 'small'}
-                                onChange={handleSizeChange}
-                                name="size" label="Small"
-                            />
-                            Small
-                        </div>
-                        <div className='text-black text-[1.4em]'>
-                            <Radio
-                                value="medium"
-                                checked={selectedSize === 'medium'}
-                                onChange={handleSizeChange}
-                                name="size" label="medium" />
-                            medium
-                        </div>
-                        <div className='text-black text-[1.4em]'>
-                            <Radio
-                                id="sizeBig"
-                                value="large"
-                                checked={selectedSize === 'large'}
-                                onChange={handleSizeChange}
-                                name="size" label="Small" />
-                            large
-                        </div>
-                        <p className="text-gray-700 mt-2 text-[23px]">
-                            Price: {price} ETB
-                        </p>
+                    <div className="mb-3">
+                        <select
+                            name="SubCity"
+                            className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
+                            onChange={handleSizeChange}
+                            value={selectedSize || ""}
+                        >
+                            <option value="" disabled>Select size and price</option>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                        </select>
                     </div>
-
-                    <div className="mt-[1em] md:mt-[9em] lg:mt-[8em] pl-[9.5em]">
+                    <p className="text-gray-700 my-4 text-[18px]">Price: {price} ETB</p>
+                    <p className='text-[23px] text-blue-600'>With Free delivery</p>
+                    <div className="mx-auto my-5">
                         <label
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            for="multiple_files"
+                            htmlFor="multiple_files"
                         >
                             Upload images
                         </label>
@@ -171,18 +182,26 @@ const Custom = () => {
                             type="file"
                             multiple
                         />
-                        <button onClick={handleUpload} className="bg-blue-500 text-white px-4 py-2 rounded">
-                            Upload Images
+                        <button
+                            onClick={handleUpload}
+                            className="bg-blue-500 text-white px-4 py-2 rounded mt-6"
+                            disabled={isUploading}
+                        >
+                            {isUploading ? (
+                                <div className="flex items-center">
+                                    <CircularProgress />
+                                    <span className="ml-2">Wait a minute it takes a minute </span>
+                                </div>
+                            ) : (
+                                'Upload Images'
+                            )}
                         </button>
-                    </div>
 
+                    </div>
                 </PopoverContent>
             </Popover>
         </div>
-
     );
 };
 
 export default Custom;
-
-
