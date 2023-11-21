@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import DeliveryForm from './DeliveryInfoForm';
 import RegisterForm from './RegistrationForm';
 import PaymentForm from './PaymentForm';
-import { Stepper, StepLabel, Step } from '@material-ui/core';
+import { Stepper, StepLabel, Step, Button, Drawer } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { selectCartItems } from '../../store/CartSlice';
 
@@ -15,11 +15,12 @@ import youtube from '../../../public/images/youtube.png';
 const CheckOut = () => {
     const cartItems = useSelector(selectCartItems);
     const cartStickers = useSelector((state) => state.cart.stickers);
+
     const totalAmountWithoutDiscount = cartStickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);
 
     const totalAmountWithDiscount = totalAmountWithoutDiscount / 5;
     console.log(totalAmountWithoutDiscount)
-
+    const unPaid = totalAmountWithoutDiscount - totalAmountWithDiscount
     const { currentStep, finalData } = useContext(MultiStepContext)
     function showStep(step) {
         switch (step) {
@@ -43,7 +44,7 @@ const CheckOut = () => {
         <>
             <div className='w-[24em] mb-[6em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
                 <h1 className="text-lg font-bold text-gray-700 leading-tight text-center mt-[90px] mb-">
-                    Form Wizard - Multi Step Form
+                    payment form
                 </h1>
                 <Stepper style={{ width: '100%' }} activeStep={currentStep - 1} orientation='horizontal'>
                     <Step>
@@ -65,7 +66,7 @@ const CheckOut = () => {
                     {cartItems.map((item) => (
                         <li key={item.id} className="mb-6 border-b pb-4">
                             <div className="flex items-center justify-evenly">
-                                <img className="w-20 h-20 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
+                                <img className="w-20 md:w-[9em] lg:w-[14em] h-20 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
 
                                 <div>
                                     <p className="text-black mb-2 md:text-lg font-mono">
@@ -95,8 +96,13 @@ const CheckOut = () => {
                         Initial Price: {totalAmountWithDiscount} ETB
                     </p>
                 </div>
+                <div className="mt-6">
+                    <p className="text-black font-bold">
+                        unpaid Price: {unPaid} ETB
+                    </p>
+                </div>
                 <h2 className='text-gray-600 text-center mt-6 text-lg font-semibold'>visit our social media</h2>
-                <div className="flex justify-around mt-8 mx-auto w-[30em]">
+                <div className="flex justify-around mt-8 mx-auto w-[20em]">
                     <a href={socialMediaLinks.telegram} target="_blank" rel="noopener noreferrer">
                         <img src={Telegram} alt="Telegram" className="w-8 h-8 cursor-pointer" />
                     </a>
@@ -110,8 +116,8 @@ const CheckOut = () => {
                         <img src={youtube} alt="Youtube" className="w-8 h-8 cursor-pointer" />
                     </a>
                 </div>
-                <h2 className='text-gray-600 text-center text-[1.2em] font-semibold mt-[1.6em] '>Address if you want to visit us in our office</h2>
-                <p className='text-gray-600 text-[1.2em]'> Kality total KCBC building</p>
+                <h2 className='text-gray-600 text-[1.1em] font-semibold mt-[1.6em] '>Address if you want to visit us in our office</h2>
+                <p className='text-gray-600 text-[1.1em]'> Kality total KCBC building</p>
             </div>
 
         </>

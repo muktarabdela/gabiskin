@@ -10,11 +10,15 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [selectedSize, setSelectedSize] = useState(null);
     const [price, setPrice] = useState(null);
     const [stickerData, setStickerData] = useState(null);
+    const [sizeError, setSizeError] = useState(null);
+
     const dispatch = useDispatch();
 
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
         setSelectedSize(newSize);
+        setSizeError(null);
+
         if (newSize === 'half_package') {
             setPrice(300);
         }
@@ -33,7 +37,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                 <>
                     <p className='text-lg font-bold mb-2'>
                         Half Package Laptop Skin - Sticker only for the back of your screen
-                    </p>                    
+                    </p>
                     your laptop after installation 😍
                     <img className='w-[13em] mx-auto rounded' src={half_package} alt="Half Package Laptop Skin" />
                 </>
@@ -44,7 +48,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     <p className='text-lg font-bold mb-2'>
                         Regular Full Package Laptop Skin - Front and back (For the back of your screen + on the keyboard area)
                     </p>
-                    
+
                     your laptop after installation 😍
 
                     <img className='w-[13em] mx-auto rounded' src={regular_full_package} alt="Half Package Laptop Skin" />
@@ -73,6 +77,12 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
 
 
     const updateSticker = async () => {
+        if (!selectedSize) {
+            setSizeError('Size is required');
+            return;
+        } else {
+            setSizeError(null);
+        }
         try {
             const data = await axios.put(`/stickers/update/${stickerId}`, {
                 size: selectedSize,
@@ -99,49 +109,51 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     };
 
     return (
-        <div className="fixed inset-0 flex mt-[4em] items-center justify-center z-50 bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
 
-            <div className="bg-white p-4 rounded shadow-md sm:w-96 z-50">
-                <h2 className="text-2xl font-semibold mb-2 text-black">Select Your choose Sticker Size</h2>
-                <div className="mb-3">
+            <div className="bg-white p-6 rounded-md shadow-lg sm:w-96 z-50">
+                <h2 className="text-3xl font-semibold mb-4 text-black">Choose Your Sticker Size</h2>
+                <div className="mb-4">
                     <div className="mb-2">
                         <select
                             name="SubCity"
-                            className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
+                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 focus:outline-none focus:border-blue-500 ${sizeError ? 'border-red-500' : 'border-gray-400'}`}
                             onChange={handleSizeChange}
                             value={selectedSize || ""}
                         >
-                            <option value="" disabled>Select package </option>
+                            <option value="" disabled>Select package</option>
                             <option value="half_package">Half package</option>
                             <option value="regular_full_package">Regular Full Package</option>
                             <option value="premium">Premium</option>
                         </select>
+                        {sizeError && <p className="text-red-500 text-sm mt-1">{sizeError}</p>}
                     </div>
                 </div>
-                <div className=''>
+                <div className="mb-4">
                     {renderSizeDetails()}
-
                 </div>
-                <p className="text-gray-700 mb-2 text-[18px] mt-[1em]">
+                <p className="text-gray-700 mb-2 text-lg mt-2">
                     Price: {price} ETB
                 </p>
-                <p className='text-[23px] text-blue-600' >With Free delivery</p>
-                <div className="flex justify-between">
+                <p className="text-lg text-blue-600">With Free Delivery</p>
+                <div className="flex justify-end mt-4">
                     <button
                         onClick={onClose}
-                        className="bg-red-500 text-white px-2 py-1 ml-[2em] mt-5 rounded hover:bg-blue-600"
+                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                     >
                         Close
                     </button>
                     <button
                         onClick={updateSticker}
-                        className="bg-blue-500 text-white px-2 py-1 mr-[15px] mt-5 rounded hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-4 py-2 ml-4 rounded hover:bg-blue-600"
                     >
                         Add to Cart
                     </button>
                 </div>
             </div>
         </div>
+
+
     );
 }
 export default HalfPopup;

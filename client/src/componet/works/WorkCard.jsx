@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import './workcard.css';
 import axios from '../../Axios';
+import Pagination from '../stickers/Pagination'; // Adjust the import path based on your project structure
 
 const WorkCard = () => {
-  const [renderedImages, setRenderedImages] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
   const [stickersData, setStickersData] = useState([]);
 
   useEffect(() => {
     const fetchStickersByCategory = async () => {
       try {
-        // Assuming you have a variable 'half' defined somewhere
         const response = await axios.get(`/stickers/stickers-withCategory?category=half`);
         setStickersData(response.data.stickers);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching stickers:', error);
       }
@@ -21,7 +21,11 @@ const WorkCard = () => {
     fetchStickersByCategory();
   }, []);
 
-  const midpointIndex = Math.floor(stickersData.length / 2);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = stickersData.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <>
@@ -30,7 +34,7 @@ const WorkCard = () => {
           <h1 className="work-title">Our Work</h1>
           <div className="mr-[10px]">
             <div className="u-repeater u-repeater-1 my-[20px]!important">
-              {stickersData.slice(0, midpointIndex).map((sticker, index) => (
+              {currentItems.map((sticker, index) => (
                 <div
                   key={index}
                   className="u-align-left u-container-style u-list-item u-repeater-item u-list-item-1"
@@ -54,16 +58,13 @@ const WorkCard = () => {
                   </div>
                 </div>
               ))}
-              {renderedImages < stickersData.length && (
-                <div className="mb-6 text-center md:text-left lg:text-center lg:mt-[250px]">
-                  <button
-                    className="border-[none] rounded-[4px] bg-purple-800 text-[#fff] h-[35px] w-[90px] text-[15px] cursor-pointer [transition:0.5s]  opacity-70 mt-[8px]"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
             </div>
+            <Pagination
+              active={currentPage}
+              itemsCountPerPage={itemsPerPage}
+              totalItemsCount={stickersData.length}
+              onChange={paginate}
+            />
           </div>
         </div>
       </section>

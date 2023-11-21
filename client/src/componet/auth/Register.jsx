@@ -8,23 +8,21 @@ function Register({ onToggleForm }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        name: '',
-        password: '',
         confirmPassword: '',
     });
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
+
         });
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        const dataToSend = { ...formData }; // Fix the syntax error here
 
 
         axios
-            .post("/users/register", dataToSend)
+            .post("/users/register", formData)
             .then((response) => {
                 console.log(response.data);
                 const token = response.data.token;

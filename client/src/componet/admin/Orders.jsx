@@ -7,11 +7,11 @@ const Orders = ({ users }) => {
             <h2 className="text-3xl font-semibold mb-4">Orders</h2>
             {users.map((user, userIndex) => (
                 <div key={userIndex} className="mb-4 bg-gray-100 rounded-md p-4">
-                    <p className="text-gray-600 mb-2"><strong>User Name:</strong> {user.name}</p>
-                    <p className="text-gray-600 mb-2"><strong>User Phone:</strong> {user.phone}</p>
+                    <p className="text-gray-600 mb-2"><strong>User Name:</strong> {user.name || user.deliveryInfo
+                        .firstName}</p>
+                    <p className="text-gray-600 mb-2"><strong>User Phone:</strong>  {(user.phone || (user.deliveryInfo && user.deliveryInfo.phone)) || 'N/A'}</p>
                     {user.orders.map((order, orderIndex) => (
                         <div key={orderIndex} className="mb-4">
-                            <p className="text-gray-600 mb-2"><strong>Order ID:</strong> {order._id}</p>
                             <ul>
                                 {order.stickers.map((sticker, stickerIndex) => (
                                     <li key={stickerIndex} className="text-gray-600 mb-2 border-b pb-2">
@@ -22,7 +22,7 @@ const Orders = ({ users }) => {
                                                 <p><strong>Quantity:</strong> {sticker.quantity}</p>
                                             </div>
                                             <div>
-                                                <p><strong>Price:</strong> ${sticker.price}</p>
+                                                <p><strong>Price:</strong> {sticker.price} ETB</p>
                                                 {/* Add other sticker information here */}
                                                 <img
                                                     src={sticker.imageUrl}

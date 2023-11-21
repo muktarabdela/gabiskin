@@ -17,11 +17,15 @@ const Custom = () => {
     const [price, setPrice] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const [sizeError, setSizeError] = useState(null);
+    const [imageError, setImageError] = useState(null);
     const dispatch = useDispatch();
 
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
         setSelectedSize(newSize);
+        setSizeError(null); // Reset size error
+
         if (newSize === 'small') {
             setPrice(35);
         } else if (newSize === 'medium') {
@@ -33,6 +37,7 @@ const Custom = () => {
 
     const handleImageChange = async (e) => {
         const files = e.target.files;
+        setImageError(null);
         const compressedImages = await Promise.all(
             Array.from(files).map(async (file) => {
                 const options = {
@@ -52,10 +57,18 @@ const Custom = () => {
     };
 
     const handleUpload = async () => {
-        if (!images || images.length === 0) {
-            // Add your logic to handle the case when no images are selected
-            alert('Please select at least one image to upload.');
+        if (!selectedSize) {
+            setSizeError('Please select a size');
             return;
+        } else {
+            setSizeError(null);
+        }
+
+        if (!images || images.length === 0) {
+            setImageError('Please select at least one image to upload');
+            return;
+        } else {
+            setImageError(null);
         }
 
         setIsUploading(true);
@@ -123,7 +136,7 @@ const Custom = () => {
     return (
         <div className="flex flex-col items-center my-10 p-0">
             <Popover isOpen={isPopoverOpen}>
-                <Card className="mt-6 w-[45vh]">
+                <Card className="mt-6 w-[45vh] md:w-[50vh] lg:w-[70vh] p-2">
                     <CardHeader color="blue-gray" className="relative h-56">
                         <img
                             src={miniStikcer}
@@ -148,7 +161,7 @@ const Custom = () => {
                     </CardFooter>
                 </Card>
 
-                <PopoverContent className="w-96">
+                <PopoverContent className="w-96 ml-6">
                     <p className='text-black text-[1.5em] mx-auto mb-[1em] font-semibold'>
                         Choose your preferred size and price
                     </p>
@@ -156,7 +169,8 @@ const Custom = () => {
                     <div className="mb-3">
                         <select
                             name="SubCity"
-                            className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
+                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 ${sizeError ? 'border-red-500' : 'border-gray-400'}`}
+
                             onChange={handleSizeChange}
                             value={selectedSize || ""}
                         >
@@ -165,23 +179,29 @@ const Custom = () => {
                             <option value="medium">Medium</option>
                             <option value="large">Large</option>
                         </select>
+                        {sizeError && <p className="text-red-500 text-sm mt-1">{sizeError}</p>}
+
                     </div>
                     <p className="text-gray-700 my-4 text-[18px]">Price: {price} ETB</p>
                     <p className='text-[23px] text-blue-600'>With Free delivery</p>
                     <div className="mx-auto my-5">
                         <label
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className={`block mb-2 text-sm font-medium text-gray-900 dark:text-white ${imageError ? 'text-red-500' : ''}`}
+
                             htmlFor="multiple_files"
                         >
                             Upload images
                         </label>
                         <input
                             onChange={handleImageChange}
-                            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            className={`block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 ${imageError ? 'border-red-500' : ''}`}
+
                             id="multiple_files"
                             type="file"
                             multiple
                         />
+                        {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
+
                         <button
                             onClick={handleUpload}
                             className="bg-blue-500 text-white px-4 py-2 rounded mt-6"

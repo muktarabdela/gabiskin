@@ -1,9 +1,10 @@
 import express from 'express';
 const router = express.Router();
 import User from '../models/userModel.js';
+import expressAsyncHandler from 'express-async-handler';
 
 // Define your routes here
-import { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, } from '../controllers/useController.js';
+import { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateAdminEmail, updateAdminPassword, adminLogin } from '../controllers/useController.js';
 import authenticateToken from '../middleware/authenticateToken.js';
 
 router.post('/register', registerUser);
@@ -22,8 +23,17 @@ router.get('/protected', authenticateToken, (req, res) => {
 })
 
 // user info 
-
 router.get('/get-user-info/:userId', authenticateToken, getUserInfo)
+
+// Update admin email
+router.patch('/update-admin-email', updateAdminEmail);
+
+// Update admin password
+router.patch('/update-admin-password', authenticateToken, updateAdminPassword);
+
+// Admin login route
+router.post('/admin/login', adminLogin);
+
 
 // admin route
 router.get('/admin', async (req, res) => {

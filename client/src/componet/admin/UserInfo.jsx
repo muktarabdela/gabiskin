@@ -1,55 +1,51 @@
 import React from 'react';
 
 const UserInfo = ({ userInfo }) => {
+    console.log(userInfo)
     return (
-        <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
+        <div className="">
             {userInfo ? (
-                userInfo.map((user) => (
-                    <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
-                        <div className="overflow-y-hidden rounded-lg border">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white">
-                                        <th className="px-5 py-3"> Name</th>
-                                        <th className="px-5 py-3">Email</th>
-                                        <th className="px-5 py-3">Phone number</th>
-                                        <th className="px-5 py-3">Payment status</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="text-gray-500">
-                                    <tr>
-                                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                            <div className="flex items-center">
-                                                <div className="ml-3">
-                                                    <p className="whitespace-no-wrap">{user.name}</p>
-                                                </div>
-                                            </div>
-                                        </td>
+                <div className="overflow-x-auto">
+                    <table className="w-full  bg-white shadow-md rounded-l overflow-hidden sm:mt-8">
+                        <thead>
+                            <tr className="bg-blue-600 text-white">
+                                <th className="py-3 px-6 text-left"> Name</th>
+                                <th className="py-3 px-6 text-left">Email</th>
+                                <th className="py-3 px-6 text-left">Phone number</th>
+                                <th className="py-3 px-6 text-left">Payment status</th>
+                                <th className="py-3 px-6 text-left">delivery Status</th>
+                            </tr>
+                        </thead>
 
-                                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                            <p className="whitespace-no-wrap">{user.email}</p>
-                                        </td>
-
-                                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                            <p className="whitespace-no-wrap">{user.phone}</p>
-                                        </td>
-
-                                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                                            <span className="rounded-full bg-green-200 px-3 py-1 text-xs font-semibold text-green-900">
-                                                {user.paymentStatus}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                ))
+                        <tbody className="text-gray-500">
+                            {userInfo.map((user, index) => (
+                                <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                                    <td className="py-4 px-6 border-b border-gray-200">
+                                        {user.name || (user.deliveryInfo && user.deliveryInfo.firstName) || 'N/A'}
+                                    </td>
+                                    <td className="py-4 px-6 border-b border-gray-200">
+                                        {user.email}
+                                    </td>
+                                    <td className="py-4 px-6 border-b border-gray-200">
+                                        {(user.phone || (user.deliveryInfo && user.deliveryInfo.phone)) || 'N/A'}
+                                    </td>
+                                    <td className="py-4 px-6 border-b border-gray-200">
+                                        {user.paymentStatus}
+                                    </td>
+                                    <td className="py-4 px-6 border-b border-gray-200">
+                                        {user.deliveryStatus}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
-                <p className="text-gray-600">Loading user info...</p>
+                <p className="text-gray-500">No delivery information found. Order now to provide delivery details!</p>
             )}
         </div>
     );
 };
 
 export default UserInfo;
+

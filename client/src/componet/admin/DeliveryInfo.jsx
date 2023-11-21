@@ -1,44 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from '../../Axios';
 
 const DeliveryInfo = ({ users }) => {
+    const [deliveryStatus, setDeliveryStatus] = useState({});
+
+    const handleUpdateDeliveryStatus = async (userId) => {
+        try {
+            const response = await axios.put(`/stickers/update-payment-status/${userId}`, {
+                newDeliveryStatus: deliveryStatus[userId],
+            });
+
+            console.log(response.data);
+            alert('Payment status updated successfully!');
+
+        } catch (error) {
+            console.error('Error updating payment status:', error);
+        }
+    };
+
+    const handleStatusChange = (userId, newStatus) => {
+        setDeliveryStatus((prevStatus) => ({
+            ...prevStatus,
+            [userId]: newStatus,
+        }));
+    };
     return (
         <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
             <h2 className="text-3xl font-semibold mb-4">Delivery Information</h2>
 
             {users.length > 0 ? (
-                <div className="overflow-x-auto">
-                    <table className="w-full bg-white shadow-md rounded-lg overflow-hidden sm:mt-8">
-                        <thead>
-                            <tr className="bg-blue-600 text-white">
-                                <th className="py-3 px-6 text-left">First Name</th>
-                                <th className="py-3 px-6 text-left">Last Name</th>
-                                <th className="py-3 px-6 text-left">Phone Number</th>
-                                <th className="py-3 px-6 text-left">SubCity</th>
-                                <th className="py-3 px-6 text-left">Delivery Location</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-gray-800">
-                            {users.map((user, index) => (
-                                <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                    <td className="py-4 px-6 border-b border-gray-200">
-                                        {user.deliveryInfo ? user.deliveryInfo.firstName : 'No delivery info'}
-                                    </td>
-                                    <td className="py-4 px-6 border-b border-gray-200">
-                                        {user.deliveryInfo ? user.deliveryInfo.lastName : 'No delivery info'}
-                                    </td>
-                                    <td className="py-4 px-6 border-b border-gray-200">
-                                        {user.deliveryInfo ? user.deliveryInfo.phone : 'No delivery info'}
-                                    </td>
-                                    <td className="py-4 px-6 border-b border-gray-200">
-                                        {user.deliveryInfo ? user.deliveryInfo.subCity : 'No delivery info'}
-                                    </td>
-                                    <td className="py-4 px-6 border-b border-gray-200">
-                                        {user.deliveryInfo ? user.deliveryInfo.deliveryLocation : 'No delivery info'}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div>
+                    {users.map((user, index) => (
+                        <div key={index} className="bg-gray-100  text-black my-5  p-4 ">
+                            <div className="mb-2">
+                                <strong>First Name:</strong> {user.deliveryInfo ? user.deliveryInfo.firstName : 'No delivery info'}
+                            </div>
+                            <div className="mb-2">
+                                <strong>Last Name:</strong> {user.deliveryInfo ? user.deliveryInfo.lastName : 'No delivery info'}
+                            </div>
+                            <div className="mb-2">
+                                <strong>Phone Number:</strong> {user.deliveryInfo ? user.deliveryInfo.phone : 'No delivery info'}
+                            </div>
+                            <div className="mb-2">
+                                <strong>SubCity:</strong> {user.deliveryInfo ? user.deliveryInfo.subCity : 'No delivery info'}
+                            </div>
+                            <div>
+                                <strong>Delivery Location:</strong>{' '}
+                                {user.deliveryInfo ? user.deliveryInfo.deliveryLocation : 'No delivery info'}
+                            </div>
+                            <div>
+                                <strong>Delivery status:</strong>{' '}
+                                <select
+                                    className="text-black mt-2 w-full px-2 py-1 rounded-md border border-gray-300 focus:outline-none"
+                                    value={deliveryStatus[user._id] || ''}
+                                    onChange={(e) => handleStatusChange(user._id, e.target.value)}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Paid">progress</option>
+                                    <option value="Failed">arrived</option>
+                                </select>
+                                <button
+                                    onClick={() => handleUpdateDeliveryStatus(user._id)}
+                                    className="bg-blue-500 text-white px-2 py-1 my-2 rounded-md"
+                                >
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <p className="text-gray-500">No delivery information found. Order now to provide delivery details!</p>

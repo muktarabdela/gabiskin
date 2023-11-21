@@ -5,11 +5,15 @@ import DeliveryInfo from '../componet/admin/DeliveryInfo';
 import Orders from '../componet/admin/Orders';
 import PaymentInfo from '../componet/admin/PaymentInfo';
 import axios from '../Axios';
-
+import { useNavigate } from 'react-router-dom';
+import AdminAuth from '../componet/Account/AdminAuth';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice';
 const Admin = ({ userId }) => {
     const [selectedSection, setSelectedSection] = useState('userInfo');
     const [usersData, setUsersData] = useState([]);
-    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -39,28 +43,30 @@ const Admin = ({ userId }) => {
         }
     };
 
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
     return (
-        <div className=" flex flex-col h-screen mt-[4em]">
-            {/* Mobile Hamburger Menu */}
-            <div className="bg--200 p-4 md:">
+        <div className=" flex flex-col h-screen mt-[5em]">
+            <div className='text-right mr-9'>
                 <button
-                    className="w-8 h-8 text-blue-500"
-                    onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                    onClick={handleLogout}
+                    className="w-20 text-white bg-primary-600 rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700"
                 >
-                    ☰
+                    Logout
                 </button>
             </div>
+            <div className="flex w-[45vh] mx-auto">
 
-            {/* Sidebar */}
-            <div className={`bg-gray-200 w-1/5 p-4 md:w-1/6 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
                 <button
-                    className={`w-full py-2 mb-2 ${selectedSection === 'userInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
+                    className={`w-full  py-2 mb-2 ${selectedSection === 'userInfo' ? 'bg-blue-300 text-white' : 'text-blue-500'}`}
                     onClick={() => setSelectedSection('userInfo')}
                 >
                     User Info
                 </button>
                 <button
-                    className={`w-full py-2 mb-2 ${selectedSection === 'deliveryInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
+                    className={`w-full  mb-2 ${selectedSection === 'deliveryInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
                     onClick={() => setSelectedSection('deliveryInfo')}
                 >
                     Delivery Info
@@ -88,3 +94,4 @@ const Admin = ({ userId }) => {
 };
 
 export default Admin;
+

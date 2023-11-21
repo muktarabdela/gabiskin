@@ -1,15 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from '../../Axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginSuccess, loginFailure } from '../../store/authSlice';
 
-const Login = ({ onToggleForm }) => {
+const AdminAuth = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [Error, setError] = useState(null)
+    const [hasNavigated, setHasNavigated] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
+    useEffect(() => {
+        console.log('useEffect is running');
+        const token = localStorage.getItem('accessToken');
+        if (token && !hasNavigated) {
+            console.log('Token found, navigating to /admin');
+            navigate('/admin');
+            setHasNavigated(true);
+        }
+    }, [navigate, hasNavigated]);
+
 
     const handleChange = (e) => {
         setFormData({
@@ -19,21 +33,19 @@ const Login = ({ onToggleForm }) => {
         });
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
-
         axios
-            .post("users/login", formData)
+            .post("users/admin/login", formData)
             .then((response) => {
                 console.log(response.data);
                 const token = response.data.token;
                 console.log("console fro token", token)
+                localStorage.setItem('accessToken', token);
 
-                localStorage.setItem('acc2essToken', token);
-                console.log(response)
-                navigate(`/account/${response.data.user.userId}`);
+                dispatch(loginSuccess(response.data));
+                console.log("navigate to admin")
+                navigate("/admin");
             })
             .catch((error) => {
                 error.response.data
@@ -94,16 +106,6 @@ const Login = ({ onToggleForm }) => {
                             >
                                 LogIn
                             </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                you haven't any account ?{" "}
-
-                                <a
-                                    onClick={onToggleForm}
-                                    className="cursor-pointer font-medium text-blue-600 hover:underline dark:text-primary-500"
-                                >
-                                    Create account here
-                                </a>
-                            </p>
                         </form>
                     </div>
                 </div>
@@ -113,4 +115,4 @@ const Login = ({ onToggleForm }) => {
     )
 }
 
-export default Login
+export default AdminAuth

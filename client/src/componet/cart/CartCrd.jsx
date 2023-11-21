@@ -32,6 +32,7 @@ function Cart() {
     const totalAmountWithDiscount = totalAmountWithoutDiscount / 5;
     console.log(totalAmountWithoutDiscount)
 
+
     return (
         <>
             <div>
@@ -130,8 +131,18 @@ function Cart() {
                                 </div>
                             </div>
                             <Link to="/checkout">
+                                {totalAmountWithoutDiscount < 250 ?
+
+                                    <p p className="text-red-500 mt-2">
+                                        For orders total value must be more than 250 ETB
+                                    </p>
+                                    : ""
+                                }
+
                                 <button
-                                    className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover-bg-blue-600"
+                                    className={`mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover-bg-blue-600 ${totalAmountWithoutDiscount < 250 && "cursor-not-allowed bg-gray-300"}`}
+                                    disabled={totalAmountWithoutDiscount < 250}
+                                    title={totalAmountWithoutDiscount < 250 ? "For orders total value must be more than 250 ETB" : ""}
                                 >
                                     Check out
                                 </button>
@@ -140,7 +151,7 @@ function Cart() {
                     </div>
                 </div>
                 <Header updateCartCount={updateCartCount} />
-            </div>
+            </div >
         </>
     );
 }

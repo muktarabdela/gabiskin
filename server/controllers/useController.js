@@ -1,11 +1,10 @@
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
 import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 dotenv.config();
-
+import asyncHandler from "express-async-handler"
 // Handle user registration
 const registerUser = async (req, res) => {
     try {
@@ -47,10 +46,10 @@ const registerUser = async (req, res) => {
         }
 
         // Check if the phone number already exists
-        const existingUserPhone = await User.findOne({ phone });
-        if (existingUserPhone) {
-            return res.status(409).json({ error: 'User with this phone number already exists' });
-        }
+        // const existingUserPhone = await User.findOne({ phone });
+        // if (existingUserPhone) {
+        //     return res.status(409).json({ error: 'User with this phone number already exists' });
+        // }
 
         // Hash the password
         const saltRounds = 10;
@@ -94,16 +93,14 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ error: 'Invalid email or password' });
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
+            return res.status(401).json({ error: 'Invalid email or password' });
         }
-
-        let isNewUser = false;
 
         const expirationTime = '1d';
 
@@ -114,7 +111,8 @@ const loginUser = async (req, res) => {
             token,
             user: {
                 email: user.email,
-                userId: user._id
+                userId: user._id,
+                isAdmin: user.isAdmin,
             }
         });
     } catch (error) {
@@ -177,9 +175,6 @@ const getUserInfo = async (req, res) => {
 
 // updateUserData
 
-// controllers/userController.js
-
-
 const updateUserData = async (req, res) => {
     const userId = req.params.userId;
     const { deliveryInfo, orders } = req.body;
@@ -208,9 +203,42 @@ const updateUserData = async (req, res) => {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
     }
-};
+}
+const updateAdminEmail = asyncHandler(async (req, res) => {
 
 
-export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData }
+    res.json({ message: 'Admin email updated successfully' });
+});
+
+
+const updateAdminPassword = asyncHandler(async (req, res) => {
+
+    res.json({ message: 'Admin password updated successfully' });
+});
+
+const adminLogin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if the user with the provided email exists and has admin role
+    const admin = await User.findOne({ email, role: 'admin' });
+    console.log('Admin found:', admin); // Add this line for debugging
+
+
+    if (admin && (await bcrypt.compare(password, admin.password))) {
+        // Admin credentials are valid, generate a token
+        const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_KEY, {
+            expiresIn: '3h', // Set your desired expiration time
+        });
+
+        res.json({
+            success: true,
+            token,
+        });
+    } else {
+        res.status(401).json({ error: 'Invalid admin credentials' });
+    }
+});
+
+export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateAdminEmail, updateAdminPassword, adminLogin }
 
 

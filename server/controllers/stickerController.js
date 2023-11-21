@@ -139,15 +139,18 @@ const postCustomData = async (req, res) => {
     }
 };
 
-const updatePaymentStatus = async  (req, res) => {
+const updatePaymentAndDeliveryStatus = async (req, res) => {
     const { userId } = req.params;
-    const { newPaymentStatus } = req.body;
+    const { newPaymentStatus, newDeliveryStatus } = req.body;
 
     try {
-        // Find the user by userId and update the paymentStatus
+        // Find the user by userId and update both paymentStatus and deliveryStatus
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { paymentStatus: newPaymentStatus },
+            {
+                paymentStatus: newPaymentStatus,
+                deliveryStatus: newDeliveryStatus,
+            },
             { new: true } // Return the updated user
         );
 
@@ -155,12 +158,16 @@ const updatePaymentStatus = async  (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.json({ message: 'Payment status updated successfully', user: updatedUser });
+        res.json({
+            message: 'Payment and delivery status updated successfully',
+            user: updatedUser,
+        });
     } catch (error) {
-        console.error('Error updating payment status:', error);
+        console.error('Error updating payment and delivery status:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 export {
@@ -169,5 +176,5 @@ export {
     updateSticker,
     fetchImages,
     postCustomData,
-    updatePaymentStatus
+    updatePaymentAndDeliveryStatus
 }

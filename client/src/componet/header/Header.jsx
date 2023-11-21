@@ -31,18 +31,18 @@ const Header = () => {
     return (
 
         <AppBar
-        className='pl-10 h-[60px] '
+            className='pl-10 h-[60px] '
             position="fixed" style={{ boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
             <Toolbar className=''>
 
                 <Box
-                    className=' absolute  left-[120px] md:left-[30px] lg:left-[50px] md:flex lg:flex'
+                    className=' absolute  left-[90px] md:left-[30px] lg:left-[50px] mx-auto md:flex lg:flex'
                     variant="h6" style={{ flexGrow: 1, color: "black" }}>
                     <Link
                         className='cursor-pointer'
                         to="/">
                         <img
-                            className=' w-[4em] h-[3em]'
+                            className=' w-[4em] h-[2.5em]'
                             src={Logo} alt="logo" />
 
                     </Link>

@@ -7,12 +7,15 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [selectedSize, setSelectedSize] = useState(null);
     const [price, setPrice] = useState(null);
     const [stickerData, setStickerData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false); // New loading state
+    const [isLoading, setIsLoading] = useState(false);
+    const [sizeError, setSizeError] = useState(null);
+
     const dispatch = useDispatch();
 
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
         setSelectedSize(newSize);
+        setSizeError(null);
         if (newSize === 'small') {
             setPrice(30);
         } else if (newSize === 'medium') {
@@ -26,21 +29,27 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         return null;
     }
 
-    const renderSizeDetails = () => {
-        if (selectedSize === 'small') {
-            return <p>Details for half_package</p>;
-        } else if (selectedSize === 'medium') {
-            return <p>Details for regular_full_package</p>;
-        } else if (selectedSize === 'large') {
-            return <p>Details for premium</p>;
-        }
+    // const renderSizeDetails = () => {
+    //     if (selectedSize === 'small') {
+    //         return <p>Details for half_package</p>;
+    //     } else if (selectedSize === 'medium') {
+    //         return <p>Details for regular_full_package</p>;
+    //     } else if (selectedSize === 'large') {
+    //         return <p>Details for premium</p>;
+    //     }
 
-        return null;
-    };
+    //     return null;
+    // };
 
     const updateSticker = async () => {
+        if (!selectedSize) {
+            setSizeError('Size is required');
+            return;
+        } else {
+            setSizeError(null);
+        }
         try {
-            setIsLoading(true); // Set loading state to true when starting the update
+            setIsLoading(true);
 
             const data = await axios.put(`/stickers/update/${stickerId}`, {
                 size: selectedSize,
@@ -69,9 +78,18 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         }
     };
 
+    function CircularProgress() {
+        return (
+            <div className="flex items-center justify-center">
+                <div className="border-t-4 border-white border-solid h-12 w-12 rounded-full animate-spin"></div>
+            </div>
+        )
+    }
     return (
+
         <div className="fixed inset-2 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded shadow-md mb-[240px] md:mb-[130px] lg:mb-[100px] w-[40vh] sm:h-[50vh] md:h-[70vh]">
+
+            <div className="bg-white p-4 rounded shadow-lg mb-[200px] md:mb-[130px] lg:mb-[100px] w-[40vh] sm:h-[50vh] md:h-[70vh]">
                 <h2 className="text-2xl font-semibold mb-2 mt-[10px] text-black ">
                     Select Your chosen Sticker Size
                 </h2>
@@ -79,7 +97,8 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     <div className="mb-2">
                         <select
                             name="SubCity"
-                            className="w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400"
+                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 ${sizeError ? 'border-red-500' : 'border-gray-400'}`}
+
                             onChange={handleSizeChange}
                             value={selectedSize || ""}
                         >
@@ -88,9 +107,11 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                             <option value="medium">Medium</option>
                             <option value="large">Large</option>
                         </select>
+                        {sizeError && <p className="text-red-500 text-sm mt-1">{sizeError}</p>}
+
                     </div>
 
-                    {renderSizeDetails()}
+                    {/* {renderSizeDetails()} */}
                 </div>
 
                 <p className="text-gray-700 mb-4 text-[18px]">Price: {price} ETB</p>
@@ -124,11 +145,14 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                                         stroke="currentColor"
                                         strokeWidth="4"
                                     ></circle>
+
                                     <path
                                         className="opacity-75"
                                         fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 6.627 5.373 12 12 12v-4a7.963 7.963 0 01-6-2.709z"
-                                    ></path>
+                                    >
+                                    </path>
+
                                 </svg>
                             </>
                         ) : (

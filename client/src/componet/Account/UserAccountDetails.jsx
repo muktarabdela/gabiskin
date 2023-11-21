@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import Telegram from '../../../public/images/telegram.png';
+import tiktok from '../../../public/images/tiktok.png';
+import instagram from '../../../public/images/instagram.png';
+import youtube from '../../../public/images/youtube.png';
 const UserAccountDetails = ({ userInfo }) => {
-  if (!userInfo.paymentStatus) {
+  if (!userInfo.deliveryInfo) {
     return (
       <div className="container mx-auto p-8 mt-[60px] text-center">
         <p className="mt-10 text-gray-300 text-4xl animate__animated animate__fadeInDown">
@@ -12,7 +15,7 @@ const UserAccountDetails = ({ userInfo }) => {
           Home of Sticker
         </p>
         <div className="mt-4 animate__animated animate__fadeIn">
-          <p className="text-gray-400">
+          <p className="text-gray-300">
             You haven't placed any orders yet. Explore our collection and
             <Link to="/" className="text-blue-500 hover:underline"> order now!</Link>
           </p>
@@ -25,6 +28,16 @@ const UserAccountDetails = ({ userInfo }) => {
     return total + order.stickers.reduce((orderTotal, sticker) => orderTotal + sticker.totalPrice, 0);
   }, 0);
   const totalAmountWithDiscount = totalAmountWithoutDiscount / 5
+
+  const unpaid = totalAmountWithoutDiscount - totalAmountWithDiscount
+
+
+  const socialMediaLinks = {
+    telegram: 'http://t.me/gabiskin',
+    tiktok: 'https://www.tiktok.com/@gabiskin',
+    instagram: ' http://instagram.com/gabiskin_',
+    youtube: ' https://youtube.com/@gabiskin_?si=OKwEAlr-AWUkGtS0',
+  };
   return (
     <div className="container mx-auto p-8 mt-[60px]">
       {/* User Information */}
@@ -63,6 +76,13 @@ const UserAccountDetails = ({ userInfo }) => {
                   <td className="font-semibold">Delivery Location:</td>
                   <td>{userInfo.deliveryInfo.deliveryLocation}</td>
                 </tr>
+                <tr>
+                  <td className="font-semibold ">Delivery Status:</td>
+                  <td>
+                    <span className=' rounded text-black border p-1 bg-blue-400'> {userInfo.
+                      deliveryStatus}</span>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -75,7 +95,7 @@ const UserAccountDetails = ({ userInfo }) => {
                   <tbody>
                     <tr>
                       <td className="font-semibold ">Payment Status:</td>
-                      <td className='text-blue-600 rounded  p-2 bg-blue-200'>{userInfo.paymentStatus}</td>
+                      <td className=' rounded w-5  text-black border p-1 bg-blue-400'>{userInfo.paymentStatus}</td>
                     </tr>
                     <tr>
                       <td className="font-semibold">Payment Method:</td>
@@ -85,7 +105,7 @@ const UserAccountDetails = ({ userInfo }) => {
                 </table>
                 <div className="md:col-span-1 mb-4 md:mb-0">
                   <h2 className="text-xl font-bold mb-2">Payment Screenshot Receipt</h2>
-                  <img src={userInfo.receiptScreenshot} alt="Payment Screenshot" className="w-[15em] rounded-md" />
+                  <img src={userInfo.receiptScreenshot} alt="Payment Screenshot" className="w-[11em] rounded-md" />
                 </div>
               </div>
             </div>
@@ -136,8 +156,25 @@ const UserAccountDetails = ({ userInfo }) => {
           <p className="text-black font-bold">
             Initial Price: {totalAmountWithDiscount} ETB
           </p>
+          <p className="text-black font-bold mt-2">
+            unpaid Price: {unpaid} ETB
+          </p>
         </div>
         <h2 className='text-gray-600 text-center mt-6 text-lg font-semibold'>visit our social media</h2>
+        <div className="flex justify-around mt-8 mx-auto w-[20em]">
+          <a href={socialMediaLinks.telegram} target="_blank" rel="noopener noreferrer">
+            <img src={Telegram} alt="Telegram" className="w-8 h-8 cursor-pointer" />
+          </a>
+          <a href={socialMediaLinks.tiktok} target="_blank" rel="noopener noreferrer">
+            <img src={tiktok} alt="TikTok" className="w-8 h-8 cursor-pointer" />
+          </a>
+          <a href={socialMediaLinks.instagram} target="_blank" rel="noopener noreferrer">
+            <img src={instagram} alt="Instagram" className="w-8 h-8 cursor-pointer" />
+          </a>
+          <a href={socialMediaLinks.youtube} target="_blank" rel="noopener noreferrer">
+            <img src={youtube} alt="Youtube" className="w-8 h-8 cursor-pointer" />
+          </a>
+        </div>
       </div>
     </div>
   );

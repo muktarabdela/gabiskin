@@ -23,6 +23,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
     deliveryInfo: {
         firstName: {
             type: String,
@@ -45,12 +54,7 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: false,
         },
-        deliveryStatus: {
-            type: String,
-            enum: ['Pending', 'Paid', 'Failed'],
-            default: 'Pending',
-        },
-    
+
     },
     orders: [
         {
@@ -76,14 +80,14 @@ const userSchema = new mongoose.Schema({
     paymentMethod: {
         type: String,
         enum: ['Telebirr', 'CBE', 'BOA'], // Add other payment methods as needed
+    }, deliveryStatus: {
+        type: String,
+        enum: ['Pending', 'progress', 'arrived'],
+        default: 'Pending',
     },
 
     receiptScreenshot: {
         type: String, // Assuming you store the image URL/path
-    },
-    isNewUser: {
-        type: Boolean,
-        default: true,
     },
 });
 
