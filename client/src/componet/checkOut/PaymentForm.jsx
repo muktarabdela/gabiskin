@@ -83,8 +83,8 @@ const PaymentForm = () => {
             });
             setIsUploading(false);
 
-            navigate(`/account/${userId}`, { replace: true });
-            window.location.reload();
+            // navigate(`/account/${userId}`, { replace: true });
+            // window.location.reload();
             console.log(paymentInfo);
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -97,17 +97,17 @@ const PaymentForm = () => {
 
     function CircularProgress() {
         return (
-            <div className="flex items-center justify-center">
-                <div className="border-t-4 border-white border-solid h-12 w-12 rounded-full animate-spin"></div>
+            <div className="fixed items-center justify-center">
+                <div className="border-t-4 border-white border-solid h-8 w-8 rounded-full animate-spin mr-9"></div>
             </div>
         )
     }
     return (
         <div className=" flex flex-col items-center justify-center bg-gray-100">
             {isUploading ? (
-                <div className="flex items-center bg-green-500 rounded p-2 absolute top-[12em]  right-7">
+                <div className=" items-center bg-green-500 rounded p-2 absolute top-[4.5em]  right-3">
                     <CircularProgress />
-                    <span className="ml-2">Wait a minute it takes a minute </span>
+                    <span className="ml-12">Wait a minute it  </span>
                 </div>
             ) : (
                 ''
