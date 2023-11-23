@@ -38,7 +38,7 @@ const UserAccountDetails = ({ userInfo }) => {
   // Define the text based on deliveryStatus
   if (userInfo.deliveryStatus === 'Pending') {
     deliveryStatusText = 'Your order has been approved and is now being prepared for delivery.';
-  } else if (userInfo.deliveryStatus === 'Delivered' || userInfo.paymentStatus === 'Paid') {
+  } else if (userInfo.deliveryStatus === 'Delivered') {
     deliveryStatusText = "We hope you enjoy your new order! Please don't hesitate to contact us if you have any questions.";
 
   } else if (userInfo.deliveryStatus === 'in progress') {
@@ -261,9 +261,15 @@ const UserAccountDetails = ({ userInfo }) => {
             <img src={youtube} alt="Youtube" className="w-8 h-8 cursor-pointer" />
           </a>
         </div>
+        <div>
+          <p className='dark:text-gray-500 mt-5 text-md'>Address if you want to visit us in our office</p>
+          <p className='dark:text-gray-500 text-md'>Kality total KCBC bledge</p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default UserAccountDetails;
+
+//  - ,

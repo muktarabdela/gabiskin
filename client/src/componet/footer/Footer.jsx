@@ -42,7 +42,7 @@ function Footer() {
                         rel="nofollow"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
-                        price                                        </Link>
+                        price    </Link>
                     </li>
                   </ul>
                 </div>
@@ -54,7 +54,7 @@ function Footer() {
                   <ul>
                     <li className="mb-4">
                       <a
-                        href="#"
+                        href="http://t.me/gabiskin"
                         target="_blank"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
@@ -62,16 +62,16 @@ function Footer() {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="https://www.tiktok.com/@gabiskin"
                         target="_blank"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
                         Tik tok
                       </a>
                     </li>
-                    <li className="my-2">
+                    <li className="">
                       <a
-                        href="#"
+                        href="https://youtube.com/@gabiskin_?si=OKwEAlr-AWUkGtS0"
                         target="_blank"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
@@ -79,7 +79,7 @@ function Footer() {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="http://instagram.com/gabiskin_"
                         target="_blank"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
@@ -91,7 +91,7 @@ function Footer() {
 
                 <iframe
                   src="https://maps.google.com/maps?q=  8.89652811296649,38.7720541236866 &t=&z=13&ie=UTF8&iwloc=&output=embed"
-                  className="relative right-[6em] md:right-[10em] lg:right-[20em] w-[20em] md:w-[30em] lg:w-[45em] h-[17em] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+                  className="relative right-[6em] md:right-[10em] lg:right-[18em] w-[20em] md:w-[23em] lg:w-[36em] h-[17em] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
                   frameBorder={0}
                   allowFullScreen=""
                 />

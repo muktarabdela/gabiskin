@@ -3,12 +3,17 @@ import axios from '../../Axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess, loginFailure } from '../../store/authSlice';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 const AdminAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [Error, setError] = useState(null)
+    const [showPassword, setShowPassword] = useState(false);
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -78,23 +83,43 @@ const AdminAuth = () => {
                                     required=""
                                 />
                             </div>
+
                             <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    placeholder="••••••••"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required=""
-                                />
+                                <div className='relative'>
+                                    <label
+                                        htmlFor="password"
+                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    >
+                                        Password
+                                    </label>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        id="password"
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        required=""
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
+                                    >
+                                        {showPassword ? (
+                                            // Lock Icon
+                                            <VisibilityOffIcon
+                                                className='mt-8'
+                                            />
+                                        ) : (
+                                            // Eye Icon
+                                            <VisibilityIcon
+                                                className='mt-8'
+                                            />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
 
                             <button

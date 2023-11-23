@@ -28,7 +28,8 @@
     transition: 0.4s;
     opacity: 0.9 !important;
 }
-.gabiskin__category-main__title p:hover { 
+
+.gabiskin__category-main__title p:hover {
     color: #6b46c1;
     transform: scale(1.1);
 }

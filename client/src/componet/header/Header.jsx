@@ -60,12 +60,6 @@ const Header = () => {
                             Pricing
                         </Link>
                     </li>
-
-                    <li className='mx- text-[1.2em] font-medium'>
-                        <Link to="/Works">
-                            About
-                        </Link>
-                    </li>
                     <li className='mx-5 text-[1.2em] font-medium'>
                         <Link to="/Works">
                             Our Work

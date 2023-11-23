@@ -8,7 +8,6 @@ const EditProfilePopup = ({ isOpen, closePopup, handleUpdateProfile, error }) =>
 
     useEffect(() => {
         if (!error && isOpen) {
-            closePopup();
         }
     }, [error, isOpen, closePopup]);
 

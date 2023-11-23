@@ -226,24 +226,19 @@ const updateProfile = async (req, res) => {
             if (!emailRegex.test(newEmail)) {
                 return res.status(400).json({ success: false, error: 'Invalid email format.' });
             }
-
             // Check if the email is already in use
-
             user.email = newEmail;
         }
-
         // Validate and update password
         if (newPassword && confirmPassword) {
             // Check if the new password and confirmation match
             if (newPassword !== confirmPassword) {
                 return res.status(400).json({ success: false, error: 'New password and confirmation do not match' });
             }
-
             // Hash the new password
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             user.password = hashedPassword;
         }
-
         // Save the updated user
         const updatedUser = await user.save();
 

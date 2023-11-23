@@ -1,13 +1,11 @@
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, } from "@material-ui/core";
 import { useContext, useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
 import { Link } from "react-router-dom";
-import { jwtDecode } from 'jwt-decode';
 
 const DeliveryForm = () => {
 
     const { setStep, DeliveryData, setDeliveryData, submitDeliveryData } = useContext(MultiStepContext)
-
     // State variables for input validation
     const [firstNameError, setFirstNameError] = useState(null);
     const [lastNameError, setLastNameError] = useState(null);

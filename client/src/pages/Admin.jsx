@@ -93,7 +93,7 @@ const Admin = ({ userId }) => {
         <div className=" flex flex-col h-screen mt-[5em]">
             <div className='text-right mr-6 mb-5'>
                 <button
-                    onClick={() => openEditPopup()}
+                    onClick={() => openEditPopup(userToUpdate)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-600"
                 >
                     Edit Profile

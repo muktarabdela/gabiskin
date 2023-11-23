@@ -75,15 +75,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Paid', 'Failed'],
         default: 'Pending',
-    }, deliveryStatus: {
-        type: String,
-        enum: ['pending', 'in progress', 'Delivered',],
-        default: 'pending',
     },
-
     paymentMethod: {
         type: String,
         enum: ['Telebirr', 'CBE', 'BOA'],
+    },
+    deliveryStatus: {
+        type: String,
+        enum: ['pending', 'in progress', 'Delivered', 'Failed'],
+        default: 'pending',
     },
     receiptScreenshot: {
         type: String,
