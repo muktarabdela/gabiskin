@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 const axios = Axios.create({
-    baseURL: 'http://localhost:5500/api',
+    baseURL: 'https://gabiskin.onrender.com',
     headers: {
         'Content-Type': 'application/json',
     },
