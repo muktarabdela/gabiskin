@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from '../../Axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = ({ onToggleForm }) => {
     const navigate = useNavigate();
@@ -43,7 +43,22 @@ const Login = ({ onToggleForm }) => {
     };
     return (
         <section className=" mt-[5em]">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div className="container mx-auto p-8 mt-[60px] text-center">
+                <p className="text-gray-300 text-4xl animate__animated animate__fadeInDown">
+                    Welcome to Gabi Skin
+                </p>
+                <p className="text-gray-400 text-xl animate__animated animate__fadeInUp">
+                    Home of Sticker
+                </p>
+                <div className="mt-4 animate__animated animate__fadeIn">
+                    <p className="text-gray-300">
+                        You haven't placed any orders yet. Explore our collection and
+                        <Link to="/" className="text-blue-500 hover:underline"> order now!</Link>
+                    </p>
+                </div>
+            </div>
+            
+            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -94,7 +109,7 @@ const Login = ({ onToggleForm }) => {
                             >
                                 LogIn
                             </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                            {/* <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 you haven't any account ?{" "}
 
                                 <a
@@ -103,7 +118,7 @@ const Login = ({ onToggleForm }) => {
                                 >
                                     Create account here
                                 </a>
-                            </p>
+                            </p> */}
                         </form>
                     </div>
                 </div>

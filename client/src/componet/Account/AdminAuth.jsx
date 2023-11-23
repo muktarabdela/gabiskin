@@ -8,22 +8,19 @@ const AdminAuth = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [Error, setError] = useState(null)
-    const [hasNavigated, setHasNavigated] = useState(false);
 
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
-    useEffect(() => {
-        console.log('useEffect is running');
-        const token = localStorage.getItem('accessToken');
-        if (token && !hasNavigated) {
-            console.log('Token found, navigating to /admin');
-            navigate('/admin');
-            setHasNavigated(true);
-        }
-    }, [navigate, hasNavigated]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+
+        if (token) {
+            navigate('/admin', { replace: true }); // Use replace to avoid adding to history
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -40,18 +37,18 @@ const AdminAuth = () => {
             .then((response) => {
                 console.log(response.data);
                 const token = response.data.token;
-                console.log("console fro token", token)
+                console.log("console for token", token);
                 localStorage.setItem('accessToken', token);
 
                 dispatch(loginSuccess(response.data));
-                console.log("navigate to admin")
+                console.log("navigate to admin");
                 navigate("/admin");
             })
             .catch((error) => {
-                error.response.data
+                console.log(error)
                 console.error(error.response.data.error);
-                setError(error.response.data.error)
-            });
+                setError(error.response.data.error);
+            })
     };
     return (
         <section className=" mt-[5em]">

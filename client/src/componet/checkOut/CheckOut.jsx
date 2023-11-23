@@ -42,7 +42,7 @@ const CheckOut = () => {
     };
     return (
         <>
-            <div className='w-[24em] mb-[6em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
+            <div className='w-[22em] mb-[6em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
                 <h1 className="text-lg font-bold text-gray-700 leading-tight text-center mt-[90px] mb-">
                     payment form
                 </h1>
@@ -66,7 +66,7 @@ const CheckOut = () => {
                     {cartItems.map((item) => (
                         <li key={item.id} className="mb-6 border-b pb-4">
                             <div className="flex items-center justify-evenly">
-                                <img className="w-20 md:w-[9em] lg:w-[14em] h-20 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
+                                <img className="w-20 md:w-[9em] lg:w-[10em] lg:h-26 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
 
                                 <div>
                                     <p className="text-black mb-2 md:text-lg font-mono">

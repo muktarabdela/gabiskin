@@ -87,7 +87,7 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     }
     return (
 
-        <div className="fixed inset-2 flex items-center justify-center z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
 
             <div className="bg-white p-4 rounded shadow-lg mb-[200px] md:mb-[130px] lg:mb-[100px] w-[40vh] sm:h-[50vh] md:h-[70vh]">
                 <h2 className="text-2xl font-semibold mb-2 mt-[10px] text-black ">

@@ -11,13 +11,13 @@ mongoose.connect('mongodb+srv://gabiadmin:sHmguDJClRAev5uj@gabiskin.e248ek4.mong
 
 // Create an admin user and save it to the database
 const seedAdmin = async () => {
-    // Define the plain text password
     const plainTextPassword = '12345678';
 
-    // Generate a salt
-    const salt = await bcrypt.genSalt(10);
 
-    // Hash the password with the generated salt
+
+    // Hash the password
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(plainTextPassword, salt);
 
     // Create the admin user
@@ -25,7 +25,7 @@ const seedAdmin = async () => {
         name: 'Admin',
         email: 'admin@gmail.com',
         password: hashedPassword,
-        confirmPassword: plainTextPassword, // You may want to remove this from the model/schema
+        confirmPassword: plainTextPassword,
         role: 'admin',
     });
 
@@ -34,10 +34,8 @@ const seedAdmin = async () => {
     console.log('Admin user seeded successfully');
 };
 
-// Run the seedAdmin function
 seedAdmin()
     .then(() => {
-        // Close the MongoDB connection after seeding
         mongoose.connection.close();
     })
     .catch((error) => {

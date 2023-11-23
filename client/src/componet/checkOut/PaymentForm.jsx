@@ -16,12 +16,6 @@ import { useDispatch } from 'react-redux';
 const PaymentForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const token = localStorage.getItem('acc2essToken');
-    const isValidToken = typeof token === 'string' && token.length > 0;
-    const decodedToken = isValidToken ? jwtDecode(token) : null;
-    const userIdFromToken = decodedToken ? decodedToken.userId : null;
-
     const deliveryData = useSelector(selectDelivery);
     const cartItems = useSelector(selectCartItems);
     const error = useSelector(state => state.user.Error);
@@ -35,55 +29,6 @@ const PaymentForm = () => {
     const [paymentMethod, setPaymentMethod] = useState(null)
     const userId = useSelector(selectUserId);
 
-    useEffect(() => {
-        const checkUserRegistration = async () => {
-            if (userIdFromToken) {
-                try {
-                    const updatedUserData = {
-                        deliveryInfo: {
-                            firstName: deliveryData.firstName,
-                            lastName: deliveryData.lastName,
-                            phone: deliveryData.phoneNumber,
-                            subCity: deliveryData.subCity,
-                            deliveryLocation: deliveryData.deliveryLocation,
-                        },
-                        orders: [
-                            {
-                                stickers: cartItems.map(item => ({
-                                    id: item.id,
-                                    price: item.price,
-                                    size: item.size,
-                                    quantity: item.quantity,
-                                    totalPrice: item.totalPrice,
-                                    category: item.category,
-                                    imageUrl: item.imageUrl,
-                                })),
-                            },
-                        ],
-                    };
-
-
-
-                    const updatedUserDataResponse = await axios.patch(`/users/${userIdFromToken}`,
-                        updatedUserData, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    });
-
-                    console.log('User data updated:', updatedUserDataResponse.data);
-                } catch (error) {
-                    // Handle errors
-                    console.error('Error updating user data:', error);
-                }
-            }
-        };
-
-        checkUserRegistration();
-    }, [userIdFromToken, token, deliveryData, cartItems]);
-
-    const userIdToUse = userIdFromToken || userId;
 
     const handlePaymentMethodChange = (e) => {
         const selectedPaymentMethod = e.target.value;
@@ -103,20 +48,17 @@ const PaymentForm = () => {
         } else {
             setPaymentMethodError(null);
         }
-
         if (!images || images.length === 0) {
             setImageError('Image file is required');
             return;
         } else {
             setImageError(null);
         }
-
         setIsUploading(true);
         const formData = new FormData();
         formData.append('file', images[0]);
         formData.append('upload_preset', 'Receipt_screenshot');
         formData.append('folder', 'Receipt');
-
         try {
             const response = await axios.post(
                 "https://api.cloudinary.com/v1_1/dcug2edrg/image/upload",
@@ -129,9 +71,8 @@ const PaymentForm = () => {
             );
             console.log('Image uploaded:', response.data.secure_url);
             const token = localStorage.getItem('acc2essToken');
-
             const paymentInfo = await axios.post('/users/paymentInfo', {
-                userId: userIdToUse,
+                userId: userId,
                 receiptScreenshot: response.data.secure_url,
                 paymentMethod: paymentMethod,
             }, {
@@ -310,10 +251,7 @@ const PaymentForm = () => {
                         />
                     </div>
                     {imageError && <p className="text-red-500 text-sm mt-1">{imageError}</p>}
-
-
                 </div>
-
                 <div className="flex mt-[2em]">
                     <div className="mx-auto">
                         <Button
@@ -344,13 +282,7 @@ const PaymentForm = () => {
                             }}
                         >
                             Done
-
                         </Button>
-
-
-
-
-
                     </div>
                 </div>
             </div>

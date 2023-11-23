@@ -56,15 +56,17 @@ const PaymentInfo = ({ users }) => {
     }));
   };
 
+  const reversedUsers = users.slice().reverse();
+
   return (
     <div className="mb-8">
       <h2 className="text-3xl font-semibold mb-4">payment</h2>
-      {Array.isArray(users) &&
-        users.map((user) => (
+      {Array.isArray(reversedUsers) &&
+        reversedUsers.map((user) => (
           <div key={user._id} className="mb-4 md:flex lg:flex justify-between bg-gray-100 rounded-md p-4">
             <div>
 
-              <p className="text-gray-600 mb-2"><strong>User Name:</strong>  {(user.phone || (user.deliveryInfo && user.deliveryInfo.firstName)) || 'N/A'}</p>
+              <p className="text-gray-600 mb-2"><strong>User Name:</strong>  {(user.deliveryInfo && user.deliveryInfo.firstName) || 'N/A'}</p>
               <p className="text-gray-600 mb-2"><strong>User Phone:</strong>  {(user.phone || (user.deliveryInfo && user.deliveryInfo.phone)) || 'N/A'}</p>
               <p className="text-gray-600 mb-2"><strong>User email:</strong> {user.email}</p>
               <p className="text-gray-600 mb-2"><strong>paymentMethod:</strong> {user.paymentMethod}</p>

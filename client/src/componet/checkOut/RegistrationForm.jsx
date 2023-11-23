@@ -11,10 +11,6 @@ import { jwtDecode } from 'jwt-decode';
 
 const RegisterForm = () => {
 
-    const token = localStorage.getItem('acc2essToken');
-    const isValidToken = typeof token === 'string' && token.length > 0;
-    const decodedToken = isValidToken ? jwtDecode(token) : null;
-    const userIdFromToken = decodedToken ? decodedToken.userId : null;
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
 
     const deliveryData = useSelector(selectDelivery);
@@ -90,7 +86,7 @@ const RegisterForm = () => {
         if (!registerData["Email"]) {
             setEmailErrorInput("email required");
             isValid = false;
-        } 
+        }
         else {
             setEmailErrorInput(null);
         }
@@ -139,7 +135,7 @@ const RegisterForm = () => {
                         margin="normal"
                         variant="outlined"
                         color="secondary"
-                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${nameError ? 'border-red-500 bg-red-100' : '' 
+                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${nameError ? 'border-red-500 bg-red-100' : ''
                             }`}
                         onInput={() => setNameError(null)}
                         value={DeliveryData["firstName"]}

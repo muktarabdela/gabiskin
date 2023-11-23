@@ -21,12 +21,12 @@ const registerUser = async (req, res) => {
         if (!confirmPassword) {
             return res.status(400).json({ error: 'Confirm password required' });
         }
-        // if (!phone) {
-        //     return res.status(400).json({ error: 'Phone number required' });
-        // }
-        // if (!name) {
-        //     return res.status(400).json({ error: 'Name required' });
-        // }
+        if (!phone) {
+            return res.status(400).json({ error: 'Phone number required' });
+        }
+        if (!name) {
+            return res.status(400).json({ error: 'Name required' });
+        }
 
         // Validate email
         const emailPattern = /^\S+@\S+\.\S+$/;
@@ -40,16 +40,16 @@ const registerUser = async (req, res) => {
         }
 
         // Check if the email already exists
-        const existingUserEmail = await User.findOne({ email });
+        const existingUserEmail = await User.findOne({ email }).lean();
         if (existingUserEmail) {
             return res.status(409).json({ error: 'User with this email already exists' });
         }
 
         // Check if the phone number already exists
-        // const existingUserPhone = await User.findOne({ phone });
-        // if (existingUserPhone) {
-        //     return res.status(409).json({ error: 'User with this phone number already exists' });
-        // }
+        const existingUserPhone = await User.findOne({ phone });
+        if (existingUserPhone) {
+            return res.status(409).json({ error: 'User with this phone number already exists' });
+        }
 
         // Hash the password
         const saltRounds = 10;
@@ -121,7 +121,6 @@ const loginUser = async (req, res) => {
     }
 };
 
-
 // post payment info
 const paymentInfo = async (req, res) => {
     try {
@@ -151,7 +150,6 @@ const paymentInfo = async (req, res) => {
     }
 }
 
-
 // server/controllers/userController.js
 
 const getUserInfo = async (req, res) => {
@@ -177,13 +175,9 @@ const getUserInfo = async (req, res) => {
 
 const updateUserData = async (req, res) => {
     const userId = req.params.userId;
-    const { deliveryInfo, orders } = req.body;
-
+    const { deliveryInfo, orders, paymentInfo } = req.body;
     try {
-        // Find the user by ID and update specific fields without replacing the entire document
         const user = await User.findById(userId);
-
-
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -195,7 +189,9 @@ const updateUserData = async (req, res) => {
         if (orders) {
             user.orders = user.orders.concat(orders);
         }
-
+        if (paymentInfo) {
+            user.paymentInfo = { ...user.paymentInfo, ...paymentInfo };
+        }
         const updatedUser = await user.save();
 
         return res.status(200).json({ message: 'User data updated successfully', user: updatedUser });
@@ -204,41 +200,85 @@ const updateUserData = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
-const updateAdminEmail = asyncHandler(async (req, res) => {
 
+const updateProfile = async (req, res) => {
+    try {
+        const { userId, currentPassword, newEmail, newPassword, confirmPassword } = req.body;
 
-    res.json({ message: 'Admin email updated successfully' });
-});
+        const user = await User.findById(userId).maxTime(20000);
+        if (!user) {
+            return res.status(404).json({ success: false, error: 'User not found' });
+        }
+        const existingUser = await User.findOne({ email: newEmail });
+        if (existingUser) {
+            return res.status(400).json({ success: false, error: 'Email is already in use.' });
+        }
 
+        // Check if the current password is valid
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ success: false, error: 'Invalid current password' });
+        }
 
-const updateAdminPassword = asyncHandler(async (req, res) => {
+        // Validate and update email
+        if (newEmail) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmail)) {
+                return res.status(400).json({ success: false, error: 'Invalid email format.' });
+            }
 
-    res.json({ message: 'Admin password updated successfully' });
-});
+            // Check if the email is already in use
+
+            user.email = newEmail;
+        }
+
+        // Validate and update password
+        if (newPassword && confirmPassword) {
+            // Check if the new password and confirmation match
+            if (newPassword !== confirmPassword) {
+                return res.status(400).json({ success: false, error: 'New password and confirmation do not match' });
+            }
+
+            // Hash the new password
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            user.password = hashedPassword;
+        }
+
+        // Save the updated user
+        const updatedUser = await user.save();
+
+        res.json({ success: true, user: updatedUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+};
 
 const adminLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    console.log('Received login request:', { email, password });
 
     // Check if the user with the provided email exists and has admin role
     const admin = await User.findOne({ email, role: 'admin' });
-    console.log('Admin found:', admin); // Add this line for debugging
+    if (admin) {
+        const passwordMatch = await bcrypt.compare(password, admin.password);
+        console.log('Password match result:', passwordMatch);
 
-
-    if (admin && (await bcrypt.compare(password, admin.password))) {
-        // Admin credentials are valid, generate a token
-        const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_KEY, {
-            expiresIn: '3h', // Set your desired expiration time
-        });
-
-        res.json({
-            success: true,
-            token,
-        });
+        if (passwordMatch) {
+            const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_KEY, {
+                expiresIn: '3h',
+            });
+            res.json({
+                success: true,
+                token,
+            });
+            return;
+        }
     } else {
         res.status(401).json({ error: 'Invalid admin credentials' });
     }
 });
 
-export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateAdminEmail, updateAdminPassword, adminLogin }
+export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateProfile, adminLogin }
 
 

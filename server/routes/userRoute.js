@@ -4,15 +4,16 @@ import User from '../models/userModel.js';
 import expressAsyncHandler from 'express-async-handler';
 
 // Define your routes here
-import { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateAdminEmail, updateAdminPassword, adminLogin } from '../controllers/useController.js';
+import { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, adminLogin, updateProfile, } from '../controllers/useController.js';
 import authenticateToken from '../middleware/authenticateToken.js';
+import authenticateUser from '../middleware/authMiddleware.js';
 
 router.post('/register', registerUser);
 
 router.post('/login', loginUser);
 
 // get user info  
-router.post('/paymentInfo', authenticateToken, paymentInfo)
+router.post('/paymentInfo', paymentInfo)
 
 // Update user data
 router.patch('/:userId', updateUserData);
@@ -25,15 +26,8 @@ router.get('/protected', authenticateToken, (req, res) => {
 // user info 
 router.get('/get-user-info/:userId', authenticateToken, getUserInfo)
 
-// Update admin email
-router.patch('/update-admin-email', updateAdminEmail);
-
-// Update admin password
-router.patch('/update-admin-password', authenticateToken, updateAdminPassword);
-
 // Admin login route
 router.post('/admin/login', adminLogin);
-
 
 // admin route
 router.get('/admin', async (req, res) => {
@@ -46,6 +40,7 @@ router.get('/admin', async (req, res) => {
     }
 });
 
+router.put('/update-profile', updateProfile)
 // router.post('/collect-delivery-info', collectDeliveryInfo)
 
 export default router;

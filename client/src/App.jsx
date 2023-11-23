@@ -15,9 +15,15 @@ import { useSelector } from 'react-redux';
 
 
 const PrivateRoute = ({ element }) => {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  return isLoggedIn ? element : <Navigate to="/login" />;
+  const token = localStorage.getItem('accessToken');
+  const isValidToken = typeof token === 'string' && token.length > 0;
+
+  if (!isValidToken) {
+    return <Navigate to="/login" />;
+  }
+  return element;
 };
+
 const App = () => {
   return (
     <>

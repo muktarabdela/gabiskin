@@ -1,11 +1,11 @@
 import React from 'react';
 
 const Orders = ({ users }) => {
-    console.log(users)
+    const reversedUsers = users.slice().reverse();
     return (
         <div className="mb-8">
             <h2 className="text-3xl font-semibold mb-4">Orders</h2>
-            {users.map((user, userIndex) => (
+            {reversedUsers.map((user, userIndex) => (
                 <div key={userIndex} className="mb-4 bg-gray-100 rounded-md p-4">
                     <p className="text-gray-600 mb-2"><strong>User Name:</strong> {user.name || user.deliveryInfo
                         .firstName}</p>

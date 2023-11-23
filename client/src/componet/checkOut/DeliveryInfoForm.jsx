@@ -6,12 +6,6 @@ import { jwtDecode } from 'jwt-decode';
 
 const DeliveryForm = () => {
 
-    const token = localStorage.getItem('acc2essToken');
-    const isValidToken = typeof token === 'string' && token.length > 0;
-    const decodedToken = isValidToken ? jwtDecode(token) : null;
-    const userIdFromToken = decodedToken ? decodedToken.userId : null;
-    console.log(userIdFromToken)
-
     const { setStep, DeliveryData, setDeliveryData, submitDeliveryData } = useContext(MultiStepContext)
 
     // State variables for input validation
@@ -168,11 +162,7 @@ const DeliveryForm = () => {
                         onClick={() => {
                             if (validateInput()) {
                                 submitDeliveryData();
-                                if (userIdFromToken) {
-                                    setStep(3);
-                                } else {
-                                    setStep(2);
-                                }
+                                setStep(2);
                             }
                         }}
                     >

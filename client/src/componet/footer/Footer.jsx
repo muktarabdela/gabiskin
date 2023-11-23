@@ -8,19 +8,19 @@ function Footer() {
       {/* This is an example component */}
       <div className="max-w-1xl mx-auto mt-[10em]">
         <footer className="p-4 sm:p-6 bg-gray-800 shadow-md rounded-t-xl">
-          <div className="md:flex md:justify-start">
-            <div className="mb-2 md:mb-0 relative left-[em]">
-              <a href="/" className="flex items-center">
-                <img
-                  src={logo}
-                  className="mr-2 h-10 w-[5em]"
-                  alt="FlowBite Logo"
-                />
-                <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                  Gabi Skin                                </span>
-              </a>
 
-            </div>
+          <div className="relative top-9 md:mb-0 ">
+            <a href="/" className="flex items-center">
+              <img
+                src={logo}
+                className="mr-2 h-10 w-[5em]"
+                alt="FlowBite Logo"
+              />
+            </a>
+
+          </div>
+          <div className="md:flex md:justify-start">
+
             <div className="ml-[6em] ">
               <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
                 <div>

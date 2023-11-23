@@ -6,15 +6,26 @@ import Orders from '../componet/admin/Orders';
 import PaymentInfo from '../componet/admin/PaymentInfo';
 import axios from '../Axios';
 import { useNavigate } from 'react-router-dom';
-import AdminAuth from '../componet/Account/AdminAuth';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
+import EditProfilePopup from '../componet/admin/EditProfilePopup';
+import { jwtDecode } from 'jwt-decode';
 const Admin = ({ userId }) => {
+    const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+    const [userToUpdate, setUserToUpdate] = useState(null);
     const [selectedSection, setSelectedSection] = useState('userInfo');
+    const [error, setError] = useState(null)
     const [usersData, setUsersData] = useState([]);
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const token = localStorage.getItem('accessToken');
+
+    const isValidToken = typeof token === 'string' && token.length > 0;
+    const decodedToken = isValidToken ? jwtDecode(token) : null;
+    const userIdFromToken = decodedToken ? decodedToken.id : null;
+    console.log(decodedToken)
+    console.log(userIdFromToken)
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -47,18 +58,48 @@ const Admin = ({ userId }) => {
         dispatch(logout());
         navigate('/login');
     };
+
+    const openEditPopup = (user) => {
+        setUserToUpdate(user);
+        setIsEditPopupOpen(true);
+    };
+
+    const closeEditPopup = () => {
+        setUserToUpdate(null);
+        setIsEditPopupOpen(false);
+    };
+
+    const handleUpdateProfile = async ({ newEmail, newPassword, confirmPassword, currentPassword }) => {
+        try {
+            const response = await axios.put('/users/update-profile', {
+                userId: userIdFromToken,
+                newEmail,
+                newPassword,
+                confirmPassword,
+                currentPassword,
+            });
+
+            console.log('Profile Update:', response.data);
+
+            // If successful, close the popup
+            closeEditPopup();
+        } catch (error) {
+            console.log(error)
+            setError(error.response.data.error);
+        }
+    };
+    console.log(error)
     return (
         <div className=" flex flex-col h-screen mt-[5em]">
-            <div className='text-right mr-9'>
+            <div className='text-right mr-6 mb-5'>
                 <button
-                    onClick={handleLogout}
-                    className="w-20 text-white bg-primary-600 rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700"
+                    onClick={() => openEditPopup()}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-600"
                 >
-                    Logout
+                    Edit Profile
                 </button>
             </div>
             <div className="flex w-[45vh] mx-auto">
-
                 <button
                     className={`w-full  py-2 mb-2 ${selectedSection === 'userInfo' ? 'bg-blue-300 text-white' : 'text-blue-500'}`}
                     onClick={() => setSelectedSection('userInfo')}
@@ -89,6 +130,12 @@ const Admin = ({ userId }) => {
             <div className="flex-1 p-8">
                 {renderSection()}
             </div>
+            <EditProfilePopup
+                isOpen={isEditPopupOpen}
+                closePopup={closeEditPopup}
+                handleUpdateProfile={handleUpdateProfile}
+                error={error}
+            />
         </div>
     );
 };

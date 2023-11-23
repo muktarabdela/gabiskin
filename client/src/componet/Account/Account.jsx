@@ -12,8 +12,8 @@ const Account = () => {
     const navigate = useNavigate(); // Use useNavigate instead of useHistory
 
     useEffect(() => {
+        
         const token = localStorage.getItem('acc2essToken');
-
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
@@ -22,7 +22,6 @@ const Account = () => {
                 const userIdFromToken = decodedToken.userId;
 
                 if (userIdFromToken) {
-                    // User is registered, fetch and display user information
                     axios
                         .get(`/users/get-user-info/${userIdFromToken}`, {
                             headers: {
@@ -49,7 +48,7 @@ const Account = () => {
             // No token available, indicating a new user
             setLoading(false);
         }
-    }, [userId, navigate]); 
+    }, [userId, navigate]);
 
     if (loading) {
         return <p>Loading...</p>;

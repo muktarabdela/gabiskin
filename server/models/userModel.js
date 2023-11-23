@@ -75,19 +75,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Paid', 'Failed'],
         default: 'Pending',
+    }, deliveryStatus: {
+        type: String,
+        enum: ['pending', 'in progress', 'Delivered',],
+        default: 'pending',
     },
 
     paymentMethod: {
         type: String,
-        enum: ['Telebirr', 'CBE', 'BOA'], // Add other payment methods as needed
-    }, deliveryStatus: {
-        type: String,
-        enum: ['Pending', 'progress', 'arrived'],
-        default: 'Pending',
+        enum: ['Telebirr', 'CBE', 'BOA'],
     },
-
     receiptScreenshot: {
-        type: String, // Assuming you store the image URL/path
+        type: String,
     },
 });
 

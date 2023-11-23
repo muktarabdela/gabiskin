@@ -23,6 +23,27 @@ const UserAccountDetails = ({ userInfo }) => {
       </div>
     );
   }
+  let paymentStatusText = '';
+  let deliveryStatusText = '';
+
+  // Define the text based on paymentStatus
+  if (userInfo.paymentStatus === 'Pending') {
+    paymentStatusText = 'Your payment is currently being processed. We will send you a notification once it is approved.';
+  } else if (userInfo.paymentStatus === 'Paid') {
+    paymentStatusText = 'We have received your payment and your order is now being processed. You will receive a notification when it is shipped.';
+  } else if (userInfo.paymentStatus === 'Failed') {
+    paymentStatusText = "There was an error processing your payment. Please try again or contact support for assistance";
+  }
+
+  // Define the text based on deliveryStatus
+  if (userInfo.deliveryStatus === 'Pending') {
+    deliveryStatusText = 'Your order has been approved and is now being prepared for delivery.';
+  } else if (userInfo.deliveryStatus === 'Delivered' || userInfo.paymentStatus === 'Paid') {
+    deliveryStatusText = "We hope you enjoy your new order! Please don't hesitate to contact us if you have any questions.";
+
+  } else if (userInfo.deliveryStatus === 'in progress') {
+    deliveryStatusText = 'Your order is currently being processed and is on its way to you.';
+  }
 
   const totalAmountWithoutDiscount = userInfo.orders.reduce((total, order) => {
     return total + order.stickers.reduce((orderTotal, sticker) => orderTotal + sticker.totalPrice, 0);
@@ -30,7 +51,6 @@ const UserAccountDetails = ({ userInfo }) => {
   const totalAmountWithDiscount = totalAmountWithoutDiscount / 5
 
   const unpaid = totalAmountWithoutDiscount - totalAmountWithDiscount
-
 
   const socialMediaLinks = {
     telegram: 'http://t.me/gabiskin',
@@ -40,85 +60,151 @@ const UserAccountDetails = ({ userInfo }) => {
   };
   return (
     <div className="container mx-auto p-8 mt-[60px]">
-      {/* User Information */}
-      <div className="mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="text-right ml-5 mb-5">
+        <div className="grid grid-cols-1 gap-4">
           <div>
             <p className="font-bold text-lg text-right">Hello: {userInfo.name || userInfo.deliveryInfo.firstName}</p>
           </div>
         </div>
       </div>
+      <>
+        <div className="mb-8 md:mr-[7em] lg:ml-[6em] ">
+          <h2 className="text-2xl font-bold mb-4">Payment and Delivery Status</h2>
+          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Payment Status:</h3>
+              <p className="text-gray-700 dark:text-gray-400">{paymentStatusText}</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Delivery Status:</h3>
+              <p className="text-gray-700 dark:text-gray-400">     {deliveryStatusText}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
 
       {/* Delivery Information */}
       <div className="">
-        <div className="mx-auto md:col-span-2 md:flex lg:flex md:ml-[10em] lg:ml-[10em]">
-          <div className="mb-4 md:mr-[6em] lg-[6em]">
-            <h2 className="text-xl font-bold mb-2">Delivery Information</h2>
-            <table className="w-full">
+
+        <div className="mb-4 md:mr-[7em] lg:ml-[6em] ">
+          <h2 className="text-xl font-bold mb-2">Delivery Information</h2>
+          <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-6 py-3">
+                    First Name
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    last Name
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Phone
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Sub City
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Delivery Location
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Delivery Status
+                  </th>
+                </tr>
+              </thead>
+
               <tbody>
-                <tr>
-                  <td className="font-semibold">First Name:</td>
-                  <td>{userInfo.deliveryInfo.firstName}</td>
-                </tr>
-                <tr className='mx-5'>
-                  <td className="font-semibold">Last Name:</td>
-                  <td>{userInfo.deliveryInfo.lastName}</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold">Phone:</td>
-                  <td>{userInfo.deliveryInfo.phone}</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold">Sub City:</td>
-                  <td>{userInfo.deliveryInfo.subCity}</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold">Delivery Location:</td>
-                  <td>{userInfo.deliveryInfo.deliveryLocation}</td>
-                </tr>
-                <tr>
-                  <td className="font-semibold ">Delivery Status:</td>
-                  <td>
-                    <span className=' rounded text-black border p-1 bg-blue-400'> {userInfo.
-                      deliveryStatus}</span>
-                  </td>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {userInfo.deliveryInfo.firstName}
+                  </th>
+
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {userInfo.deliveryInfo.lastName}
+                  </th>
+
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {userInfo.deliveryInfo.phone}
+                  </th>
+
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {userInfo.deliveryInfo.subCity}
+                  </th>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {userInfo.deliveryInfo.deliveryLocation}
+                  </th>
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <span className='text-[1.2em] ml-[2em] md:ml-[3em] lg:ml-[5em] rounded w-5 text-white border p-2 bg-blue-400'>
+                      {userInfo.deliveryStatus}
+                    </span>
+                  </th>
                 </tr>
               </tbody>
             </table>
           </div>
-          {/* Payment Information */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center mt-14 md:mt-0 lg:mt-0 xl:mx-[300px]">
-            <div className="md:col-span-2">
-              <div className="">
-                <h2 className="text-xl font-bold mb-2">Payment Information</h2>
-                <table className="w-full">
-                  <tbody>
+        </div>
+
+        {/* Payment Information */}
+        <div className="mb-4 md:mr-[7em] lg:ml-[6em] ">
+          <div className="md:col-span-2">
+            <div className="">
+              <h2 className="text-xl font-bold mb-2">Payment Information</h2>
+              <div class="relative overflow-x-auto">
+
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                      <td className="font-semibold ">Payment Status:</td>
-                      <td className=' rounded w-5  text-black border p-1 bg-blue-400'>{userInfo.paymentStatus}</td>
+                      <th scope="col" class="px-6 py-3">
+                        Payment Screenshot Receipt
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        Payment Method
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        Payment Status
+                      </th>
+                    </tr>
+                  </thead>
+
+
+                  <tbody>
+                    <tr className=''>
+                      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <img src={userInfo.receiptScreenshot} alt="Payment Screenshot" className="w-[11em] rounded-md" />
+                      </th>
+
+                      <th scope="row" class="px-6  py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <span className='text-[1.3em] ml-[1em] md:ml-[3em] lg:ml-[5em]'>                          {userInfo.paymentMethod}
+                        </span>
+                      </th>
+
+                      <th scope="row" className=''>
+                        <span className='text-[1.2em] ml-[2em] md:ml-[3em] lg:ml-[5em] rounded w-5  text-white border p-2 bg-blue-400'>  {userInfo.paymentStatus}</span>
+
+                      </th>
+
+                      <td ></td>
                     </tr>
                     <tr>
-                      <td className="font-semibold">Payment Method:</td>
-                      <td>{userInfo.paymentMethod}</td>
+
+                      <td></td>
                     </tr>
                   </tbody>
                 </table>
-                <div className="md:col-span-1 mb-4 md:mb-0">
-                  <h2 className="text-xl font-bold mb-2">Payment Screenshot Receipt</h2>
-                  <img src={userInfo.receiptScreenshot} alt="Payment Screenshot" className="w-[11em] rounded-md" />
-                </div>
               </div>
             </div>
           </div>
-
         </div>
+
       </div>
 
 
       {/* Orders */}
 
 
-      <div className="mx-2 cart-items-container my-6 rounded-md bg-gray-100 p-6">
+      <div className="cart-items-container my-6 rounded-md bg-gray-100 p-6">
         <h2 className="text-black text-2xl font-bold mb-4">Your Orders</h2>
         <hr className="border-black" />
         <ul className="mt-4">
@@ -161,7 +247,7 @@ const UserAccountDetails = ({ userInfo }) => {
           </p>
         </div>
         <h2 className='text-gray-600 text-center mt-6 text-lg font-semibold'>visit our social media</h2>
-        <div className="flex justify-around mt-8 mx-auto w-[20em]">
+        <div className="flex justify-around mt-8 mx-auto w-[13em]">
           <a href={socialMediaLinks.telegram} target="_blank" rel="noopener noreferrer">
             <img src={Telegram} alt="Telegram" className="w-8 h-8 cursor-pointer" />
           </a>

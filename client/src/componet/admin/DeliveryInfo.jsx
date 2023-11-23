@@ -6,15 +6,14 @@ const DeliveryInfo = ({ users }) => {
 
     const handleUpdateDeliveryStatus = async (userId) => {
         try {
-            const response = await axios.put(`/stickers/update-payment-status/${userId}`, {
+            const response = await axios.put(`/stickers/update-delivery-status/${userId}`, {
                 newDeliveryStatus: deliveryStatus[userId],
             });
-
             console.log(response.data);
-            alert('Payment status updated successfully!');
+            alert('Delivery status updated successfully!');
 
         } catch (error) {
-            console.error('Error updating payment status:', error);
+            console.error('Error updating delivery status:', error);
         }
     };
 
@@ -23,14 +22,15 @@ const DeliveryInfo = ({ users }) => {
             ...prevStatus,
             [userId]: newStatus,
         }));
-    };
+    }
+    const reversedUsers = users.slice().reverse();
     return (
         <div className="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
             <h2 className="text-3xl font-semibold mb-4">Delivery Information</h2>
 
-            {users.length > 0 ? (
+            {reversedUsers.length > 0 ? (
                 <div>
-                    {users.map((user, index) => (
+                    {reversedUsers.map((user, index) => (
                         <div key={index} className="bg-gray-100  text-black my-5  p-4 ">
                             <div className="mb-2">
                                 <strong>First Name:</strong> {user.deliveryInfo ? user.deliveryInfo.firstName : 'No delivery info'}
@@ -56,8 +56,8 @@ const DeliveryInfo = ({ users }) => {
                                     onChange={(e) => handleStatusChange(user._id, e.target.value)}
                                 >
                                     <option value="Pending">Pending</option>
-                                    <option value="Paid">progress</option>
-                                    <option value="Failed">arrived</option>
+                                    <option value="in progress">in progress</option>
+                                    <option value="Delivered">Delivered</option>
                                 </select>
                                 <button
                                     onClick={() => handleUpdateDeliveryStatus(user._id)}

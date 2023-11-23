@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Login from './Login';
-import Register from './Register';
+// import Register from './Register';
 
 const AuthForm = () => {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -11,11 +11,7 @@ const AuthForm = () => {
 
     return (
         <div>
-            {isRegistering ? (
-                <Register onToggleForm={toggleForm} />
-            ) : (
-                <Login onToggleForm={toggleForm} />
-            )}
+            <Login onToggleForm={toggleForm} />
         </div>
     );
 };
