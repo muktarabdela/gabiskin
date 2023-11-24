@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromCart, incrementQuantity, decrementQuantity, updateTotalQuantity } from '../../store/CartSlice';
+import { removeFromCart, incrementQuantity, decrementQuantity } from '../../store/CartSlice';
 import Header from "../header/Header";
 import { Link } from "react-router-dom";
 

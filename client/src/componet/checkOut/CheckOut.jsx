@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DeliveryForm from './DeliveryInfoForm';
 import RegisterForm from './RegistrationForm';
 import PaymentForm from './PaymentForm';
@@ -13,6 +13,10 @@ import instagram from '../../../public/images/instagram.png';
 import youtube from '../../../public/images/youtube.png';
 
 const CheckOut = () => {
+    useEffect(() => {
+        // Scroll to the top when the component mounts
+        window.scrollTo(0, 0);
+    }, []);
     const cartItems = useSelector(selectCartItems);
     const cartStickers = useSelector((state) => state.cart.stickers);
 
@@ -59,7 +63,7 @@ const CheckOut = () => {
                 </Stepper>
                 {showStep(currentStep)}
             </div>
-            
+
             <div className="mx-2 cart-items-container my-6 rounded-md bg-gray-100 p-6">
                 <h2 className="text-black text-2xl font-bold mb-4">Your Orders</h2>
                 <hr className="border-black" />
@@ -67,7 +71,7 @@ const CheckOut = () => {
                     {cartItems.map((item) => (
                         <li key={item.id} className="mb-6 border-b pb-4">
                             <div className="flex items-center justify-evenly">
-                                <img className="w-20 md:w-[9em] lg:w-[10em] lg:h-26 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
+                                <img className="w-[10em] md:w-[9em] lg:w-[10em] lg:h-26 object-cover mr-[2em] md:mr-[20em] lg-[60em]" src={item.imageUrl} alt="" />
 
                                 <div>
                                     <p className="text-black mb-2 md:text-lg font-mono">

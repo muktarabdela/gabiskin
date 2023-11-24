@@ -35,8 +35,6 @@ const HalfStickers = ({ category }) => {
                     Half Skin Package
                 </span>
             </h1>
-
-
             <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {currentStickers.map((sticker) => (
                     <HalfCard key={sticker._id} sticker={sticker} />

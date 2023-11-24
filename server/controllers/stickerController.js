@@ -69,7 +69,7 @@ const uploadMultiple = async (req, res) => {
                 category: "half",
                 size: sticker.size,
                 price: sticker.price,
-                imageUrl: imageUrl, // Assign the secure URL
+                imageUrl: imageUrl,
             });
 
             // Save the sticker to the database

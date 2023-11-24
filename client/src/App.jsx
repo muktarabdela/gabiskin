@@ -11,7 +11,6 @@ import CheckoutPage from "./componet/checkOut/CheckOut"
 import Admin from './pages/Admin'
 import Page404 from './pages/Page404'
 import AdminAuth from './componet/Account/AdminAuth'
-import { useSelector } from 'react-redux';
 
 
 const PrivateRoute = ({ element }) => {
@@ -25,6 +24,8 @@ const PrivateRoute = ({ element }) => {
 };
 
 const App = () => {
+  console.log('Rendering App');
+
   return (
     <>
       <Header />

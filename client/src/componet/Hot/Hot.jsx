@@ -60,7 +60,6 @@ function Hot() {
                     isFocused={index === focusedIndex}
                     selectedStickerId={selectedStickerId}
 
-                // Make sure to pass the function here
                 />
             )}
         </div>

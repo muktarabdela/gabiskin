@@ -8,15 +8,12 @@ import boa from "../../../public/images/boa.png"
 import { useSelector } from 'react-redux';
 import { selectUserId, setErrorData } from '../../store/userSlice.js';
 import { useNavigate } from 'react-router-dom';
-import { selectDelivery } from '../../store/deliverySlice';
-import { selectCartItems } from "../../store/CartSlice";
 import { useDispatch } from 'react-redux';
 
 const PaymentForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const error = useSelector(state => state.user.Error);
-
     const [paymentMethodError, setPaymentMethodError] = useState(null);
     const [imageError, setImageError] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -25,14 +22,11 @@ const PaymentForm = () => {
     const [images, setImages] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState(null)
     const userId = useSelector(selectUserId);
-
-
     const handlePaymentMethodChange = (e) => {
         const selectedPaymentMethod = e.target.value;
         setPaymentMethod(selectedPaymentMethod);
         setPaymentMethodError(null);
     };
-
     const handleImageChange = (e) => {
         const files = e.target.files;
         setImages(files);
@@ -102,9 +96,9 @@ const PaymentForm = () => {
     return (
         <div className=" flex flex-col items-center justify-center bg-gray-100">
             {isUploading ? (
-                <div className=" items-center bg-green-500 rounded p-2 absolute top-[4.5em]  right-3">
+                <div className=" items-center bg-green-500 rounded p-4 fixed top-[4.5em]  right-3">
                     <CircularProgress />
-                    <span className="ml-12">Wait a minute it  </span>
+                    <span className="ml-12 text-[1.2em]">Wait a minute </span>
                 </div>
             ) : (
                 ''

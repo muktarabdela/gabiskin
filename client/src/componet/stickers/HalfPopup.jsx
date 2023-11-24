@@ -108,7 +108,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
         } catch (error) {
             console.log(error);
         } finally {
-            setIsLoading(false); // Set loading state to false when the update is complete
+            setIsLoading(false);
         }
     };
 
@@ -142,6 +142,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                 <p className="text-lg text-blue-600">With Free Delivery</p>
                 <div className="flex justify-between mt-4">
                     <button
+                        onClick={onClose}
                         className="bg-red-500 text-white px-2 py-1 mt-5 rounded hover:bg-red-600 "
                     >
                         Close

@@ -126,7 +126,7 @@ const RegisterForm = () => {
     return (
         <div className="w-[19em] md:w-[22em] lg:w-[28em]  mx-auto  bg-white">
             <>
-                <p className="text-md text-gray-700 leading-tight text-center mt-8 mb-5">
+                <p className="text-md text-gray-700 leading-tight text-center dark:text-gray-500 mb-5">
                     {" "}
                     you need account to mange your order
                 </p>

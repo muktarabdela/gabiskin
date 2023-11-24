@@ -5,9 +5,6 @@ import DeliveryInfo from '../componet/admin/DeliveryInfo';
 import Orders from '../componet/admin/Orders';
 import PaymentInfo from '../componet/admin/PaymentInfo';
 import axios from '../Axios';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice';
 import EditProfilePopup from '../componet/admin/EditProfilePopup';
 import { jwtDecode } from 'jwt-decode';
 const Admin = ({ userId }) => {
@@ -16,8 +13,6 @@ const Admin = ({ userId }) => {
     const [selectedSection, setSelectedSection] = useState('userInfo');
     const [error, setError] = useState(null)
     const [usersData, setUsersData] = useState([]);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const token = localStorage.getItem('accessToken');
 
@@ -26,11 +21,12 @@ const Admin = ({ userId }) => {
     const userIdFromToken = decodedToken ? decodedToken.id : null;
     console.log(decodedToken)
     console.log(userIdFromToken)
+
     useEffect(() => {
+        window.scrollTo(0, 0);
         const fetchUserData = async () => {
             try {
                 const response = await axios.get('/users/admin');
-                console.log(response.data);
                 setUsersData(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error.message);
@@ -40,25 +36,14 @@ const Admin = ({ userId }) => {
     }, [userId]);
 
     const renderSection = () => {
-        switch (selectedSection) {
-            case 'userInfo':
-                return <UserInfo userInfo={usersData} />;
-            case 'deliveryInfo':
-                return <DeliveryInfo users={usersData} />;
-            case 'orders':
-                return <Orders users={usersData} />;
-            case 'PaymentInfo':
-                return <PaymentInfo users={usersData} />;
-            default:
-                return null;
-        }
+        const sectionComponents = {
+            userInfo: <UserInfo userInfo={usersData} />,
+            deliveryInfo: <DeliveryInfo users={usersData} />,
+            orders: <Orders users={usersData} />,
+            PaymentInfo: <PaymentInfo users={usersData} />,
+        };
+        return sectionComponents[selectedSection] || null;
     };
-
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/login');
-    };
-
     const openEditPopup = (user) => {
         setUserToUpdate(user);
         setIsEditPopupOpen(true);
@@ -99,37 +84,19 @@ const Admin = ({ userId }) => {
                     Edit Profile
                 </button>
             </div>
-            <div className="flex w-[45vh] mx-auto">
-                <button
-                    className={`w-full  py-2 mb-2 ${selectedSection === 'userInfo' ? 'bg-blue-300 text-white' : 'text-blue-500'}`}
-                    onClick={() => setSelectedSection('userInfo')}
-                >
-                    User Info
-                </button>
-                <button
-                    className={`w-full  mb-2 ${selectedSection === 'deliveryInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
-                    onClick={() => setSelectedSection('deliveryInfo')}
-                >
-                    Delivery Info
-                </button>
-                <button
-                    className={`w-full py-2 ${selectedSection === 'orders' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
-                    onClick={() => setSelectedSection('orders')}
-                >
-                    Orders
-                </button>
-                <button
-                    className={`w-full py-2 ${selectedSection === 'PaymentInfo' ? 'bg-blue-500 text-white' : 'text-blue-500'}`}
-                    onClick={() => setSelectedSection('PaymentInfo')}
-                >
-                    Payment Info
-                </button>
-            </div>
 
-            {/* Main Content */}
-            <div className="flex-1 p-8">
-                {renderSection()}
+            <div className="flex w-[45vh] mx-auto">
+                {['userInfo', 'deliveryInfo', 'orders', 'PaymentInfo'].map((section) => (
+                    <button
+                        key={section}
+                        className={`w-full py-2 mb-2 ${selectedSection === section ? 'bg-blue-300 text-white' : 'text-blue-500'}`}
+                        onClick={() => setSelectedSection(section)}
+                    >
+                        {section.replace(/([A-Z])/g, ' $1').trim()}
+                    </button>
+                ))}
             </div>
+            <div className="flex-1 p-8">{renderSection()}</div>
             <EditProfilePopup
                 isOpen={isEditPopupOpen}
                 closePopup={closeEditPopup}

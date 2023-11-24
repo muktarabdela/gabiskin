@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Card404 from '../componet/404/404Card'
 
 const Page404 = () => {
+    useEffect(() => {
+        // Scroll to the top when the component mounts
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div>
             <Card404 />

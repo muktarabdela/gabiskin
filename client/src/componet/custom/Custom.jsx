@@ -46,7 +46,6 @@ const Custom = () => {
                     useWebWorker: true,
                 };
                 try {
-                    return await imageCompression(file, options);
                 } catch (error) {
                     console.error('Error compressing image:', error);
                     return file; // Fallback to original image
@@ -110,6 +109,8 @@ const Custom = () => {
                     category: customDataBase.data.newSticker.category,
                     imageUrl: customDataBase.data.newSticker.imageUrl,
                 }));
+                setIsPopoverOpen(false);
+
             } catch (error) {
                 console.error(`Error uploading image ${i + 1}:`, error);
             }
@@ -152,16 +153,16 @@ const Custom = () => {
                             💫 We have a Discount for those who want Quantity.
                         </Typography>
                     </CardBody>
-                    <CardFooter className="pt-0">
-                        <PopoverHandler>
-                            <Button className='bg-red-600 ml-[8em] my-2' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
+                    <CardFooter className="pt-0 mx-auto">
+                        <PopoverHandler >
+                            <Button className='bg-red-600 mx-auto my-2' onClick={() => setIsPopoverOpen(!isPopoverOpen)}>
                                 Send Image
                             </Button>
                         </PopoverHandler>
                     </CardFooter>
                 </Card>
 
-                <PopoverContent className="w-96 ml-6">
+                <PopoverContent className="w-96 mx-auto">
                     <p className='text-black text-[1.5em] mx-auto mb-[1em] font-semibold'>
                         Choose your preferred size and price
                     </p>

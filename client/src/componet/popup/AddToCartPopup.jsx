@@ -77,14 +77,6 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             setIsLoading(false); // Set loading state to false when the update is complete
         }
     };
-
-    function CircularProgress() {
-        return (
-            <div className="flex items-center justify-center">
-                <div className="border-t-4 border-white border-solid h-12 w-12 rounded-full animate-spin"></div>
-            </div>
-        )
-    }
     return (
 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

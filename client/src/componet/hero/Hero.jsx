@@ -92,7 +92,7 @@ const Hero = () => {
                                 Our laptop skins are also available as an exact fit for all Laptop. Go to your favorite design and select the relevant size. we'll do the rest
                             </p>
                         </div>
-                        <img src={heroTwo} alt="Hero One" className="w-[19em] mb-3 md:w-auto lg:w-auto" />
+                        <img src={heroTwo} alt="Hero One" className="w-[19em] mx-auto mb-3 md:w-auto lg:w-auto" />
                     </div>
                 </div>
                 <div className="third-slide">
