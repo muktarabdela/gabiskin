@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import AddToCartPopup from '../popup/AddToCartPopup';
 
-function StickerCard({ sticker, currentPage, stickersPerPage, onPageChange }) {
+function StickerCard({ sticker }) {
     const [selectedStickerId, setSelectedStickerId] = useState(sticker._id);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -32,14 +32,16 @@ function StickerCard({ sticker, currentPage, stickersPerPage, onPageChange }) {
 
     return (
         <div className="m-3">
+            {isLoading && <CircularProgress />}
             <Card className='object-cover text-center mx-auto' elevation={3}>
-                <CardContent className='h-[20vh] md:h-[37vh] lg:h-[39vh] bg-[#ebebf0]'>
-                    {isLoading && <CircularProgress />}
+                <CardContent
+                    onLoad={() => setIsLoading(false)}
+
+                    className={`h-[20vh] md:h-[37vh] lg:h-[39vh] bg-[#ebebf0]  ${isLoading ? 'hidden' : ''}`}>
                     <img
+                        className='h-[12vh] w-[10vh] md:w-[25vh] md:h-[30vh] object-cover text-center mx-auto '
                         src={sticker.imageUrl}
                         alt={sticker.name}
-                        className={`h-[12vh] w-[10vh] md:w-[25vh] md:h-[30vh] object-cover text-center mx-auto ${isLoading ? 'hidden' : ''}`}
-                        onLoad={() => setIsLoading(false)}
                     />
                     <button
                         onClick={() => openPopup(sticker._id)}

@@ -11,7 +11,7 @@ const Category = () => {
 
     return (
         <>
-            <div className="gabiskin_category">
+            <div className="gabiskin_category ">
                 <h1 className="gabiskin__category-title">Category Stickers</h1>
                 <div className="gabiskin__category-main__title">
                     <p className={`top ${selectedCategory === "Movies" ? "selected text-purple-500 border-b-2" : ""}`} onClick={() => handleCategoryChange("Movies")}>Movie</p>

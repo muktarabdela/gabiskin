@@ -7,12 +7,18 @@ import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import axios from "../../Axios";
 import { setUserId, setErrorData } from '../../store/userSlice';
-import { jwtDecode } from 'jwt-decode';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 const RegisterForm = () => {
-
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
     const { currentStep, DeliveryData, setDeliveryData, setStep, submitRegisterData, registerData, setRegisterData } = useContext(MultiStepContext)
-
     const deliveryData = useSelector(selectDelivery);
     const registrationData = useSelector(selectRegistration);
     const cartItems = useSelector(selectCartItems);
@@ -117,11 +123,8 @@ const RegisterForm = () => {
             registrationData
         }
     }, [currentStep, submitRegisterData, handleRegistration]);
-
-
     return (
-        <div className="w-[40vh] mx-auto  bg-white">
-
+        <div className="w-[19em] md:w-[22em] lg:w-[28em]  mx-auto  bg-white">
             <>
                 <p className="text-md text-gray-700 leading-tight text-center mt-8 mb-5">
                     {" "}
@@ -143,6 +146,7 @@ const RegisterForm = () => {
                     />
 
                 </div>
+
                 <div className={`mb-2 ${emailErrorInput ? 'error' : ''}`}>
                     <TextField
                         label="Email"
@@ -154,37 +158,75 @@ const RegisterForm = () => {
                         value={registerData["Email"]}
                         onChange={(e) => setRegisterData({ ...registerData, "Email": e.target.value })}
                     />
-
                 </div>
-                <div className={`mb-2 ${passwordError ? 'error' : ''}`}>
-                    <TextField
-                        type="password"
-                        label="Password"
-                        margin="normal"
-                        variant="outlined"
-                        color="secondary"
-                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordError ? 'border-red-500 bg-red-100' : ''
-                            }`}
-                        onInput={() => setPasswordError(null)}
-                        value={registerData["password"]}
-                        onChange={(e) => setRegisterData({ ...registerData, "password": e.target.value })}
-                    />
 
+                <div className='relative'>
+                    <div className={`mb-2 ${passwordError ? 'error' : ''}`}>
+                        <TextField
+                            type={showPassword ? "text" : "password"} label="Password"
+                            margin="normal"
+                            variant="outlined"
+                            color="secondary"
+                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordError ? 'border-red-500 bg-red-100' : ''
+                                }`}
+                            onInput={() => setPasswordError(null)}
+                            value={registerData["password"]}
+                            onChange={(e) => setRegisterData({ ...registerData, "password": e.target.value })}
+                        />
+
+                    </div>
+                    <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
+                    >
+                        {showPassword ? (
+                            // Lock Icon
+                            <VisibilityOffIcon
+                                className='mt-3 text-black'
+                            />
+                        ) : (
+                            // Eye Icon
+                            <VisibilityIcon
+                                className='mt-3 text-black'
+                            />
+                        )}
+                    </button>
                 </div>
-                <div className={`mb-2 ${passwordConfirmError ? 'error' : ''}`}>
-                    <p className="text-red-400">{passwordConfirmError}</p>
-                    <TextField
-                        type="password"
-                        label="Confirm password"
-                        margin="normal"
-                        variant="outlined"
-                        color="secondary"
-                        className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordConfirmError ? 'border-red-500 bg-red-100' : ''
-                            }`}
-                        onInput={() => setPasswordConfirmError(null)}
-                        value={registerData["confirmPassword"]}
-                        onChange={(e) => setRegisterData({ ...registerData, "confirmPassword": e.target.value })}
-                    />
+
+                <div className='relative'>
+
+                    <div className={`mb-2 ${passwordConfirmError ? 'error' : ''}`}>
+                        <p className="text-red-400">{passwordConfirmError}</p>
+                        <TextField
+                            type={showConfirmPassword ? "text" : "password"} label="Confirm password"
+                            margin="normal"
+                            variant="outlined"
+                            color="secondary"
+                            className={`w-full px-4 py-3 rounded-md text-gray-700 font-medium border-solid border-2 border-gray-400 ${passwordConfirmError ? 'border-red-500 bg-red-100' : ''
+                                }`}
+                            onInput={() => setPasswordConfirmError(null)}
+                            value={registerData["confirmPassword"]}
+                            onChange={(e) => setRegisterData({ ...registerData, "confirmPassword": e.target.value })}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={toggleConfirmPasswordVisibility}
+                        className="absolute top-1/2 right-4 transform -translate-y-1/2 focus:outline-none"
+                    >
+                        {showConfirmPassword ? (
+                            // Lock Icon
+                            <VisibilityOffIcon
+                                className='mt-3 text-black'
+                            />
+                        ) : (
+                            // Eye Icon
+                            <VisibilityIcon
+                                className='mt-3 text-black'
+                            />
+                        )}
+                    </button>
                 </div>
 
                 <div className="flex mt-7">

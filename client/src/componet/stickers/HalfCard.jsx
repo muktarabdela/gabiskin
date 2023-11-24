@@ -6,6 +6,7 @@ import HalfPopup from './HalfPopup';
 function HalfCard({ sticker, onPageChange }) {
     const [selectedStickerId, setSelectedStickerId] = useState(sticker._id);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const openPopup = (stickerId) => {
         setSelectedStickerId(stickerId);
@@ -19,15 +20,25 @@ function HalfCard({ sticker, onPageChange }) {
     const handleAddToCart = () => {
         closePopup();
     }
+    function CircularProgress() {
+        return (
+            <div className="flex items-center justify-center mt-4">
+                <div className="border-t-4 border-blue-500 border-solid h-12 w-12 rounded-full animate-spin"></div>
+            </div>
+        )
+    }
 
     return (
         <div className="">
+            {isLoading && <CircularProgress />}
             <Card className='object-cover text-center mx-auto' elevation={3}>
-                <CardContent className='bg-[#ebebf0]'>
+                <CardContent
+                    onLoad={() => setIsLoading(false)}
+                    className={`bg-[#ebebf0] ${isLoading ? 'hidden' : ''}`}>
                     <img
                         src={sticker.imageUrl}
                         alt={sticker.name}
-                        className="h-[30vh] w-[40vh] md:w-[25vh] md:h-[30vh] object-cover text-center mx-auto"
+                        className="h-[25vh] w-[30vh] md:w-[25vh] md:h-[30vh] object-cover text-center mx-auto"
                     />
                     <button
                         onClick={() => openPopup(sticker._id)}

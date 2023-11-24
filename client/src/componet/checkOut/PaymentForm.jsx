@@ -1,5 +1,5 @@
-import { Button, CircularProgress, Tooltip } from "@material-ui/core";
-import { useContext, useEffect, useState } from "react";
+import { Button, Tooltip } from "@material-ui/core";
+import { useContext,  useState } from "react";
 import { MultiStepContext } from "../../Context/checkoutContext";
 import axios from "../../Axios";
 import telebir from "../../../public/images/telebirr.png"
@@ -8,7 +8,6 @@ import boa from "../../../public/images/boa.png"
 import { useSelector } from 'react-redux';
 import { selectUserId, setErrorData } from '../../store/userSlice.js';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { selectDelivery } from '../../store/deliverySlice';
 import { selectCartItems } from "../../store/CartSlice";
 import { useDispatch } from 'react-redux';
@@ -16,8 +15,6 @@ import { useDispatch } from 'react-redux';
 const PaymentForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const deliveryData = useSelector(selectDelivery);
-    const cartItems = useSelector(selectCartItems);
     const error = useSelector(state => state.user.Error);
 
     const [paymentMethodError, setPaymentMethodError] = useState(null);
@@ -83,8 +80,8 @@ const PaymentForm = () => {
             });
             setIsUploading(false);
 
-            // navigate(`/account/${userId}`, { replace: true });
-            // window.location.reload();
+            navigate(`/account/${userId}`, { replace: true });
+            window.location.reload();
             console.log(paymentInfo);
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -115,7 +112,7 @@ const PaymentForm = () => {
             <p className="text-lg text-gray-700 leading-tight text-center mt-8 mb-5">
                 Easy payment method
             </p>
-            <p className="text-red-500 my-2">{error}</p>
+            <p className="text-red-500 my-2 text-lg mb-2">{error}</p>
 
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-lg font-semibold mb-4 text-blue-500">Payment Options</h2>

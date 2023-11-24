@@ -17,12 +17,10 @@ function Cart() {
   }
   const handleIncrementQuantity = (itemId, itemPrice) => {
     dispatch(incrementQuantity(itemId));
-    dispatch(increaseTotalPrice(itemPrice));
   };
 
   const handleDecrementQuantity = (itemId, itemPrice) => {
     dispatch(decrementQuantity(itemId));
-    dispatch(decreaseTotalPrice(itemPrice));
   };
 
   const totalAmountWithoutDiscount = cartStickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);

@@ -11,6 +11,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [price, setPrice] = useState(null);
     const [stickerData, setStickerData] = useState(null);
     const [sizeError, setSizeError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -84,6 +85,7 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             setSizeError(null);
         }
         try {
+            setIsLoading(true);
             const data = await axios.put(`/stickers/update/${stickerId}`, {
                 size: selectedSize,
                 price: price,
@@ -105,6 +107,8 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
             onClose();
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false); // Set loading state to false when the update is complete
         }
     };
 
@@ -136,18 +140,47 @@ function HalfPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                     Price: {price} ETB
                 </p>
                 <p className="text-lg text-blue-600">With Free Delivery</p>
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-between mt-4">
                     <button
-                        onClick={onClose}
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        className="bg-red-500 text-white px-2 py-1 mt-5 rounded hover:bg-red-600 "
                     >
                         Close
                     </button>
+
                     <button
                         onClick={updateSticker}
-                        className="bg-blue-500 text-white px-4 py-2 ml-4 rounded hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-2 py-1 mr-[15px] mt-5 rounded hover:bg-blue-600 "
+                        disabled={isLoading} // Disable the button when loading
                     >
-                        Add to Cart
+                        {isLoading ? (
+                            <>
+                                <svg
+                                    className="animate-spin h-5 w-5 mr-3 text-white"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    ></circle>
+
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 6.627 5.373 12 12 12v-4a7.963 7.963 0 01-6-2.709z"
+                                    >
+                                    </path>
+
+                                </svg>
+                            </>
+                        ) : (
+                            'Add to Cart'
+                        )}
                     </button>
                 </div>
             </div>

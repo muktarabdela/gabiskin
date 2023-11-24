@@ -42,7 +42,7 @@ const CheckOut = () => {
     };
     return (
         <>
-            <div className='w-[22em] mb-[6em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
+            <div className='w-[22em] mb-[9em] md:w-[30em] lg:w-[35em] h-[40em] rounded-lg mx-auto bg-white'>
                 <h1 className="text-lg font-bold text-gray-700 leading-tight text-center mt-[90px] mb-">
                     payment form
                 </h1>
@@ -59,6 +59,7 @@ const CheckOut = () => {
                 </Stepper>
                 {showStep(currentStep)}
             </div>
+            
             <div className="mx-2 cart-items-container my-6 rounded-md bg-gray-100 p-6">
                 <h2 className="text-black text-2xl font-bold mb-4">Your Orders</h2>
                 <hr className="border-black" />

@@ -61,7 +61,7 @@ const DeliveryForm = () => {
 
 
     return (
-        <div className="w-[40vh] mx-auto">
+        <div className="w-[19em] md:w-[22em] lg:w-[28em] mx-auto">
             <p className="text-md text-gray-700 leading-tight text-center text-[23px] mb-2">
                 Delivery Address
             </p>
