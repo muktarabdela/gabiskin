@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Card404 from '../componet/404/404Card'
+import Card404 from '../components/404/404Card'
 
 const Page404 = () => {
     useEffect(() => {

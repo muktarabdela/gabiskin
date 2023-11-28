@@ -1,15 +1,15 @@
-import Category from "../componet/stickers/Category"
-import Hero from "../componet/hero/Hero"
-import Hot from "../componet/Hot/Hot"
-import Partner from "../componet/Partener/Partner"
-import Advantage from "../componet/Advantage/Adventage"
-import Custom from "../componet/custom/Custom"
-import HalfStickers from "../componet/stickers/HalfStickers"
+import Category from "../components/stickers/Category"
+import Hero from "../components/hero/Hero"
+import Partner from "../components/Partener/Partner"
+import Advantage from "../components/Advantage/Adventage"
+import Custom from "../components/custom/Custom"
 import { useEffect } from "react"
-
+import Hot from "../components/popular/popularSticker/Hot"
+import PopularSkin from "../components/popular/popularSkin/PopularSkin"
+import LaptopSkin from "../components/Laptop_skin/LaptopSkin"
+import SkinCategory from "../components/Laptop_skin/SkinCategory"
 const Home = () => {
   useEffect(() => {
-    // Scroll to the top when the component mounts
     window.scrollTo(0, 0);
   }, []);
   return (
@@ -18,7 +18,8 @@ const Home = () => {
       <Custom />
       <Hot />
       <Category />
-      <HalfStickers />
+      <PopularSkin />
+      <SkinCategory />
       <Partner />
       <Advantage />
     </>

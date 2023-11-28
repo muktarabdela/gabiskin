@@ -4,9 +4,8 @@ import User from '../models/userModel.js';
 import expressAsyncHandler from 'express-async-handler';
 
 // Define your routes here
-import { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, adminLogin, updateProfile, } from '../controllers/useController.js';
+import { registerUser, loginUser, paymentInfo, getUserInfo, adminLogin, updateProfile, } from '../controllers/useController.js';
 import authenticateToken from '../middleware/authenticateToken.js';
-import authenticateUser from '../middleware/authMiddleware.js';
 
 router.post('/register', registerUser);
 
@@ -16,7 +15,7 @@ router.post('/login', loginUser);
 router.post('/paymentInfo', paymentInfo)
 
 // Update user data
-router.patch('/:userId', updateUserData);
+// router.patch('/:userId', updateUserData);
 
 // protected route
 router.get('/protected', authenticateToken, (req, res) => {

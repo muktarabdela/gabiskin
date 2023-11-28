@@ -5,7 +5,10 @@ const stickerSchema = new mongoose.Schema({
     name: String,
     category: {
         type: String,
-        default: 'custom', 
+        default: 'custom',
+    },
+    package: {
+        type: String
     },
     size: {
         type: String,

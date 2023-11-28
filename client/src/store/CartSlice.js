@@ -5,8 +5,8 @@ const cartSlice = createSlice({
     initialState: {
         stickers: [],
         totalQuantity: 0,
-        totalPrice: 0, 
-        stickerId: null, 
+        totalPrice: 0,
+        stickerId: null,
         quantity: 0,
     },
     reducers: {
@@ -21,25 +21,24 @@ const cartSlice = createSlice({
                     price: newItem.price,
                     size: newItem.size,
                     quantity: newItem.quantity,
-                    totalPrice: newItem.price * newItem.quantity,
                     category: newItem.category,
                     imageUrl: newItem.imageUrl,
                 });
             }
             state.totalQuantity += newItem.quantity;
-
             state.stickerId = newItem._id;
             state.quantity = newItem.quantity;
+            state.totalPrice = state.stickers.reduce((total, sticker) => {
+                return total + sticker.price * sticker.quantity;
+            }, 0);
 
-            state.totalPrice = state.stickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);
         },
-        sendCartToOrders: (state) =>{
+        sendCartToOrders: (state) => {
             const cartItems = state.stickers;
         },
         removeFromCart: (state, action) => {
             const itemIdToRemove = action.payload;
             state.stickers = state.stickers.filter((item) => item.id !== itemIdToRemove);
-            // Update totalQuantity when removing an item from the cart
             state.totalQuantity -= 1;
         },
         incrementQuantity(state, action) {
@@ -58,10 +57,6 @@ const cartSlice = createSlice({
         },
         selectors: {
             selectCartCount: (state) => state.cart.stickers.length,
-            selectTotalPrice: createSelector(
-                (state) => state.cart.stickers,
-                (stickers) => stickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0)
-            ),
         },
         updateTotalQuantity: (state, action) => {
             state.totalQuantity = action.payload;
@@ -72,10 +67,11 @@ export const selectCartCount = (state) => state.cart.totalQuantity;
 export const selectCartItems = (state) => state.cart.stickers;
 export const selectStickerId = (state) => state.cart.stickerId;
 export const selectQuantity = (state) => state.cart.quantity;
-export const selectTotalPrice = (state) => state.cart.totalPrice;
 
-
+export const selectTotalPrice = createSelector(
+    (state) => state.cart.stickers,
+    (stickers) => stickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0)
+);
 export const { updateTotalQuantity, addToCart, removeFromCart, incrementQuantity, decrementQuantity } = cartSlice.actions;
-
 
 export default cartSlice;

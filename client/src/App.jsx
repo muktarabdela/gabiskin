@@ -1,16 +1,16 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Header from './componet/header/Header'
+import Header from './components/header/Header'
 import Home from './pages/Home'
 import Pricing from './pages/Pricing'
 import Works from './pages/Works'
 import "./app.css"
 import Cart from './pages/Cart'
-import Footer from './componet/footer/Footer'
-import Account from './componet/Account/account'
-import CheckoutPage from "./componet/checkOut/CheckOut"
+import Footer from './components/footer/Footer'
+import Account from './components/Account/account'
+import CheckoutPage from "./components/checkOut/CheckOut"
 import Admin from './pages/Admin'
 import Page404 from './pages/Page404'
-import AdminAuth from './componet/Account/AdminAuth'
+import AdminAuth from './components/Account/AdminAuth'
 
 
 const PrivateRoute = ({ element }) => {

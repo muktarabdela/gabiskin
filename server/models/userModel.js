@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    totalPrice: {
+        type: Number,
+    },
     role: {
         type: String,
         enum: ['user', 'admin'],
@@ -54,7 +57,6 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: false,
         },
-
     },
     orders: [
         {
@@ -64,7 +66,6 @@ const userSchema = new mongoose.Schema({
                     price: Number,
                     size: String,
                     quantity: Number,
-                    totalPrice: Number,
                     category: String,
                     imageUrl: String,
                 },

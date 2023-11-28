@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import ContactCard from '../componet/Contact/ContactCard'
+import ContactCard from '../components/Contact/ContactCard'
 
 const Contact = () => {
     useEffect(() => {

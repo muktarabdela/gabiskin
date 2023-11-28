@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import WorkCard from '../componet/works/WorkCard'
+import WorkCard from '../components/works/WorkCard'
 
 const Works = () => {
   useEffect(() => {

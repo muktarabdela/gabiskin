@@ -8,9 +8,17 @@ import asyncHandler from "express-async-handler"
 // Handle user registration
 const registerUser = async (req, res) => {
     try {
-        // Extract user registration data from the request body
-        const { name, email, phone, password, confirmPassword, deliveryInfo, orders } = req.body;
-
+        const { name, email, phone, password, confirmPassword, totalPrice, deliveryInfo, orders } = req.body;
+        // Check if the email already exists
+        const existingUserEmail = await User.findOne({ email }).lean();
+        if (existingUserEmail) {
+            return res.status(409).json({ error: 'User with this email already exists' });
+        }
+        // Check if the phone number already exists
+        const existingUserPhone = await User.findOne({ phone });
+        if (existingUserPhone) {
+            return res.status(409).json({ error: 'User with this phone number already exists' });
+        }
         // Check if required fields are provided
         if (!email) {
             return res.status(400).json({ error: 'Email required' });
@@ -24,33 +32,16 @@ const registerUser = async (req, res) => {
         if (!phone) {
             return res.status(400).json({ error: 'Phone number required' });
         }
-        if (!name) {
-            return res.status(400).json({ error: 'Name required' });
-        }
 
         // Validate email
         const emailPattern = /^\S+@\S+\.\S+$/;
         if (!emailPattern.test(email)) {
             return res.status(400).json({ error: 'Invalid email format' });
         }
-
         // Validate password
         if (password !== confirmPassword) {
             return res.status(400).json({ error: 'Password and Confirm password do not match' });
         }
-
-        // Check if the email already exists
-        const existingUserEmail = await User.findOne({ email }).lean();
-        if (existingUserEmail) {
-            return res.status(409).json({ error: 'User with this email already exists' });
-        }
-
-        // Check if the phone number already exists
-        const existingUserPhone = await User.findOne({ phone });
-        if (existingUserPhone) {
-            return res.status(409).json({ error: 'User with this phone number already exists' });
-        }
-
         // Hash the password
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
@@ -63,27 +54,21 @@ const registerUser = async (req, res) => {
             phone,
             password: hashedPassword,
             confirmPassword,
+            totalPrice,
             deliveryInfo,
             orders,
             isNewUser: true,
         });
-
         console.log('New user ID:', newUser._id);
-
         await newUser.save();
         const expirationTime = '1d';
-
-
         const token = jwt.sign({ email, userId: newUser._id }, process.env.JWT_KEY, { expiresIn: expirationTime });
-
         return res.status(200).json({ message: 'User registered successfully', token, newUser });
-
     } catch (error) {
         console.error('Error during user registration:', error);
         return res.status(500).json({ message: 'Failed to create a new user' });
     }
 };
-
 
 // Handle user login
 const loginUser = async (req, res) => {
@@ -128,12 +113,10 @@ const paymentInfo = async (req, res) => {
         const { userId, paymentStatus, paymentMethod, receiptScreenshot } = req.body;
         // Find the user in the database by userId
         const user = await User.findById(userId);
-
         // Check if the user exists
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found.' });
         }
-
         // Update the user's payment information
         user.paymentStatus = paymentStatus;
         user.paymentMethod = paymentMethod;
@@ -149,7 +132,6 @@ const paymentInfo = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 }
-
 // server/controllers/userController.js
 
 const getUserInfo = async (req, res) => {
@@ -170,36 +152,34 @@ const getUserInfo = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+// // updateUserData
+// const updateUserData = async (req, res) => {
+//     const userId = req.params.userId;
+//     const { deliveryInfo, orders, paymentInfo } = req.body;
+//     try {
+//         const user = await User.findById(userId);
+//         if (!user) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
+//         // Update deliveryInfo if provided
+//         if (deliveryInfo) {
+//             user.deliveryInfo = { ...user.deliveryInfo, ...deliveryInfo };
+//         }
+//         // Update orders if provided
+//         if (orders) {
+//             user.orders = user.orders.concat(orders);
+//         }
+//         if (paymentInfo) {
+//             user.paymentInfo = { ...user.paymentInfo, ...paymentInfo };
+//         }
+//         const updatedUser = await user.save();
 
-// updateUserData
-
-const updateUserData = async (req, res) => {
-    const userId = req.params.userId;
-    const { deliveryInfo, orders, paymentInfo } = req.body;
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        // Update deliveryInfo if provided
-        if (deliveryInfo) {
-            user.deliveryInfo = { ...user.deliveryInfo, ...deliveryInfo };
-        }
-        // Update orders if provided
-        if (orders) {
-            user.orders = user.orders.concat(orders);
-        }
-        if (paymentInfo) {
-            user.paymentInfo = { ...user.paymentInfo, ...paymentInfo };
-        }
-        const updatedUser = await user.save();
-
-        return res.status(200).json({ message: 'User data updated successfully', user: updatedUser });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
-    }
-}
+//         return res.status(200).json({ message: 'User data updated successfully', user: updatedUser });
+//     } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ error: 'Internal server error' });
+//     }
+// }
 
 const updateProfile = async (req, res) => {
     try {
@@ -261,7 +241,7 @@ const adminLogin = asyncHandler(async (req, res) => {
 
         if (passwordMatch) {
             const token = jwt.sign({ id: admin._id, email: admin.email, role: admin.role }, process.env.JWT_KEY, {
-                expiresIn: '3h',
+                expiresIn: '1h',
             });
             res.json({
                 success: true,
@@ -274,6 +254,6 @@ const adminLogin = asyncHandler(async (req, res) => {
     }
 });
 
-export { registerUser, loginUser, paymentInfo, getUserInfo, updateUserData, updateProfile, adminLogin }
+export { registerUser, loginUser, paymentInfo, getUserInfo, updateProfile, adminLogin }
 
 

@@ -3,9 +3,7 @@ const router = express.Router();
 
 import { getCategoryStickers, updateSticker, postCustomData, uploadMultiple, fetchImages, updatePaymentStatus, updateDeliveryStatus } from '../controllers/stickerController.js'
 // upload Custom
-
 router.get('/stickers-withCategory', getCategoryStickers)
-
 router.put('/get-custom', postCustomData);
 
 // create sticker

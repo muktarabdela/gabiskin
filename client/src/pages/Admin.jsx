@@ -1,11 +1,11 @@
 // AdminPage.js
 import React, { useEffect, useState } from 'react';
-import UserInfo from '../componet/admin/UserInfo';
-import DeliveryInfo from '../componet/admin/DeliveryInfo';
-import Orders from '../componet/admin/Orders';
-import PaymentInfo from '../componet/admin/PaymentInfo';
+import UserInfo from '../components/admin/UserInfo';
+import DeliveryInfo from '../components/admin/DeliveryInfo';
+import Orders from '../components/admin/Orders';
+import PaymentInfo from '../components/admin/PaymentInfo';
 import axios from '../Axios';
-import EditProfilePopup from '../componet/admin/EditProfilePopup';
+import EditProfilePopup from '../components/admin/EditProfilePopup';
 import { jwtDecode } from 'jwt-decode';
 const Admin = ({ userId }) => {
     const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
@@ -36,13 +36,13 @@ const Admin = ({ userId }) => {
     }, [userId]);
 
     const renderSection = () => {
-        const sectionComponents = {
+        const sectioncomponents = {
             userInfo: <UserInfo userInfo={usersData} />,
             deliveryInfo: <DeliveryInfo users={usersData} />,
             orders: <Orders users={usersData} />,
             PaymentInfo: <PaymentInfo users={usersData} />,
         };
-        return sectionComponents[selectedSection] || null;
+        return sectioncomponents[selectedSection] || null;
     };
     const openEditPopup = (user) => {
         setUserToUpdate(user);
@@ -89,7 +89,7 @@ const Admin = ({ userId }) => {
                 {['userInfo', 'deliveryInfo', 'orders', 'PaymentInfo'].map((section) => (
                     <button
                         key={section}
-                        className={`w-full py-2 mb-2 ${selectedSection === section ? 'bg-blue-300 text-white' : 'text-blue-500'}`}
+                        className={`w-full py- mb- ${selectedSection === section ? ' border-b  p-1 rounded-lg text-orange-400 ' : 'text-blue-500'}`}
                         onClick={() => setSelectedSection(section)}
                     >
                         {section.replace(/([A-Z])/g, ' $1').trim()}

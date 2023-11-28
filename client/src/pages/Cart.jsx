@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import CartCrd from '../componet/cart/CartCrd'
+import CartCrd from '../components/cart/CartCrd'
 
 const Cart = () => {
     useEffect(() => {

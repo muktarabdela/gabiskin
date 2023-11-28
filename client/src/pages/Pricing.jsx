@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import PriceCard from '../componet/PriceCard/PriceCard'
+import PriceCard from '../components/PriceCard/PriceCard'
 
 const Pricing = () => {
     useEffect(() => {

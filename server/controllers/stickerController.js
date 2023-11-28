@@ -28,7 +28,7 @@ const fetchImages = async (req, res) => {
         do {
             const options = {
                 type: 'upload',
-                prefix: 'half/',
+                prefix: 'English tips/',
                 max_results: 500,
                 next_cursor: nextCursor,
             };
@@ -40,8 +40,8 @@ const fetchImages = async (req, res) => {
         const insertedImages = [];
         for (const image of allImages) {
             const newSticker = new Stickers({
-                name: "half",
-                category: "half",
+                name: "min stickers",
+                category: "English_tips",
                 imageUrl: image.secure_url,
             });
             const savedImage = await newSticker.save();
@@ -187,7 +187,6 @@ const updateDeliveryStatus = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 
 export {
     getCategoryStickers,
