@@ -56,32 +56,32 @@ const fetchImages = async (req, res) => {
     }
 };
 
-const uploadMultiple = async (req, res) => {
-    const stickerData = req.body.stickers;
-    try {
-        const insertedStickers = [];
-        for (const sticker of stickerData) {
-            // Upload the image to Cloudinary and get the secure URL
-            const imageUrl = await uploadToCloudinary(sticker.imagPath, "half/");
+// const uploadMultiple = async (req, res) => {
+//     const stickerData = req.body.stickers;
+//     try {
+//         const insertedStickers = [];
+//         for (const sticker of stickerData) {
+//             // Upload the image to Cloudinary and get the secure URL
+//             const imageUrl = await uploadToCloudinary(sticker.imagPath, "half/");
 
-            const newSticker = new Stickers({
-                name: "half",
-                category: "half",
-                size: sticker.size,
-                price: sticker.price,
-                imageUrl: imageUrl,
-            });
+//             const newSticker = new Stickers({
+//                 name: "half",
+//                 category: "half",
+//                 size: sticker.size,
+//                 price: sticker.price,
+//                 imageUrl: imageUrl,
+//             });
 
-            // Save the sticker to the database
-            const savedSticker = await newSticker.save();
-            insertedStickers.push(savedSticker);
-        }
-        res.status(200).json({ stickers: insertedStickers });
-    } catch (error) {
-        console.error("Error during database save:", error);
-        res.status(500).json({ error: "An error occurred during database save." });
-    }
-};
+//             // Save the sticker to the database
+//             const savedSticker = await newSticker.save();
+//             insertedStickers.push(savedSticker);
+//         }
+//         res.status(200).json({ stickers: insertedStickers });
+//     } catch (error) {
+//         console.error("Error during database save:", error);
+//         res.status(500).json({ error: "An error occurred during database save." });
+//     }
+// };
 
 // update sticker
 const updateSticker = async (req, res) => {
@@ -190,7 +190,6 @@ const updateDeliveryStatus = async (req, res) => {
 
 export {
     getCategoryStickers,
-    uploadMultiple,
     updateSticker,
     fetchImages,
     postCustomData,

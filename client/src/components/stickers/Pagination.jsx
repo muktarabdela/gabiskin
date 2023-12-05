@@ -1,53 +1,70 @@
 import React from 'react';
-// import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/solid';
 
 const Pagination = ({ active, itemsCountPerPage, totalItemsCount, onChange }) => {
-    const pageNumbers = [];
     const totalPages = Math.ceil(totalItemsCount / itemsCountPerPage);
 
-    for (let i = 1; i <= totalPages; i++) {
-        pageNumbers.push(i);
-    }
+    const getPageRange = () => {
+        const rangeStart = Math.max(1, active - 2);
+        const rangeEnd = Math.min(totalPages, rangeStart + 4);
+
+        return Array.from({ length: rangeEnd - rangeStart + 1 }, (_, index) => index + rangeStart);
+    };
 
     return (
-        <div className="flex items-center justify-center space-x-1 mt-4">
-            {active > 1 && (
-                <button
-                    className="text-blue-500 px-3 py-1 border border-blue-500 rounded cursor-pointer flex items-center gap-1"
-                    onClick={() => onChange(active - 1)}
+        <div
+            aria-label='Pagination'
+            className="flex justify-center items-center text-gray-600 mt-8 lg:mt-0 lg:flex-row mx-auto"
+        >
+            <button
+                className="p-2 mr-4 rounded hover:bg-gray-100"
+                onClick={() => onChange(active - 1)}
+                disabled={active === 1}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                    </svg>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
 
+            {getPageRange().map((number) => (
+                <button
+                    key={number}
+
+                    className={`px-4 py-2 rounded ${active === number ? 'bg-gray-200 text-gray-900 font-medium hover:bg-gray-100' : 'hover:bg-gray-100'}`}
+                    onClick={() => onChange(number)}
+                >
+                    {number}
+                </button>
+            ))}
+
+            {totalPages > 5 && (
+                <button
+                    className='py-2 rounded  text-gray-400 mb-2 ml-1 font-medium  '
+                >
+                    ...
                 </button>
             )}
 
-            <ul className="flex space-x-2">
-                {pageNumbers.map((number) => (
-                    <li key={number}>
-                        <button
-                            className={`${active === number ? 'bg-blue-500 text-white' : 'text-green-500'
-                                } px-2 py-1 border  rounded cursor-pointer`}
-                            onClick={() => onChange(number)}
-                        >
-                            {number}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-
-            {active < totalPages && (
-                <button
-                    className="text-green-600-500 px-2 py-1 border border-green-400 rounded cursor-pointer flex items-center gap-1"
-                    onClick={() => onChange(active + 1)}
+            <button
+                className="p-2 ml-4 rounded hover:bg-gray-100"
+                onClick={() => onChange(active + 1)}
+                disabled={active === totalPages}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                    </svg>
-                </button>
-            )}
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
         </div>
     );
 };
