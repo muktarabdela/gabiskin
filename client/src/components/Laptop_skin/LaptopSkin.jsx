@@ -6,6 +6,7 @@ import HalfCard from "./HalfCard";
 const LaptopSkin = ({ category }) => {
     const [stickersData, setStickersData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
     const stickersPerPage = 8;
 
     useEffect(() => {
@@ -13,7 +14,9 @@ const LaptopSkin = ({ category }) => {
             try {
                 const response = await axios.get(`/stickers/stickers-withCategory?category=${category}`);
                 setStickersData(response.data.stickers);
+                setIsLoading(false);
             } catch (error) {
+                setIsLoading(false);
                 console.error('Error fetching stickers:', error);
             }
         }
@@ -27,23 +30,43 @@ const LaptopSkin = ({ category }) => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-    return (
-        <div>
-            <h1 className="flex justify-center items-center text-center text-3xl  font-thin">
-            </h1>
-            <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {currentStickers.map((sticker) => (
-                    <HalfCard key={sticker._id} sticker={sticker} />
-                ))}
-            </div>
-            <Pagination
-                active={currentPage}
-                itemsCountPerPage={stickersPerPage}
-                totalItemsCount={stickersData.length}
-                onChange={handlePageChange}
-            />
-        </div>
 
+
+    function CircularProgress() {
+        return (
+            <div className="flex items-center justify-center mt-4">
+
+                <div className="border-t-4 border-blue-500 border-solid h-[6em] w-[6em] rounded-full animate-spin"></div>
+            </div>
+        );
+    }
+    return (
+        <>
+            {isLoading ? (
+                <div className="flex items-center justify-center my-8">
+                </div>
+            ) : stickersData.length === 0 ? (
+                <div className="text-center text-lg">
+                    <p> Stickers are on the way! Please wait or refresh.
+                    </p>
+                    <CircularProgress />
+                </div>
+            ) : (
+                <>
+                    <div className="p-4 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {currentStickers.map((sticker) => (
+                            <HalfCard key={sticker._id} sticker={sticker} />
+                        ))}
+                    </div>
+                    <Pagination
+                        active={currentPage}
+                        itemsCountPerPage={stickersPerPage}
+                        totalItemsCount={stickersData.length}
+                        onChange={handlePageChange}
+                    />
+                </>
+            )}
+        </>
     );
 };
 

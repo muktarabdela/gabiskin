@@ -37,22 +37,21 @@ const Custom = () => {
     const handleImageChange = async (e) => {
         const files = e.target.files;
         setImageError(null);
-        const compressedImages = await Promise.all(
-            Array.from(files).map(async (file) => {
-                const options = {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 800,
-                    useWebWorker: true,
-                };
-                try {
-                } catch (error) {
-                    console.error('Error compressing image:', error);
-                    return file; // Fallback to original image
-                }
-            })
-        );
-        setImages(compressedImages);
+        const processedImages = Array.from(files);
+        try {
+            const compressedImages = await Promise.all(
+                processedImages.map(async (file) => {
+                    // You can add compression logic here if needed
+                    return file;
+                })
+            );
+            setImages(compressedImages);
+        } catch (error) {
+            console.error('Error processing images:', error);
+            setImages(processedImages); // Fallback to original images
+        }
     };
+
 
     const handleUpload = async () => {
         if (!selectedSize) {
@@ -210,7 +209,7 @@ const Custom = () => {
                             {isUploading ? (
                                 <div className="flex items-center">
                                     <CircularProgress />
-                                    <span className="ml-2">Wait a minute it takes a minute </span>
+                                    <span className="ml-2">please wait</span>
                                 </div>
                             ) : (
                                 'Upload Images'

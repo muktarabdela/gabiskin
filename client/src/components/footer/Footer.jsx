@@ -95,15 +95,14 @@ function Footer() {
                   </ul>
                 </div>
 
-                <div className="flex justify-center items-center h-full">
+                <div className="relative right-[6em] lg:right-[15em]">
                   <iframe
                     src="https://maps.google.com/maps?q=8.89652811296649,38.7720541236866&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                    className="w-[20em] md:w-[23em] lg:w-[36em] h-[17em] rounded-t-lg lg:rounded-tr-none lg:rounded-bl-lg"
+                    className=" h-[17em] sm:w-[20em] w-[20em] md:w-[2zem] lg:w-[30em] rounded-t-lg "
                     frameBorder={0}
                     allowFullScreen=""
                   />
                 </div>
-
               </div>
             </div>
           </div>
