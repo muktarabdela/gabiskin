@@ -21,40 +21,40 @@ const getCategoryStickers = async (req, res) => {
     }
 }
 
-const fetchImages = async (req, res) => {
-    let allImages = [];
-    let nextCursor = null;
-    try {
-        do {
-            const options = {
-                type: 'upload',
-                prefix: 'English tips/',
-                max_results: 500,
-                next_cursor: nextCursor,
-            };
-            const result = await Cloudinary.api.resources(options);
-            allImages = allImages.concat(result.resources);
-            nextCursor = result.next_cursor;
-        } while (nextCursor);
+// const fetchImages = async (req, res) => {
+//     let allImages = [];
+//     let nextCursor = null;
+//     try {
+//         do {
+//             const options = {
+//                 type: 'upload',
+//                 prefix: 'christmas/',
+//                 max_results: 500,
+//                 next_cursor: nextCursor,
+//             };
+//             const result = await Cloudinary.api.resources(options);
+//             allImages = allImages.concat(result.resources);
+//             nextCursor = result.next_cursor;
+//         } while (nextCursor);
 
-        const insertedImages = [];
-        for (const image of allImages) {
-            const newSticker = new Stickers({
-                name: "min stickers",
-                category: "English_tips",
-                imageUrl: image.secure_url,
-            });
-            const savedImage = await newSticker.save();
-            insertedImages.push(savedImage);
-        }
+//         const insertedImages = [];
+//         for (const image of allImages) {
+//             const newSticker = new Stickers({
+//                 name: "min stickers",
+//                 category: "christmas",
+//                 imageUrl: image.secure_url,
+//             });
+//             const savedImage = await newSticker.save();
+//             insertedImages.push(savedImage);
+//         }
 
-        // Send a single response to the client with the inserted images.
-        res.json({ images: insertedImages });
-    } catch (error) {
-        console.error("Error during database save:", error);
-        res.status(500).json({ error: "An error occurred during database save." });
-    }
-};
+//         // Send a single response to the client with the inserted images.
+//         res.json({ images: insertedImages });
+//     } catch (error) {
+//         console.error("Error during database save:", error);
+//         res.status(500).json({ error: "An error occurred during database save." });
+//     }
+// };
 
 // const uploadMultiple = async (req, res) => {
 //     const stickerData = req.body.stickers;
@@ -65,8 +65,8 @@ const fetchImages = async (req, res) => {
 //             const imageUrl = await uploadToCloudinary(sticker.imagPath, "half/");
 
 //             const newSticker = new Stickers({
-//                 name: "half",
-//                 category: "half",
+//                 name: "mini-stickers",
+//                 category: "New_stickers",
 //                 size: sticker.size,
 //                 price: sticker.price,
 //                 imageUrl: imageUrl,
@@ -191,8 +191,8 @@ const updateDeliveryStatus = async (req, res) => {
 export {
     getCategoryStickers,
     updateSticker,
-    fetchImages,
+    // fetchImages,
     postCustomData,
     updatePaymentStatus,
-    updateDeliveryStatus
+    updateDeliveryStatus,
 }

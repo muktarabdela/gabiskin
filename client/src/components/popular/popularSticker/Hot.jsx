@@ -13,7 +13,7 @@ function Hot() {
     useEffect(() => {
         const fetchHot = async () => {
             try {
-                const response = await axios.get("/stickers/stickers-withCategory?category=Hot");
+                const response = await axios.get("/stickers/stickers-withCategory?category=popular");
                 setHotStickers(response.data.stickers);
                 console.log(response.data);
             } catch (error) {
@@ -38,9 +38,7 @@ function Hot() {
                         <HotCard
                             key={sticker._id}
                             sticker={sticker}
-                            onAddToCart={onAddToCart}
-
-                        />
+                            onAddToCart={onAddToCart}/>
                     ))}
                 </ul>
             </div>

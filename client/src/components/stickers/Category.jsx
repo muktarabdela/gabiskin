@@ -3,7 +3,7 @@ import Sticker from "../stickers/Stickers";
 import "./category.css";
 
 const Category = () => {
-    const [selectedCategory, setSelectedCategory] = useState("Movies");
+    const [selectedCategory, setSelectedCategory] = useState("New_stickers");
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
@@ -14,6 +14,8 @@ const Category = () => {
             <div className="gabiskin_category ">
                 <h1 className="gabiskin__category-title">Category Stickers</h1>
                 <div className="gabiskin__category-main__title overflow-x-auto whitespace-nowrap">
+                    <p className={`top ${selectedCategory === "New_stickers" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("New_stickers")}>New stickers</p>
+                    <p className={`top ${selectedCategory === "christmas" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("christmas")}>Christmas</p>
                     <p className={`top ${selectedCategory === "Movies" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("Movies")}>Movie</p>
                     <p className={`top ${selectedCategory === "programming" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("programming")}>Programming</p>
                     <p className={`top ${selectedCategory === "Music" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("Music")}>Music</p>

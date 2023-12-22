@@ -36,9 +36,9 @@ const Sticker = ({ category }) => {
 
     function CircularProgress() {
         return (
-            <div className="flex items-center justify-center mt-4">
+            <div className="flex items-center justify-center mt-7">
 
-                <div className="border-t-4 border-blue-500 border-solid h-[6em] w-[6em] rounded-full animate-spin"></div>
+                <div className="border-t-4 border-blue-500 border-solid h-[3em] w-[3em] rounded-full animate-spin"></div>
             </div>
         );
     }
@@ -46,11 +46,11 @@ const Sticker = ({ category }) => {
         <>
             {isLoading ? (
                 <div className="flex items-center justify-center my-8">
+                    <CircularProgress />
                 </div>
             ) : stickersData.length === 0 ? (
                 <div className="text-center text-lg">
-                    <p> Stickers are on the way! Please wait or refresh.
-                    </p>
+                    <p>Stickers are on the way! Please wait or refresh.</p>
                     <CircularProgress />
                 </div>
             ) : (

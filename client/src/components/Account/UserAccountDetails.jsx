@@ -47,7 +47,6 @@ const UserAccountDetails = ({ userInfo }) => {
   }
 
   const totalAmountWithoutDiscount = userInfo.totalPrice
-  console.log(userInfo.totalPrice)
   const totalAmountWithDiscount = totalAmountWithoutDiscount / 5
 
   const unpaid = totalAmountWithoutDiscount - totalAmountWithDiscount
@@ -219,7 +218,7 @@ const UserAccountDetails = ({ userInfo }) => {
                     </p>
                     <p className="text-black mb-2 md:text-lg font-mono">
                       <span className="mr-2 text-gray-600">Sticker Price:</span>
-                      {sticker.totalPrice}
+                      {sticker.price} 
                     </p>
                     <p className="text-black md:text-lg font-mono">
                       <span className="mr-2 text-gray-600">Quantity:</span>

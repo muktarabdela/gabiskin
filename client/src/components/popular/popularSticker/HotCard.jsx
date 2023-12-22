@@ -10,7 +10,7 @@ function HotCard({ sticker, onAddToCart }) {
             <Link className="text-[#f4f4f5] hover:transform-[scale(1.09)]">
                 <p className="hot-title">{sticker.title}</p>
                 <img
-                    className="gabiskin__hot-main__card-img"
+                    className="gabiskin__hot-main__card-img h-[10em] mx-auto"
                     src={sticker.imageUrl}
                     alt={sticker.name}
                 />

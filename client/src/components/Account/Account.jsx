@@ -17,7 +17,6 @@ const Account = () => {
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
-                console.log('Decoded Token:', decodedToken);
 
                 const userIdFromToken = decodedToken.userId;
 

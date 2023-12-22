@@ -11,7 +11,6 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
     const [sizeError, setSizeError] = useState(null);
 
     const dispatch = useDispatch();
-
     const handleSizeChange = (event) => {
         const newSize = event.target.value;
         setSelectedSize(newSize);
@@ -68,17 +67,15 @@ function AddToCartPopup({ isOpen, onClose, onAddToCart, stickerId }) {
                 };
                 dispatch(addToCart(stickerData));
             }
-
             onAddToCart(selectedSize, price);
             onClose();
         } catch (error) {
             console.log(error);
         } finally {
-            setIsLoading(false); // Set loading state to false when the update is complete
+            setIsLoading(false);
         }
     };
     return (
-
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
 
             <div className="bg-white p-6 rounded-md shadow-lg sm:w-96 z-50">
