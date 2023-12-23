@@ -45,7 +45,8 @@ const Sticker = ({ category }) => {
     return (
         <>
             {isLoading ? (
-                <div className="flex items-center justify-center my-8">
+                <div className="text-center text-lg">
+                    <p>Stickers are on the way! Please wait or refresh.</p>
                     <CircularProgress />
                 </div>
             ) : stickersData.length === 0 ? (

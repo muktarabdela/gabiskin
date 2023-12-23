@@ -109,16 +109,13 @@ function Footer() {
           <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
           <div className="text-left">
             <span className="text-sm mt-4  text-gray-500 text-left dark:text-gray-400 flex  ">
-              Developed{" "}
+              Developed by {" "}
               <a
                 href="https://www.linkedin.com/in/muktarabdela/"
                 target="_blank"
-                className="hover:underline ml-1 flex"
+                className="underline ml-1 flex"
               >
                 muktar
-                <img
-                  className="w-[1.5em] rounded-md ml-2"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-mMHBzCfB4uhXtDo_51TZwLexR3TPVsJ-JLY52A2Dag&s" alt="" />
               </a>
             </span>
           </div>

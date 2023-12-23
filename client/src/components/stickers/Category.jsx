@@ -13,7 +13,7 @@ const Category = () => {
         <>
             <div className="gabiskin_category ">
                 <h1 className="gabiskin__category-title">Category Stickers</h1>
-                <div className="gabiskin__category-main__title overflow-x-auto whitespace-nowrap">
+                <div className="gabiskin__category-main__title flex justify-between mx-4 overflow-x-auto whitespace-nowrap scrollbar-hidden">
                     <p className={`top ${selectedCategory === "New_stickers" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("New_stickers")}>New stickers</p>
                     <p className={`top ${selectedCategory === "christmas" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("christmas")}>Christmas</p>
                     <p className={`top ${selectedCategory === "Movies" ? "selected border-b  p-1 rounded-lg text-orange-400 " : ""}`} onClick={() => handleCategoryChange("Movies")}>Movie</p>
