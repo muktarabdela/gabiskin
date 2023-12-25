@@ -1,13 +1,13 @@
 import express from 'express';
 const router = express.Router();
 
-import { getCategoryStickers, updateSticker, postCustomData, updatePaymentStatus, updateDeliveryStatus } from '../controllers/stickerController.js'
+import { getCategoryStickers, updateSticker, postCustomData, updatePaymentStatus, updateDeliveryStatus, fetchImages } from '../controllers/stickerController.js'
 // upload Custom
 router.get('/stickers-withCategory', getCategoryStickers)
 router.put('/get-custom', postCustomData);
 
 // create sticker
-// router.get('/create', fetchImages)
+router.get('/create', fetchImages)
 
 // update sticker
 router.put('/update/:sticker_Id', updateSticker);

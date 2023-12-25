@@ -85,10 +85,7 @@ const Header = () => {
                         <IconButton edge="end" color="primary" onClick={handleMenu}>
                             <MenuIcon />
                         </IconButton>
-
-
                         <Menu
-
                             id="menu-appbar"
                             anchorEl={anchorEl}
                             anchorOrigin={{
@@ -117,11 +114,6 @@ const Header = () => {
                             <MenuItem onClick={handleClose}>
                                 <Link to="/Works">
                                     Works
-                                </Link>
-                            </MenuItem>
-                            <MenuItem onClick={handleClose}>
-                                <Link to="/Works">
-                                    About
                                 </Link>
                             </MenuItem>
                         </Menu>
