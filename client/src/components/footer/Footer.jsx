@@ -16,6 +16,7 @@ function Footer() {
               />
             </a>
           </div>
+
           <div className="md:flex md:justify-start">
 
             <div className="ml-[6em] relative bottom-16">
@@ -72,7 +73,7 @@ function Footer() {
                         target="_blank"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
-                        Tik tok
+                        Tiktok
                       </a>
                     </li>
                     <li className="">
@@ -95,23 +96,35 @@ function Footer() {
                   </ul>
                 </div>
 
-                <div className="relative right-[6em] lg:right-[15em]">
+                <div className="relative right-[6em] lg:right-[25em] hidden lg:block">
                   <iframe
                     src="https://maps.google.com/maps?q=8.89652811296649,38.7720541236866&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                    className=" h-[17em] sm:w-[20em] w-[20em] md:w-[2zem] lg:w-[30em] rounded-t-lg "
+                    className="h-[17em]    lg:w-[50em] rounded-t-lg"
                     frameBorder={0}
                     allowFullScreen=""
                   />
                 </div>
+
               </div>
             </div>
+          </div>
+
+
+
+          <div className="w-full mx-auto lg:hidden">
+            <iframe
+              src="https://maps.google.com/maps?q=8.89652811296649,38.7720541236866&t=&z=13&ie=UTF8&iwloc=&output=embed"
+              className="h-[17em] w-full rounded-t-lg"
+              frameBorder={0}
+              allowFullScreen=""
+            />
           </div>
           <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
           <div className="text-left">
             <span className="text-sm mt-4  text-gray-500 text-left dark:text-gray-400 flex  ">
               Developed by {" "}
               <a
-                href="https://www.linkedin.com/in/muktarabdela/"
+                href="https://muka10.com"
                 target="_blank"
                 className="underline ml-1 flex"
               >
