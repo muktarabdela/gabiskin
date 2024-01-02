@@ -3,7 +3,7 @@ import React from 'react'
 const Youtube = () => {
     return (
         <section className="mt-10">
-            <h3 className="text-xl ml-6 font-semibold mb-2 text-white">
+            <h3 className="text-xl  text-center font-semibold mb-4 text-white">
                 How to apply laptop sticker Gabiskin
             </h3>
             <div className="aspect-w-16 aspect-h-9 max-w-4xl mx-auto overflow-hidden rounded-lg shadow-lg">

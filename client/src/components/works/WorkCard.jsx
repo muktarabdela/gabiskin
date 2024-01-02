@@ -29,8 +29,15 @@ const WorkCard = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = stickersData.slice(indexOfFirstItem, indexOfLastItem).reverse();
 
-
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const SocialMediaLink = ({ href, image, title }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" title={title}>
+      <img src={image} alt={title} className="w-10 h-10 cursor-pointer transform hover:scale-110 transition-transform" />
+    </a>
+  );
+
+
   function CircularProgress() {
     return (
       <div className="flex items-center justify-center mt-4">
@@ -47,9 +54,8 @@ const WorkCard = () => {
   return (
     <>
       <div className=''>
-        {isLoading && <CircularProgress />}
         <h1 className="text-center text-[1.6em] pt-[80px] mx-[0] my-6 [transition:all_0.3s_ease-in-out] font-mono">ለላፕቶፓቹን ጋቢ ደረረረብ </h1>
-
+        {isLoading && <CircularProgress />}
         <div className="p-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 lg:row-cols-3 gap-4">
           {currentItems.map((sticker, index) => (
             <div
@@ -110,18 +116,11 @@ const WorkCard = () => {
       </div>
       <h3 className="text-center mt-8 text-lg font-semibold">👇CHECK OUT OUR SOCIAL MEDIA LINK</h3>
       <div className="flex justify-around mx-auto mt-4 w-[13em]">
-        <a href={socialMediaLinks.telegram} target="_blank" rel="noopener noreferrer" title="Telegram">
-          <img src={Telegram} alt="Telegram" className="w-10 h-10 cursor-pointer transform hover:scale-110 transition-transform" />
-        </a>
-        <a href={socialMediaLinks.tiktok} target="_blank" rel="noopener noreferrer" title="TikTok">
-          <img src={tiktok} alt="TikTok" className="w-10 h-10 cursor-pointer transform hover:scale-110 transition-transform" />
-        </a>
-        <a href={socialMediaLinks.instagram} target="_blank" rel="noopener noreferrer" title="Instagram">
-          <img src={instagram} alt="Instagram" className="w-10 h-10 cursor-pointer transform hover:scale-110 transition-transform" />
-        </a>
-        <a href={socialMediaLinks.youtube} target="_blank" rel="noopener noreferrer" title="Youtube">
-          <img src={youtube} alt="Youtube" className="w-10 h-10 cursor-pointer transform hover:scale-110 transition-transform" />
-        </a>
+        <SocialMediaLink href={socialMediaLinks.telegram} image={Telegram} title="Telegram" />
+        <SocialMediaLink href={socialMediaLinks.tiktok} image={tiktok} title="tiktok" />
+        <SocialMediaLink href={socialMediaLinks.youtube} image={youtube} title="youtube" />
+        <SocialMediaLink href={socialMediaLinks.instagram} image={instagram} title="instagram" />
+
       </div>
     </>
   );
