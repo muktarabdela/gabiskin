@@ -1,0 +1,28 @@
+import React from 'react'
+
+const Youtube = () => {
+    return (
+        <section className="mt-10">
+            <h3 className="text-xl ml-6 font-semibold mb-2 text-white">
+                How to apply laptop sticker Gabiskin
+            </h3>
+            <div className="aspect-w-16 aspect-h-9 max-w-4xl mx-auto overflow-hidden rounded-lg shadow-lg">
+                <div dangerouslySetInnerHTML={{
+                    __html: `
+        <iframe 
+            width="100%" 
+            height="345" 
+            src="https://www.youtube.com/embed/d5zpwHXqM5s?si=abnNWQXShaEKq-gv" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen>
+        </iframe>` }}
+                />
+            </div>
+
+        </section>
+    )
+}
+
+export default Youtube
