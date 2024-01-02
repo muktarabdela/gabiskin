@@ -65,7 +65,7 @@ const Hero = () => {
     return (
         <div className="heroSecMainParent mb-[150px]">
             <p className="text-2xl pt-20 text-center font-bold text-gray-300 sm:text34xl md:text-2xl lg:text-3xl xl:text-5xl mb-5">
-                Welcome to <span className="text-blue-500">Gabi Sticker</span> Home
+                Welcome to <span className="text-blue-500">GabiSkin</span> Home
             </p>
 
 

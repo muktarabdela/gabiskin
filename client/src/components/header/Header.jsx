@@ -41,7 +41,7 @@ const Header = () => {
                         className='cursor-pointer'
                         to="/">
                         <img
-                            className=' w-[3.5em] h-[3em] mt-2'
+                            className=' w-[3.5em] h-[4em]'
                             src={Logo} alt="logo" />
 
                     </Link>

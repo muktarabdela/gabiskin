@@ -54,7 +54,7 @@ const WorkCard = () => {
   return (
     <>
       <div className=''>
-        <h1 className="text-center text-[1.6em] pt-[80px] mx-[0] my-6 [transition:all_0.3s_ease-in-out] font-mono">ለላፕቶፓቹን ጋቢ ደረረረብ </h1>
+        <h1 className="text-center text-[1.6em] pt-[80px] mx-[0] my-6 [transition:all_0.3s_ease-in-out] font-mono">ለላፕቶፓቹ ጋቢ ደረረረብ </h1>
         {isLoading && <CircularProgress />}
         <div className="p-4 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 lg:row-cols-3 gap-4">
           {currentItems.map((sticker, index) => (

@@ -31,7 +31,7 @@ function Footer() {
                         to="/works"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
-                        our works
+                        Our works
                       </Link>
                     </li>
                     <li>
@@ -40,7 +40,8 @@ function Footer() {
                         rel="nofollow"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
-                        price    </Link>
+                        Price
+                      </Link>
                     </li>
                     <li>
                       <Link
@@ -48,7 +49,7 @@ function Footer() {
                         rel="nofollow"
                         className="text-gray-600 hover:underline dark:text-gray-400"
                       >
-                        admin
+                        Admin
                       </Link>
                     </li>
                   </ul>
