@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios1 from 'axios';
 import axios from "../../Axios";
 import { addToCart } from '../../store/CartSlice';
-import miniStikcer from "../../../public/images/price3.png";
+import miniStikcer from "../../../public/images/price3.jpg";
 import {
     Card, CardHeader, CardBody, CardFooter, Typography,
 } from "@material-tailwind/react";

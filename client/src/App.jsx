@@ -11,6 +11,7 @@ import CheckoutPage from "./components/checkOut/CheckOut"
 import Admin from './pages/Admin'
 import Page404 from './pages/Page404'
 import AdminAuth from './components/Account/AdminAuth'
+import About from './pages/About'
 
 
 const PrivateRoute = ({ element }) => {
@@ -46,6 +47,14 @@ const App = () => {
         <Route path="/works" element={
           <>
             <Works />
+            <Footer />
+
+          </>
+
+        } />
+        <Route path="/about" element={
+          <>
+            <About />
             <Footer />
 
           </>

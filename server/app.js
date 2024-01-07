@@ -29,10 +29,11 @@ const port = process.env.PORT || 3000;
 
 const startServer = async () => {
     try {
-        connectDB(process.env.DBURL);
+        await connectDB(process.env.DBURL);
         app.listen(port, () => console.log(`http://localhost:${port}`));
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 startServer();

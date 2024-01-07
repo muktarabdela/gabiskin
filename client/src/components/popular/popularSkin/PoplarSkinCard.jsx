@@ -4,9 +4,17 @@ import { Link } from 'react-router-dom';
 import HalfPopup from '../../Laptop_skin/HalfPopup';
 
 function PoplarSkinCard({ sticker }) {
+    // console.log(sticker)
     const [selectedStickerId, setSelectedStickerId] = useState(sticker._id);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentRow, setCurrentRow] = useState(0);
+    const moveToNextRow = () => {
+        setCurrentRow((prevRow) => (prevRow + 1) % numberOfRows);
+    };
+    const moveToPrevRow = () => {
+        setCurrentRow((prevRow) => (prevRow - 1 + numberOfRows) % numberOfRows);
+    };
     const openPopup = (stickerId) => {
         setSelectedStickerId(stickerId);
         setIsPopupOpen(true);
@@ -26,6 +34,7 @@ function PoplarSkinCard({ sticker }) {
         )
     }
 
+
     return (
         <div>
             {isLoading && <CircularProgress />}
@@ -33,7 +42,7 @@ function PoplarSkinCard({ sticker }) {
                 onLoad={() => setIsLoading(false)} >
                 <Link className={`text-[#f4f4f5] hover:transform-[scale(1.09) ${isLoading ? 'hidden' : ''} `}>
                     <img
-                        className="gabiskin__hot-main__card-img mt-6 h-[11em]"
+                        className="gabiskin__hot-main__card-img mt-6 h-[11em] w-[14em]"
                         src={sticker.imageUrl}
                         alt={sticker.name}
                     />

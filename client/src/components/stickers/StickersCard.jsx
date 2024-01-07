@@ -36,9 +36,10 @@ function StickerCard({ sticker }) {
                 onLoad={() => setIsLoading(false)}
             >
                 <CardContent
-                    className={`h-[20vh] md:h-[37vh] lg:h-[45vh] bg-[#ebebf0]  ${isLoading ? 'hidden' : ''}`}>
+                    className={`h-[20vh] md:h-[37vh] lg:h-[45vh]  bg-[#ebebf0]  ${isLoading ? 'hidden' : ''}`}>
                     <img
-                        className='h-[12vh] w-[12vh] md:w-[25vh] md:h-[30vh] lg:h-[17em] lg:w-[15em] lg:p-[2em] p-2 object-cover text-center mx-auto '
+                        className="h-[12vh] lg:h-[16em] w-full lg:p-8  md:w-full object-fill text-center mx-auto "
+                        // className='h-[12vh] w-[12vh] md:w-[25vh] md:h-[30vh] lg:h-[17em] lg:w-[15em] lg:p-[2em] p-2 object-cover text-center mx-auto '
                         src={sticker.imageUrl}
                         alt={sticker.name}
                     />

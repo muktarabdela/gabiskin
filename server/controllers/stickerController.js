@@ -28,7 +28,7 @@ const fetchImages = async (req, res) => {
         do {
             const options = {
                 type: 'upload',
-                prefix: 'works/',
+                prefix: 'mouckup/Qoute/',
                 max_results: 500,
                 next_cursor: nextCursor,
             };
@@ -40,15 +40,14 @@ const fetchImages = async (req, res) => {
         const insertedImages = [];
         for (const image of allImages) {
             const newSticker = new Stickers({
-                name: "our works",
-                category: "works",
+                name: "mouckup",
+                category: "Qoute",
                 imageUrl: image.secure_url,
             });
             const savedImage = await newSticker.save();
             insertedImages.push(savedImage);
         }
 
-        // Send a single response to the client with the inserted images.
         res.json({ images: insertedImages });
     } catch (error) {
         console.error("Error during database save:", error);

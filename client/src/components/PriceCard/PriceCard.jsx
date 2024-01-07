@@ -2,7 +2,7 @@ import React from "react";
 import "./pricecard.css"
 import mini from "../../../public/images/price.png";
 import full from "../../../public/images/price2.png";
-import custom from "../../../public/images/price3.png";
+import custom from "../../../public/images/price3.jpg";
 import { Link } from "react-router-dom";
 
 function PriceCard() {

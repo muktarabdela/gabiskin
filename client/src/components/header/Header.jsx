@@ -18,11 +18,9 @@ const Header = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -62,6 +60,11 @@ const Header = () => {
                     <li className='mx-5 text-[1.2em] font-medium'>
                         <Link to="/Works">
                             Our Work
+                        </Link>
+                    </li>
+                    <li className='mx-5 text-[1.2em] font-medium'>
+                        <Link to="/about">
+                            About
                         </Link>
                     </li>
 
@@ -104,6 +107,12 @@ const Header = () => {
                                 onClick={handleClose}>
                                 <Link to="/">
                                     Home
+                                </Link>
+                            </MenuItem>
+                            <MenuItem
+                                onClick={handleClose}>
+                                <Link to="/about">
+                                    About
                                 </Link>
                             </MenuItem>
                             <MenuItem onClick={handleClose}>

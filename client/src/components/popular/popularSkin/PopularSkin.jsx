@@ -11,7 +11,7 @@ function PopularSkin() {
     useEffect(() => {
         const fetchHot = async () => {
             try {
-                const response = await axios.get("/stickers/stickers-withCategory?category=laptop-skin-popular");
+                const response = await axios.get("/stickers/stickers-withCategory?category=most_popular");
                 setHotStickers(response.data.stickers);
                 console.log(response.data);
             } catch (error) {
@@ -21,9 +21,7 @@ function PopularSkin() {
         fetchHot();
     }, []);
 
-    // Define your onAddToCart function here
     const onAddToCart = (size, price) => {
-        // Implement your cart functionality here
         console.log("Adding to cart: Size -", size, "Price -", price);
     };
 

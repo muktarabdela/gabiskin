@@ -32,15 +32,15 @@ function HalfCard({ sticker }) {
             <Card className='object-cover text-center mx-auto' elevation={3}>
                 <CardContent
                     onLoad={() => setIsLoading(false)}
-                    className={`bg-[#ebebf0] ${isLoading ? 'hidden' : ''}`}>
+                    className={`bg-[#E9E9E9]  w-full ${isLoading ? 'hidden' : ''}`}>
                     <img
                         src={sticker.imageUrl}
                         alt={sticker.name}
-                        className="h-[30vh] w-[35vh] p-2 md:w-[25vh] md:h-[30vh] object-cover text-center mx-auto"
+                        className="shadow- h-[30vh] w-full p-2  md:w-full object-fill  mx-auto "
                     />
                     <button
                         onClick={() => openPopup(sticker._id)}
-                        className="border-[none] rounded-[4px] bg-purple-800 text-[#fff] h-[25px] w-[80px] md:h-[25px] md:w-[80px] lg:h-[35px] lg:w-[90px] text-[15px] cursor-pointer transition-opacity duration-500 opacity-70 mt-[8px]"
+                        className="border-[none] rounded-[4px] bg-purple-800 text-[#fff] h-[25px] w-[80px] md:h-[25px] md:w-[80px] lg:h-[35px] lg:w-[90px] text-[15px] cursor-pointer transition-opacity duration-500 opacity-70 mt-[1.5em]"
                     >
                         Order Now
                     </button>

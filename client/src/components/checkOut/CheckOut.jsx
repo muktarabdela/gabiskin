@@ -14,12 +14,11 @@ import youtube from '../../../public/images/youtube.png';
 
 const CheckOut = () => {
     useEffect(() => {
-        // Scroll to the top when the component mounts
         window.scrollTo(0, 0);
     }, []);
     const cartItems = useSelector(selectCartItems);
     const cartStickers = useSelector((state) => state.cart.stickers);
-
+    console.log(cartItems)
     const totalAmountWithoutDiscount = cartStickers.reduce((total, sticker) => total + sticker.price * sticker.quantity, 0);
 
     const totalAmountWithDiscount = totalAmountWithoutDiscount / 5;
@@ -80,7 +79,7 @@ const CheckOut = () => {
                                     </p>
                                     <p className="text-black mb-2 md:text-lg font-mono">
                                         <span className="mr-2 text-gray-600">Sticker Price:</span>
-                                        {item.totalPrice}
+                                        {item.price}
                                     </p>
                                     <p className="text-black md:text-lg font-mono">
                                         <span className="mr-2 text-gray-600">Quantity:</span>

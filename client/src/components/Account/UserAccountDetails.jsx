@@ -5,7 +5,7 @@ import tiktok from '../../../public/images/tiktok.png';
 import instagram from '../../../public/images/instagram.png';
 import youtube from '../../../public/images/youtube.png';
 const UserAccountDetails = ({ userInfo }) => {
-
+  console.log(userInfo)
   if (!userInfo.deliveryInfo) {
     return (
       <div className="container mx-auto p-8 mt-[60px] text-center">
@@ -218,7 +218,7 @@ const UserAccountDetails = ({ userInfo }) => {
                     </p>
                     <p className="text-black mb-2 md:text-lg font-mono">
                       <span className="mr-2 text-gray-600">Sticker Price:</span>
-                      {sticker.price} 
+                      {sticker.price}
                     </p>
                     <p className="text-black md:text-lg font-mono">
                       <span className="mr-2 text-gray-600">Quantity:</span>
